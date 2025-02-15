@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".sign.view.SignInFragment"
+    android:overScrollMode="never"
+    android:padding="@dimen/_24sdp"
+    android:clipToPadding="false"
+    android:background="@color/AcliceBlue"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:text="Zola"
+        android:textColor="@color/my_primary"
+        android:textSize="@dimen/_18ssp"
+        android:textStyle="bold"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:text="Connect people around the world!"
+            android:textColor="@color/my_primary"
+            android:layout_marginBottom="90dp"
+            android:textSize="@dimen/_12ssp"
+            />
+        <EditText
+            android:id="@+id/et_sign_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:hint="07864545562"
+            android:inputType="phone"
+            android:layout_margin="10dp"
+            android:background="@drawable/et_background"
+            android:elevation="10dp"
+            android:textSize="23sp"
+            />
+
+        <TextView
+            android:id="@+id/textCheckLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:gravity="right"
+            android:text="*Invalid phone number"
+            android:textColor="@color/error"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/et_sign_passw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:hint="iloveZola"
+            android:inputType="textPassword"
+            android:layout_margin="10dp"
+            android:background="@drawable/et_background"
+            android:elevation="10dp"
+            android:textSize="23sp"
+            />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_marginTop="@dimen/_20sdp">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_margin="10dp"
+                android:text="SIGN IN"
+                android:textSize="@dimen/_20ssp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:cornerRadius="@dimen/_8sdp"
+                />
+            <ProgressBar
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+        <TextView
+
+            android:id="@+id/tv_createNewAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:text="Don't have an account? Come with"
+            android:textColor="@color/my_primary"
+            android:layout_marginBottom="@dimen/_20sdp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/others"
+            android:textColor="@color/Grey"
+            android:layout_above="@id/socialicons"
+            android:text="or sign in with"
+            android:layout_centerHorizontal="true"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/socialicons"
+            android:layout_alignParentBottom="true"
+            android:gravity="center">
+
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/google"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/facebook"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/twitter"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</ScrollView>

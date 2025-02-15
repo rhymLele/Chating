@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/addPerson"
+            android:title="Add friend"
+        android:icon="@drawable/baseline_person_add_alt_1_24"
+        app:showAsAction="always"
+        />
+    <item android:id="@+id/addGroup"
+        android:title="Create new group"
+        android:icon="@drawable/baseline_group_add_24"
+        app:showAsAction="always"
+        />
+</menu>

@@ -196,27 +196,53 @@
         android:id="@+id/llRepIbLocal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@drawable/background_repib_local"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:background="@drawable/background_repib_local"
-        android:visibility="visible"
-
-        android:layout_marginEnd="@dimen/_10sdp">
+        app:layout_constraintVertical_bias="0.951">
 
         <TextView
             android:id="@+id/textMessageRepLocal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp"
             android:textColor="@color/whiteAccent"
-            android:visibility="gone"
             android:textSize="@dimen/_13ssp"
-            app:layout_constrainWidth_max="wrap"
+            android:visibility="gone"
 
-            android:padding="@dimen/_10sdp"/>
+            app:layout_constrainWidth_max="wrap" />
 
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/roundImageViewRepLocal"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/_5sdp"
+            android:scaleType="centerCrop"
+            android:src="@color/my_primary"
+            android:visibility="gone"
+            app:riv_corner_radius="@dimen/_10sdp" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/closeRepIbLocal"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/background_close"
+            android:padding="@dimen/_5sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_close_24"
+            android:visibility="gone"
+            app:riv_corner_radius="@dimen/_10sdp" />
     </LinearLayout>
 
 

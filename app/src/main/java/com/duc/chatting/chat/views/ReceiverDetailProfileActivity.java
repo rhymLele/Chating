@@ -1,6 +1,7 @@
 package com.duc.chatting.chat.views;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -119,7 +120,9 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
             }
         });
         binding.buttonInbox.setOnClickListener(v -> {
-
+            Intent intent=new Intent(this, ChatActivity.class);
+            intent.putExtra(Contants.KEY_USER,receiverUser);
+            startActivity(intent);
         });
     }
     private void loadReceiverDetails(){

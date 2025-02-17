@@ -1,10 +1,9 @@
-package com.duc.chatting.chat;
+package com.duc.chatting.chat.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;

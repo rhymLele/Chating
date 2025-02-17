@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.duc.chatting.R;
-import com.duc.chatting.chat.UserAdapter;
+import com.duc.chatting.chat.adapters.UserAdapter;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.chat.viewmodels.ChatUserViewModel;
 import com.duc.chatting.databinding.ActivityUserBinding;

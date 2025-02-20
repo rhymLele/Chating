@@ -81,6 +81,30 @@ public class ChatMessage implements Serializable {
         this.statusMessage = statusMessage;
     }
 
+    public ChatMessage(String messageID, String statusMessage, String senderID, String receiverID, String message, Date dateTime, Date dateObject, String messageRepLocal, String urlFileRepLocal, String urlImageRepLocal) {
+        this.messageID = messageID;
+        this.statusMessage = statusMessage;
+        this.senderID = senderID;
+        this.receiverID = receiverID;
+        this.message = message;
+        this.dateTime = dateTime;
+        this.dateObject = dateObject;
+        this.messageRepLocal = messageRepLocal;
+        this.urlFileRepLocal = urlFileRepLocal;
+        this.urlImageRepLocal = urlImageRepLocal;
+    }
+
+    public ChatMessage(String messageID, String statusMessage, String senderID, String receiverID, String fileName, String urlFile, Date dateTime, Date dateObject) {
+        this.messageID = messageID;
+        this.statusMessage = statusMessage;
+        this.senderID = senderID;
+        this.receiverID = receiverID;
+        this.fileName = fileName;
+        this.urlFile = urlFile;
+        this.dateTime = dateTime;
+        this.dateObject = dateObject;
+    }
+
     public ChatMessage(String senderID, String receiverID, String fileName, String urlFile, Date dateTime, String senderName, String senderImage) {
         this.senderID = senderID;
         this.receiverID = receiverID;
@@ -189,6 +213,16 @@ public class ChatMessage implements Serializable {
         this.receiverID = receiverID;
         this.fileName = fileName;
         this.urlFile = urlFile;
+    }
+
+    public ChatMessage(String senderID, String senderName, String senderImage, String receiverID, String fileName, String urlFile, Date dateTime) {
+        this.senderID = senderID;
+        this.senderName = senderName;
+        this.senderImage = senderImage;
+        this.receiverID = receiverID;
+        this.fileName = fileName;
+        this.urlFile = urlFile;
+        this.dateTime = dateTime;
     }
 
     public String getMessageID() {

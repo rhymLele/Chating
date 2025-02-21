@@ -185,7 +185,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String chatID=databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
-                    ChatMessage chatMessage=new ChatMessage(senderID,senderName,senderImage,receiverID,new Date(),)
+//                    ChatMessage chatMessage=new ChatMessage(senderID,senderName,senderImage,receiverID,new Date(),)
                 }
 
                 @Override

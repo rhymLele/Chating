@@ -4,10 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.ComponentCaller;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -16,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +32,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.duc.chatting.R;
 import com.duc.chatting.chat.adapters.ChatAdapter;
 import com.duc.chatting.chat.models.ChatMessage;
+import com.duc.chatting.chat.models.Conservation;
 import com.duc.chatting.chat.models.PDFClass;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.chat.viewmodels.ChatActivityViewModel;
@@ -34,6 +40,12 @@ import com.duc.chatting.databinding.ActivityChatBinding;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+
+import org.checkerframework.checker.units.qual.C;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
@@ -202,7 +214,49 @@ public class ChatActivity extends AppCompatActivity {
         binding.fileSend.setOnClickListener(v -> {
             selectFile();
         });
+        binding.textName.setOnClickListener(v -> {
+//            Conservation conservation=new Conservation(conservationID,receiverUser.getId());
+//            Intent intent=new Intent(this,...);
+//            intent.putExtra(Contants.KEY_CONVERSATION,conservation);
+//            startActivity(intent);
+        });
+        //select image
+        binding.imgSend.setOnClickListener(v -> {
+            Intent intent=new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pickImageBanner.launch(intent);
+        });
+
     }
+    private final ActivityResultLauncher<Intent> pickImageBanner=registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),result->{
+            if(result.getResultCode()==RESULT_OK){
+                if(result.getData()!=null){
+                    dataImage=result.getData().getData();
+                    Uri imageUri=result.getData().getData();
+                    try {
+                        Bitmap bitmap=MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageUri);
+                        binding.roundedImageViewSend.setImageBitmap(bitmap);
+                        binding.roundedImageViewSend.setVisibility(View.VISIBLE);
+                        encodeImageSend=encodeImage(bitmap);
+                    }catch (IOException ioException){
+                        throw  new RuntimeException();
+                    }
+                }
+            }
+    });
+
+    private String encodeImage(Bitmap bitmap) {
+        int previewWidth = 150;
+        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
+        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+
     //open folder pdf on device
     private void selectFile() {
         Intent intent=new Intent();
@@ -212,9 +266,30 @@ public class ChatActivity extends AppCompatActivity {
     }
     //get data from device after select pdf file
 
+    @SuppressLint("Range")
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data, @NonNull ComponentCaller caller) {
-        super.onActivityResult(requestCode, resultCode, data, caller);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1&&resultCode==RESULT_OK&&data!=null&& data.getData()!=null){
+            dataFile=data.getData();
+
+            Uri uri=data.getData();
+            String uriString =uri.toString();
+            File myFile =new File(uriString);
+            String displayName=null;
+            if(uriString.startsWith("content://")){
+                Cursor cursor=null;
+                try {
+                    cursor=this.getContentResolver().query(uri,null,null,null,null);
+                    if(cursor!=null&& cursor.moveToFirst()){
+                        displayName=cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                        binding.inputMessage.setText(displayName);
+                    }
+                }finally {
+                    cursor.close();
+                }
+            }
+        }
     }
 
     private void loadReceiverDetails() {

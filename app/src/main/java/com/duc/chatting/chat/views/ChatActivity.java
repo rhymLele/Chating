@@ -14,6 +14,7 @@ import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ import com.duc.chatting.databinding.ActivityChatBinding;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.units.qual.C;
 
@@ -70,12 +72,12 @@ public class ChatActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 //        setContentView(R.layout.activity_chat);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
+        Log.d("Chat","Iam here");
         preferenceManager = new PreferenceManager(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ChatActivityViewModel.class);
         loadReceiverDetails();
@@ -294,8 +296,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private void loadReceiverDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Contants.KEY_USER);
-        binding.textName.setText(receiverUser.getName());
-
+        if(!binding.textName.toString().isEmpty()){
+            binding.textName.setText(receiverUser.getName());
+        }
     }
 
     private Bitmap getBitmapFromEncodeString(String encodeImage) {
@@ -319,5 +322,91 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onUserClickedMessageStatus(ChatMessage chatMessage) {
         //process status of message
+        if(chatMessage.getSenderID().equals(preferenceManager.getString(Contants.KEY_USER_ID))){
+            textDisableInboxForMe.setVisibility(View.VISIBLE);
+        }else{
+            textDisableInboxForMe.setVisibility(View.GONE);
+            textDisableInboxForAll.setVisibility(View.GONE);
+        }
+        dialog.show();
+        textDisableInboxForMe.setOnClickListener(v->{
+            String status="disableForMe";
+            viewModel.setStatusMessage(chatMessage.getMessageID(),status);
+
+            dialog.dismiss();
+        });
+        textRepInbox.setOnClickListener(v -> {
+            dialog.dismiss();
+            binding.imgSend.setVisibility(View.GONE);
+            binding.fileSend.setVisibility(View.GONE);
+            binding.llRepIbLocal.setVisibility(View.VISIBLE);
+            binding.layoutSendIb.setVisibility(View.GONE);
+            binding.layoutSendRepIb.setVisibility(View.VISIBLE);
+            isCheckedButton=true;
+            if(chatMessage.getFileName()!=null){
+                binding.textMessageRepLocal.setVisibility(View.VISIBLE);
+                binding.roundImageViewRepLocal.setVisibility(View.GONE);
+                binding.textMessageRepLocal.setText(chatMessage.getFileName());
+
+            }else if(chatMessage.getUrlImageRepLocal()!=null) {
+                binding.roundImageViewRepLocal.setVisibility(View.VISIBLE);
+                binding.textMessageRepLocal.setVisibility(View.GONE);
+                Picasso.get().load(chatMessage.getUrlImage()).into(binding.roundImageViewRepLocal);
+
+            }else{
+                binding.textMessageRepLocal.setVisibility(View.VISIBLE);
+                binding.roundImageViewRepLocal.setVisibility(View.GONE);
+                binding.textMessageRepLocal.setText(chatMessage.getMessage());
+
+            }
+            binding.closeRepIbLocal.setOnClickListener(v1 -> {
+                binding.llRepIbLocal.setVisibility(View.GONE);
+                binding.imgSend.setVisibility(View.VISIBLE);
+                binding.fileSend.setVisibility(View.VISIBLE);
+                binding.textMessageRepLocal.setText(null);
+                binding.roundImageViewRepLocal.setImageBitmap(null);
+            });
+            if(!binding.textMessageRepLocal.getText().toString().isEmpty()||binding.roundImageViewRepLocal.getDrawable()!=null){
+                binding.layoutSendRepIb.setOnClickListener(v2->{
+                  if(!binding.inputMessage.getText().toString().isEmpty()){
+                      if(chatMessage.getFileName()!=null){
+                          viewModel.sendMessageRepLocal(
+                                  preferenceManager.getString(Contants.KEY_USER_ID),
+                                  preferenceManager.getString(Contants.KEY_NAME),
+                                  preferenceManager.getString(Contants.KEY_IMAGE),
+                                  receiverUser.getId(),
+                                  receiverUser.getName(),
+                                  receiverUser.getImgProfile(),
+                                  binding.inputMessage.getText().toString(),
+                                  chatMessage.getFileName(),
+                                  chatMessage.getUrlFile(),
+                                  chatMessage.getUrlImage()
+                          );
+                      }else if(chatMessage.getFileName()==null){
+                          viewModel.sendMessageRepLocal(
+                                  preferenceManager.getString(Contants.KEY_USER_ID),
+                                  preferenceManager.getString(Contants.KEY_NAME),
+                                  preferenceManager.getString(Contants.KEY_IMAGE),
+                                  receiverUser.getId(),
+                                  receiverUser.getName(),
+                                  receiverUser.getImgProfile(),
+                                  binding.inputMessage.getText().toString(),
+                                  chatMessage.getMessage(),
+                                  chatMessage.getUrlFile(),
+                                  chatMessage.getUrlImage());
+                      }
+                  }
+                  isCheckedButton=false;
+                  binding.llRepIbLocal.setVisibility(View.GONE);
+                  binding.textMessageRepLocal.setText(null);
+                  binding.roundImageViewRepLocal.setImageBitmap(null);
+                  binding.layoutSendIb.setVisibility(View.VISIBLE);
+                  binding.layoutSendRepIb.setVisibility(View.GONE);
+
+                });
+
+
+            }
+        });
     }
 }

@@ -216,8 +216,7 @@
             android:textColor="@color/whiteAccent"
             android:textSize="@dimen/_13ssp"
             android:visibility="gone"
-
-            app:layout_constrainWidth_max="wrap" />
+            />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/roundImageViewRepLocal"

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -120,9 +121,14 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
             }
         });
         binding.buttonInbox.setOnClickListener(v -> {
-            Intent intent=new Intent(this, ChatActivity.class);
-            intent.putExtra(Contants.KEY_USER,receiverUser);
-            startActivity(intent);
+            if (receiverUser != null) {
+                Intent intent = new Intent(this, ChatActivity.class);
+                intent.putExtra(Contants.KEY_USER, receiverUser);
+                startActivity(intent);
+            } else {
+                Log.e("ReceiverDetailProfile", "receiverUser is null!");
+            }
+
         });
     }
     private void loadReceiverDetails(){

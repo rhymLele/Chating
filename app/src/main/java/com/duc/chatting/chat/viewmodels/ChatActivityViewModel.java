@@ -117,6 +117,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
                 if (conservationID != null) {
                     updateConservation(messageChat, senderID, senderName, senderImage, receiverID, receiveName, receiverImage);
                 } else if (conservationID == null) {
+                    Log.d("ChatAct", "create new Message");
                     Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiveName, receiverImage, messageChat, new Date());
                     addConservation(conservation);
                 }
@@ -151,23 +152,23 @@ public class ChatActivityViewModel extends AndroidViewModel {
         });
     }
 
-    public void sendMesageFile(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String reiceiverImage, Uri data, String fileName){
+    public void sendMesageFile(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String reiceiverImage, Uri data, String fileName) {
 
-        String base64File = encodeFileToBase64(data,getApplication());
+        String base64File = encodeFileToBase64(data, getApplication());
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ChatMessage chatMessage=new ChatMessage(senderID,senderName,senderImage,receiverID,fileName,base64File,new Date());
-                String chatID=databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
+                ChatMessage chatMessage = new ChatMessage(senderID, senderName, senderImage, receiverID, fileName, base64File, new Date());
+                String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
                 sentInputMessage.postValue(Boolean.TRUE);
-                if(conservationID!=null){
-                    PDFClass pdfClass=new PDFClass(conservationID,chatID,senderID,receiverID,fileName,base64File,new Date(),"enable");
+                if (conservationID != null) {
+                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
                     databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
-                    updateConservation(fileName,senderID,senderName,senderImage,receiverID,receiverName,reiceiverImage);
-                }else if(conservationID==null){
-                    Conservation conservation=new Conservation(senderID,senderName,senderImage,receiverID,receiverName,reiceiverImage,fileName,new Date());
+                    updateConservation(fileName, senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage);
+                } else if (conservationID == null) {
+                    Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage, fileName, new Date());
                     addConservation(conservation);
-                    PDFClass pdfClass=new PDFClass(conservationID,chatID,senderID,receiverID,fileName,base64File,new Date(),"enable");
+                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
                     databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
                 }
             }
@@ -179,107 +180,108 @@ public class ChatActivityViewModel extends AndroidViewModel {
         });
 
     }
-    public void sendMessageImage(String senderID,String senderName,String senderImage,String receiverID,String receiverName,String receiverImage,Uri data){
+
+    public void sendMessageImage(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Uri data) {
 //            String fileImage=encodeImage(Uri.c)
-            databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String chatID=databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
+        databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
 //                    ChatMessage chatMessage=new ChatMessage(senderID,senderName,senderImage,receiverID,new Date(),)
-                }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
+            }
+        });
     }
 
 
-    public void listenMessages(String senderID,String receiverID){
+    public void listenMessages(String senderID, String receiverID) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chatMessages.clear();
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    String senderIDL=dataSnapshot.child(Contants.KEY_SENDER_ID).getValue(String.class);
-                    String receiverIDL=dataSnapshot.child(Contants.KEY_RECEIVER_ID).getValue(String.class);
-                    String fileName=dataSnapshot.child(Contants.KEY_FILENAME).getValue(String.class);
-                    String urlImage=dataSnapshot.child(Contants.KEY_URL_IMAGE).getValue(String.class);
-                    String statusMessage=dataSnapshot.child(Contants.KEY_STATUS_MESSAGE).getValue(String.class);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String senderIDL = dataSnapshot.child(Contants.KEY_SENDER_ID).getValue(String.class);
+                    String receiverIDL = dataSnapshot.child(Contants.KEY_RECEIVER_ID).getValue(String.class);
+                    String fileName = dataSnapshot.child(Contants.KEY_FILENAME).getValue(String.class);
+                    String urlImage = dataSnapshot.child(Contants.KEY_URL_IMAGE).getValue(String.class);
+                    String statusMessage = dataSnapshot.child(Contants.KEY_STATUS_MESSAGE).getValue(String.class);
                     //for sender
-                    if(senderID.equals(senderIDL)&&receiverID.equals(receiverIDL)){
+                    if (senderID.equals(senderIDL) && receiverID.equals(receiverIDL)) {
                         //file pdf message
-                        if(fileName!=null){
-                            String messageID=dataSnapshot.getKey();
-                            String urlFile=dataSnapshot.child(Contants.KEY_URL_FILE).getValue(String.class);
-                            Date date=dataSnapshot.child("dateTime").getValue(Date.class);
-                            Date dateObject=dataSnapshot.child("dateTime").getValue(Date.class);
-                            ChatMessage chatMessage=new ChatMessage(messageID,statusMessage,senderIDL,receiverIDL,fileName,urlFile,date,dateObject);
-                            chatMessages.add(chatMessage);
-                        //message image
-                        }else if(urlImage!=null){
-                            String messageID=dataSnapshot.getKey();
-                            Date date=dataSnapshot.child("dateTime").getValue(Date.class);
-                            Date dateObject=dataSnapshot.child("dateTime").getValue(Date.class);
-                            ChatMessage chatMessage=new ChatMessage(messageID,senderIDL,receiverIDL,date,dateObject,urlImage,statusMessage);
-                            chatMessages.add(chatMessage);
-                        }
-                        //text message
-                        else {
-                            String messageID=dataSnapshot.getKey();
-                            String message=dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
-                            Date date=dataSnapshot.child("dateTime").getValue(Date.class);
-                            Date dateObject=dataSnapshot.child("dateTime").getValue(Date.class);
-                            String messageRepLocal=dataSnapshot.child(Contants.KEY_MESSAGE_REP).getValue(String.class);
-                            String urlFileRepLocal=dataSnapshot.child(Contants.KEY_URL_FILE_REP).getValue(String.class);
-                            String urlImageRepLocal=dataSnapshot.child(Contants.KEY_URL_IMAGE_REP).getValue(String.class);
-
-                            ChatMessage chatMessage=new ChatMessage(messageID,statusMessage,senderIDL,receiverIDL,message,date,dateObject,messageRepLocal,urlFileRepLocal,urlImageRepLocal);
-                                chatMessages.add(chatMessage);
-                        }
-                    }//for receiver
-                    else if(senderID.equals(receiverIDL)&&receiverID.equals(senderIDL)){
-                        //file pdf message
-                        if(fileName!=null){
-                            String messageID=dataSnapshot.getKey();
-                            String urlFile=dataSnapshot.child(Contants.KEY_URL_FILE).getValue(String.class);
-                            Date date=dataSnapshot.child("dateTime").getValue(Date.class);
-                            Date dateObject=dataSnapshot.child("dateTime").getValue(Date.class);
-                            ChatMessage chatMessage=new ChatMessage(messageID,statusMessage,senderIDL,receiverIDL,fileName,urlFile,date,dateObject);
+                        if (fileName != null) {
+                            String messageID = dataSnapshot.getKey();
+                            String urlFile = dataSnapshot.child(Contants.KEY_URL_FILE).getValue(String.class);
+                            Date dateTime = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, receiverIDL, fileName, urlFile, dateTime, dateObject);
                             chatMessages.add(chatMessage);
                             //message image
-                        }else if(urlImage!=null){
-                            String messageID=dataSnapshot.getKey();
-                            Date date=dataSnapshot.child("dateTime").getValue(Date.class);
-                            Date dateObject=dataSnapshot.child("dateTime").getValue(Date.class);
-                            ChatMessage chatMessage=new ChatMessage(messageID,senderIDL,receiverIDL,date,dateObject,urlImage,statusMessage);
+                        } else if (urlImage != null) {
+                            String messageID = dataSnapshot.getKey();
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            ChatMessage chatMessage = new ChatMessage(messageID, senderIDL, receiverIDL, date, dateObject, urlImage, statusMessage);
                             chatMessages.add(chatMessage);
                         }
                         //text message
                         else {
-                            String messageID=dataSnapshot.getKey();
-                            String message=dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
-                            Date date=dataSnapshot.child("dateTime").getValue(Date.class);
-                            Date dateObject=dataSnapshot.child("dateTime").getValue(Date.class);
-                            String messageRepLocal=dataSnapshot.child(Contants.KEY_MESSAGE_REP).getValue(String.class);
-                            String urlFileRepLocal=dataSnapshot.child(Contants.KEY_URL_FILE_REP).getValue(String.class);
-                            String urlImageRepLocal=dataSnapshot.child(Contants.KEY_URL_IMAGE_REP).getValue(String.class);
+                            String messageID = dataSnapshot.getKey();
+                            String message = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            String messageRepLocal = dataSnapshot.child(Contants.KEY_MESSAGE_REP).getValue(String.class);
+                            String urlFileRepLocal = dataSnapshot.child(Contants.KEY_URL_FILE_REP).getValue(String.class);
+                            String urlImageRepLocal = dataSnapshot.child(Contants.KEY_URL_IMAGE_REP).getValue(String.class);
 
-                            ChatMessage chatMessage=new ChatMessage(messageID,statusMessage,senderIDL,receiverIDL,message,date,dateObject,messageRepLocal,urlFileRepLocal,urlImageRepLocal);
+                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, receiverIDL, message, date, dateObject, messageRepLocal, urlFileRepLocal, urlImageRepLocal);
+                            chatMessages.add(chatMessage);
+                        }
+                    }//for receiver
+                    else if (senderID.equals(receiverIDL) && receiverID.equals(senderIDL)) {
+                        //file pdf message
+                        if (fileName != null) {
+                            String messageID = dataSnapshot.getKey();
+                            String urlFile = dataSnapshot.child(Contants.KEY_URL_FILE).getValue(String.class);
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, receiverIDL, fileName, urlFile, date, dateObject);
+                            chatMessages.add(chatMessage);
+                            //message image
+                        } else if (urlImage != null) {
+                            String messageID = dataSnapshot.getKey();
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            ChatMessage chatMessage = new ChatMessage(messageID, senderIDL, receiverIDL, date, dateObject, urlImage, statusMessage);
+                            chatMessages.add(chatMessage);
+                        }
+                        //text message
+                        else {
+                            String messageID = dataSnapshot.getKey();
+                            String message = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            String messageRepLocal = dataSnapshot.child(Contants.KEY_MESSAGE_REP).getValue(String.class);
+                            String urlFileRepLocal = dataSnapshot.child(Contants.KEY_URL_FILE_REP).getValue(String.class);
+                            String urlImageRepLocal = dataSnapshot.child(Contants.KEY_URL_IMAGE_REP).getValue(String.class);
+
+                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, receiverIDL, message, date, dateObject, messageRepLocal, urlFileRepLocal, urlImageRepLocal);
                             chatMessages.add(chatMessage);
                         }
                     }
                     chatMessagesMutableLiveData.postValue(chatMessages);
                 }
-                if(conservationID==null){
-                    checkForConservation(senderID,receiverID);
+                if (conservationID == null) {
+                    checkForConservation(senderID, receiverID);
                 }
                 chatMessages.sort(Comparator.comparing(ChatMessage::getDateObject));
-                if(chatMessages.size()==0){
+                if (chatMessages.size() == 0) {
                     count0MutableLiveData.postValue(Boolean.TRUE);
-                }else{
-                    count0MutableLiveData.postValue(Boolean.TRUE );
+                } else {
+                    count0MutableLiveData.postValue(Boolean.FALSE);
                 }
                 loadChatRecycleView.postValue(Boolean.TRUE);
                 loadProgressBarMutableLiveData.postValue(Boolean.TRUE);
@@ -291,50 +293,53 @@ public class ChatActivityViewModel extends AndroidViewModel {
             }
         });
     }
-    private void checkForConservation(String senderID,String receiverID){
-        if(chatMessages.size()!=0){
-            checkForConservationRemotely(senderID,receiverID);
+
+    private void checkForConservation(String senderID, String receiverID) {
+        if (chatMessages.size() != 0) {
+            checkForConservationRemotely(senderID, receiverID);
         }
     }
-    private void checkForConservationRemotely(String senderID,String receiverID){
-     databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).addListenerForSingleValueEvent(new ValueEventListener() {
-         @Override
-         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    String senderIDcon=dataSnapshot.child(Contants.KEY_SENDER_ID).getValue(String.class);
-                    String receiverIDcon=dataSnapshot.child(Contants.KEY_RECEIVER_ID).getValue(String.class);
-                    if(senderID.equals(senderIDcon)&&receiverID.equals(receiverIDcon)){
-                        conservationID=dataSnapshot.getKey();
+
+    private void checkForConservationRemotely(String senderID, String receiverID) {
+        databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String senderIDcon = dataSnapshot.child(Contants.KEY_SENDER_ID).getValue(String.class);
+                    String receiverIDcon = dataSnapshot.child(Contants.KEY_RECEIVER_ID).getValue(String.class);
+                    if (senderID.equals(senderIDcon) && receiverID.equals(receiverIDcon)) {
+                        conservationID = dataSnapshot.getKey();
                         conservationIDMutableLiveData.postValue(conservationID);
-                        String theme=dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
+                        String theme = dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
                         themeConservationMutableLiveData.postValue(theme);
                         continue;
-                    }else if(senderID.equals(receiverIDcon)&&receiverID.equals(senderIDcon)){
-                        conservationID=dataSnapshot.getKey();
+                    } else if (senderID.equals(receiverIDcon) && receiverID.equals(senderIDcon)) {
+                        conservationID = dataSnapshot.getKey();
                         conservationIDMutableLiveData.postValue(conservationID);
 
-                        String theme=dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
+                        String theme = dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
                         themeConservationMutableLiveData.postValue(theme);
                         continue;
                     }
                 }
-         }
+            }
 
-         @Override
-         public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-         }
-     });
+            }
+        });
 
     }
-    public void setStatusMessage(String messageID,String status){
+
+    public void setStatusMessage(String messageID, String status) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).child(messageID).child(Contants.KEY_STATUS_MESSAGE).setValue(status);
         databaseReference.child(Contants.KEY_COLLECTION_FILE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    if(messageID.equals(dataSnapshot.child(Contants.KEY_CHAT_ID).getValue(String.class))){
-                        String key=dataSnapshot.getKey();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (messageID.equals(dataSnapshot.child(Contants.KEY_CHAT_ID).getValue(String.class))) {
+                        String key = dataSnapshot.getKey();
                         databaseReference.child(Contants.KEY_COLLECTION_FILE).child(key).child(Contants.KEY_STATUS_FILE).setValue("disable");
 
                     }
@@ -349,9 +354,9 @@ public class ChatActivityViewModel extends AndroidViewModel {
         databaseReference.child(Contants.KEY_COLLECTION_IMAGE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    if(messageID.equals(dataSnapshot.child(Contants.KEY_CHAT_ID).getValue(String.class))){
-                        String key=dataSnapshot.getKey();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (messageID.equals(dataSnapshot.child(Contants.KEY_CHAT_ID).getValue(String.class))) {
+                        String key = dataSnapshot.getKey();
                         databaseReference.child(Contants.KEY_COLLECTION_IMAGE).child(key).child(Contants.KEY_STATUS_IMAGE).setValue("disable");
 
                     }
@@ -363,10 +368,11 @@ public class ChatActivityViewModel extends AndroidViewModel {
 
             }
         });
-        String lastMessage=preferenceManager.getString(Contants.KEY_NAME)+" invalid message ";
+        String lastMessage = preferenceManager.getString(Contants.KEY_NAME) + " invalid message ";
         databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).child(conservationID).child(Contants.KEY_LAST_MESSAGE).setValue(lastMessage);
 
     }
+
     private void decodeBase64ToFile(String base64String, String fileName, Context context) {
         byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
         File file = new File(context.getFilesDir(), fileName);
@@ -376,6 +382,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
             e.printStackTrace();
         }
     }
+
     private String encodeFileToBase64(Uri fileUri, Context context) {
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
@@ -387,11 +394,13 @@ public class ChatActivityViewModel extends AndroidViewModel {
             return null;
         }
     }
-    private Bitmap decodeImage(String image){
+
+    private Bitmap decodeImage(String image) {
         byte[] bytes = Base64.decode(image, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         return bitmap;
     }
+
     private String encodeImage(Bitmap bitmap) {
         int previewWidth = 150;
         int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
@@ -401,6 +410,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
+
     //save conservation
     private void addConservation(Conservation conservation) {
         conservationID = databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).push().getKey();

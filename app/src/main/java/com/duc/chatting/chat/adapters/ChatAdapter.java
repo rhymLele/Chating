@@ -100,9 +100,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public class SentMessageViewHolder extends RecyclerView.ViewHolder {
         private ItemContainerSentMessageBinding binding;
-        public SentMessageViewHolder(@NonNull ItemContainerSentMessageBinding binding) {
-            super(binding.getRoot());
-            this.binding=binding;
+        public SentMessageViewHolder(@NonNull ItemContainerSentMessageBinding itemContainerSentMessageBinding) {
+            super(itemContainerSentMessageBinding.getRoot());
+            this.binding=itemContainerSentMessageBinding;
         }
         public void setData(ChatMessage chatMessage){
             if(chatMessage.getStatusMessage()!=null&&chatMessage.getStatusMessage().equals("disableForAll")){
@@ -182,15 +182,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     //using xml receiver message
     public class ReceiverMessageViewHolder extends RecyclerView.ViewHolder{
         ItemContainerReceiverMessageBinding binding;
-        public ReceiverMessageViewHolder(@NonNull ItemContainerReceiverMessageBinding binding) {
-            super(binding.getRoot());
-            this.binding=binding;
+        public ReceiverMessageViewHolder(@NonNull ItemContainerReceiverMessageBinding itemContainerReceiverMessageBinding) {
+            super(itemContainerReceiverMessageBinding.getRoot());
+            this.binding=itemContainerReceiverMessageBinding;
         }
         public void setData(ChatMessage chatMessage, Bitmap receiverProfileImage){
             if(chatMessage.getStatusMessage()!=null&&chatMessage.getStatusMessage().equals("disableForAll")){
                 String text="";
                 if(chatMessage.getSenderName()!=null){
-                    text=chatMessage.getSenderName()+":Valid Message";
+                    text=chatMessage.getSenderName() + ": Valid message";
                     if(receiverProfileImage!=null){
                         binding.imageProfile.setImageBitmap(receiverProfileImage);
                     }else if(chatMessage.getSenderImage()!=null){
@@ -201,7 +201,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         binding.textNameSender.setText(chatMessage.getSenderName());
                     }
                 }else {
-                    text=name+": Valid message";
+                    text=name + ": Valid message";
                     if(receiverProfileImage!=null){
                         binding.imageProfile.setImageBitmap(receiverProfileImage);
                     }else if(chatMessage.getSenderImage()!=null){
@@ -232,7 +232,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         String urlFile=chatMessage.getUrlFile();
                         PDFClass pdfClass=new PDFClass(nameFile,urlFile);
                         pdfListeners.onUserClickedFileMessage(pdfClass);
-                        if(binding.textDateTime.getVisibility()!=View.GONE){
+                        if(binding.textDateTime.getVisibility()==View.GONE){
                             binding.textDateTime.setVisibility(View.VISIBLE);
                         }else if(binding.textDateTime.getVisibility()==View.VISIBLE){
                             binding.textDateTime.setVisibility(View.GONE);
@@ -242,7 +242,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         messageStatusListeners.onUserClickedMessageStatus(chatMessage);
                         return false;
                     });
-                }else if(chatMessage.getUrlImage()!=null){
+                }//set image display chat
+                else if(chatMessage.getUrlImage()!=null){
                     binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
                     if(receiverProfileImage!=null){
                         binding.imageProfile.setImageBitmap(receiverProfileImage);
@@ -298,9 +299,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                             binding.textDateTime.setVisibility(View.GONE);
                         }
                     });
-
                 }
             }
+            //click to profile user
             binding.imageProfile.setOnClickListener(v -> {
                 String userID=chatMessage.getSenderID();
                 User user=new User(userID);

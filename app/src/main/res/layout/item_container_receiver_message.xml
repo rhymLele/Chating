@@ -51,7 +51,7 @@
                 android:paddingTop="@dimen/_8sdp"
                 android:paddingEnd="@dimen/_12sdp"
                 android:paddingBottom="@dimen/_8sdp"
-                android:textColor="@color/whiteAccent"
+                android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"
                 android:visibility="gone" />
 
@@ -74,7 +74,7 @@
                 android:paddingEnd="@dimen/_12sdp"
                 android:paddingBottom="@dimen/_8sdp"
                 android:text="Hallo"
-                android:textColor="@color/whiteAccent"
+                android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"
 
                 />

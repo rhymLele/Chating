@@ -1,12 +1,19 @@
 package com.duc.chatting.chat.views;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,6 +31,7 @@ public class UserActivity extends AppCompatActivity {
     ActivityUserBinding binding;
     private ChatUserViewModel viewModel;
     UserAdapter userAdapter;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,20 +59,51 @@ public class UserActivity extends AppCompatActivity {
             startActivity(i);
 
         });
-        binding.searchAddUser.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchAddUserr.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                viewModel.getUsers(query);
-                return false;
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
             @Override
-            public boolean onQueryTextChange(String newText) {
-                viewModel.getUsers(newText);
-                return false;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    // Khi có text nhập vào, ẩn icon trái và phải
+                    binding.searchAddUserr.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    viewModel.getUsers(s.toString());
+                } else {
+                    // Khi không có text, hiển thị lại icon trái và phải
+                    binding.searchAddUserr.setCompoundDrawablesWithIntrinsicBounds(
+                            ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_search_24),
+                            null,
+                            ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseline_qr_code_scanner_24),
+                            null
+                    );
+            }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
+        binding.searchAddUserr.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                // Lấy drawableRight (icon QR scanner)
+                Drawable drawableRight = binding.searchAddUserr.getCompoundDrawables()[2];
 
+                if (drawableRight != null) {
+                    int drawableWidth = drawableRight.getBounds().width();
+                    int editTextWidth = binding.searchAddUserr.getWidth();
+                    int touchX = (int) event.getX();
+
+                    if (touchX >= (editTextWidth - drawableWidth - binding.searchAddUserr.getPaddingRight())) {
+                        // Người dùng đã chạm vào drawableRight
+                        Toast.makeText(v.getContext(), "QR Scanner Clicked!", Toast.LENGTH_SHORT).show();
+                        return true; // Sự kiện đã được xử lý
+                    }
+                }
+            }
+            return false; // Cho phép EditText xử lý các sự kiện khác (như nhập văn bản)
+        });
     }
     public void onUserClicked(User user){
         Intent intent=new Intent(getApplicationContext(), ReceiverDetailProfileActivity.class);

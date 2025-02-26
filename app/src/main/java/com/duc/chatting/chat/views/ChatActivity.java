@@ -169,9 +169,11 @@ public class ChatActivity extends AppCompatActivity {
                 if (s.toString().isEmpty()) {
                     binding.imgSend.setVisibility(View.VISIBLE);
                     binding.fileSend.setVisibility(View.VISIBLE);
+                    binding.voiceSend.setVisibility(View.VISIBLE);
                 } else {
                     binding.imgSend.setVisibility(View.GONE);
                     binding.fileSend.setVisibility(View.GONE);
+                    binding.voiceSend.setVisibility(View.GONE);
                 }
             }
 

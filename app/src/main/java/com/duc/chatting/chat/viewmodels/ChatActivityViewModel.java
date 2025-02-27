@@ -199,7 +199,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
 
 
     public void listenMessages(String senderID, String receiverID) {
-        databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(Contants.KEY_COLLECTION_CHAT).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chatMessages.clear();
@@ -301,7 +301,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
     }
 
     private void checkForConservationRemotely(String senderID, String receiverID) {
-        databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -334,7 +334,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
 
     public void setStatusMessage(String messageID, String status) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).child(messageID).child(Contants.KEY_STATUS_MESSAGE).setValue(status);
-        databaseReference.child(Contants.KEY_COLLECTION_FILE).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(Contants.KEY_COLLECTION_FILE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -351,7 +351,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
 
             }
         });
-        databaseReference.child(Contants.KEY_COLLECTION_IMAGE).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(Contants.KEY_COLLECTION_IMAGE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {

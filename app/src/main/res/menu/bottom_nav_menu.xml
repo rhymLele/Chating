@@ -3,7 +3,11 @@
     <item android:id="@+id/conservation"
         android:title="Chat"
         android:icon="@drawable/baseline_chat_24v1"/>
+    <item android:icon="@drawable/chatbot"
+        android:id="@+id/chatgpt"
+        android:title="Chat bot"/>
     <item android:icon="@drawable/baseline_person_24v1"
         android:id="@+id/personal"
         android:title="Personal"/>
+
 </menu>

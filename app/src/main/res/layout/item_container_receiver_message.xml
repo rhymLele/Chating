@@ -30,9 +30,9 @@
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
             android:layout_gravity="center_vertical"
-            android:background="@color/greyAccent"
+            android:background="@drawable/background_profile"
             android:scaleType="centerCrop"
-            android:src="@drawable/baseline_person_add_alt_1_24"
+            android:src="@drawable/baseline_person_24v2"
             app:riv_oval="true" />
 
         <LinearLayout
@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
             android:background="@drawable/background_repib_local"
             android:orientation="vertical">
 
@@ -74,7 +75,7 @@
                 android:paddingEnd="@dimen/_12sdp"
                 android:paddingBottom="@dimen/_8sdp"
                 android:text="Hallo"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_13ssp"
 
                 />

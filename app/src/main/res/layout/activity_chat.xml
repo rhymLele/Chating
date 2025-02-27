@@ -15,7 +15,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/_5sdp"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
-        android:background="@color/AcliceBlue"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -38,6 +38,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
 
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageCall"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/baseline_call_24"
+        app:layout_constraintRight_toLeftOf="@id/imageVideo"
+        app:layout_constraintTop_toTopOf="parent" />
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageVideo"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/baseline_videocam_24"
+        app:layout_constraintRight_toLeftOf="@+id/imageInfor"
+        app:layout_constraintTop_toTopOf="parent" />
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageInfor"
         android:layout_width="@dimen/_30sdp"
@@ -187,6 +205,7 @@
             android:hint="Type message ..."
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
+            android:drawableRight="@drawable/baseline_emoji_emotions_24"
             android:layout_marginLeft="@dimen/_5sdp"
             android:inputType="text"
             android:textColor="@color/black"

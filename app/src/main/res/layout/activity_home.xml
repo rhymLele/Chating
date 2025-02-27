@@ -33,6 +33,10 @@
         app:itemIconTint="@color/color_c"
         app:itemTextColor="@color/color_c"
         app:menu="@menu/bottom_nav_menu"
+        app:labelVisibilityMode="unlabeled"
+        app:itemHorizontalTranslationEnabled="false"
+        app:itemBackground="@android:color/transparent"
+        app:itemIconSize="@dimen/_22sdp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

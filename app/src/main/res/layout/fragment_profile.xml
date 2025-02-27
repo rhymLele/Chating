@@ -35,7 +35,7 @@
         android:id="@+id/imageToDetailProfile"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
-        android:src="@drawable/settings_chat"
+        android:src="@drawable/baseline_edit_square_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.981"

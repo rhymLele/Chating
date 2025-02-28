@@ -31,6 +31,33 @@ public class ChatMessage implements Serializable {
     private String statusMessage;
     private String conId;
 
+    public ChatMessage(String messageID, String statusMessage, String senderID, String senderName, String senderImage, String receiverID, String fileName, String urlFile, Date dateTime, Date dateObject) {
+        this.messageID = messageID;
+        this.statusMessage = statusMessage;
+        this.senderID = senderID;
+        this.senderName = senderName;
+        this.senderImage = senderImage;
+        this.receiverID = receiverID;
+        this.fileName = fileName;
+        this.urlFile = urlFile;
+        this.dateTime = dateTime;
+        this.dateObject = dateObject;
+    }
+
+    public ChatMessage(String messageID, String statusMessage, String senderID, String senderName, String senderImage, String receiverID, String message, Date dateTime, Date dateObject, String messageRepLocal, String urlFileRepLocal, String urlImageRepLocal) {
+        this.messageID = messageID;
+        this.statusMessage = statusMessage;
+        this.senderID = senderID;
+        this.senderName = senderName;
+        this.senderImage = senderImage;
+        this.receiverID = receiverID;
+        this.message = message;
+        this.dateTime = dateTime;
+        this.dateObject = dateObject;
+        this.messageRepLocal = messageRepLocal;
+        this.urlFileRepLocal = urlFileRepLocal;
+        this.urlImageRepLocal = urlImageRepLocal;
+    }
 
     public ChatMessage(String senderID, String senderName, String receiverID, String message, Date dateObject,
                        String conservationID, String conservationName, String conservationImage, String conId) {

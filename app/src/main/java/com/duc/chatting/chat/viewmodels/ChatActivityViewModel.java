@@ -199,6 +199,29 @@ public class ChatActivityViewModel extends AndroidViewModel {
 
 
     public void listenMessages(String senderID, String receiverID) {
+        //group chat
+        Set<String> listenSenderID = new HashSet<>();
+        databaseReference.child(Contants.KEY_COLLECTION_GROUP_MEMBER).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (receiverID.equals(dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class))) {
+                        String userID = dataSnapshot.child(Contants.KEY_USER_ID).getValue(String.class);
+                        String userIDAdd = dataSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class);
+                        listenSenderID.add(userID);
+                        listenSenderID.add(userIDAdd);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -272,6 +295,44 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             chatMessages.add(chatMessage);
                         }
                     }
+                    //for groupchat
+                    else if (receiverID.equals(receiverIDL) && listenSenderID.contains(senderID)) {
+                        if (fileName != null) {
+                            String messageID = dataSnapshot.getKey();
+                            String urlFile = dataSnapshot.child(Contants.KEY_URL_FILE).getValue(String.class);
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            String senderName = dataSnapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
+                            String senderImage = dataSnapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
+
+                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, senderName, senderImage, receiverIDL, fileName, urlFile, date, dateObject);
+                            chatMessages.add(chatMessage);
+
+                        } else if (urlImage != null) {
+                            String messageID = dataSnapshot.getKey();
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            String senderName = dataSnapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
+                            String senderImage = dataSnapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
+                            ChatMessage chatMessage = new ChatMessage(messageID, senderIDL, senderName, senderImage, receiverIDL, date, dateObject, urlImage, statusMessage);
+                            chatMessages.add(chatMessage);
+                        } else {
+                            String messageID = dataSnapshot.getKey();
+                            String message = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            Date date = dataSnapshot.child("dateTime").getValue(Date.class);
+                            Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
+                            String senderName = dataSnapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
+                            String senderImage = dataSnapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
+
+                            String messageRepLocal = dataSnapshot.child(Contants.KEY_MESSAGE_REP).getValue(String.class);
+                            String urlFileRepLocal = dataSnapshot.child(Contants.KEY_URL_FILE_REP).getValue(String.class);
+                            String urlImageRepLocal = dataSnapshot.child(Contants.KEY_URL_IMAGE_REP).getValue(String.class);
+                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, senderName, senderImage,
+                                    receiverIDL, message, date, dateObject, messageRepLocal, urlFileRepLocal, urlImageRepLocal);
+                            chatMessages.add(chatMessage);
+                        }
+                    }
+
                     chatMessagesMutableLiveData.postValue(chatMessages);
                 }
                 if (conservationID == null) {
@@ -301,6 +362,28 @@ public class ChatActivityViewModel extends AndroidViewModel {
     }
 
     private void checkForConservationRemotely(String senderID, String receiverID) {
+        //for group chat
+        isChecked = false;
+        Set<String> listenSenderID = new HashSet<>();
+        databaseReference.child(Contants.KEY_COLLECTION_GROUP_MEMBER).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (receiverID.equals(dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class))) {
+                        String userID = dataSnapshot.child(Contants.KEY_USER_ID).getValue(String.class);
+                        String userIDAdd = dataSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class);
+                        listenSenderID.add(userID);
+                        listenSenderID.add(userIDAdd);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -320,6 +403,14 @@ public class ChatActivityViewModel extends AndroidViewModel {
                         String theme = dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
                         themeConservationMutableLiveData.postValue(theme);
                         continue;
+                    }
+                    //get conservationID of group
+                    else if (receiverID.equals(receiverIDcon) && listenSenderID.contains(senderID)) {
+                        conservationID = dataSnapshot.getKey();
+                        conservationIDMutableLiveData.postValue(conservationID);
+                        isChecked = true;
+                        String theme = dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
+                        themeConservationMutableLiveData.postValue(theme);
                     }
                 }
             }

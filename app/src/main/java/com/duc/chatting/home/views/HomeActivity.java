@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.duc.chatting.R;
+import com.duc.chatting.chat.views.GroupChatActivity;
 import com.duc.chatting.chat.views.UserActivity;
 import com.duc.chatting.databinding.ActivityHomeBinding;
 
@@ -38,8 +39,11 @@ public class HomeActivity extends AppCompatActivity {
         });
         setSupportActionBar(binding.header.myToolBar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Zalo");
-
-        binding.bottomNavigationView.setOnItemReselectedListener(item -> {
+        if (savedInstanceState == null) { // Chỉ load lần đầu tiên khi Activity được tạo
+            replaceFragment(new ConservationFragment());
+            binding.bottomNavigationView.setSelectedItemId(R.id.conservation);
+        }
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id=item.getItemId();
             if(id==R.id.conservation)
             {
@@ -47,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
             }else if(id==R.id.personal){
                 replaceFragment(new PersonalFragment());
             }
-
+            return true;
         });
     }
 
@@ -68,8 +72,8 @@ public class HomeActivity extends AppCompatActivity {
         }
         if(id==R.id.addGroup)
         {
-//            Intent intent=new Intent(getContext(),...);
-//            startActivity(intent);
+            Intent intent=new Intent(this, GroupChatActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

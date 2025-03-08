@@ -34,7 +34,7 @@
             android:layout_height="@dimen/_100sdp"
             android:padding="@dimen/_10sdp"
             android:scaleType="centerCrop"
-            android:src="@color/my_primary"
+            android:src="@color/greyLight"
             android:visibility="gone"
             app:riv_corner_radius="@dimen/_10sdp" />
 

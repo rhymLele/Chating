@@ -23,6 +23,15 @@ public class GroupMember implements Serializable {
         this.userNameAdd = userNameAdd;
     }
 
+    public GroupMember(String groupChatID, String userID, String name, Date timeAdd, String userIdAdd, String userNameAdd) {
+        this.groupChatID = groupChatID;
+        this.userID = userID;
+        this.name = name;
+        this.timeAdd = timeAdd;
+        this.userIdAdd = userIdAdd;
+        this.userNameAdd = userNameAdd;
+    }
+
     public String getGroupChatID() {
         return groupChatID;
     }

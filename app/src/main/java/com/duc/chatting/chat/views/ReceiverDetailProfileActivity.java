@@ -76,7 +76,7 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
         });
         viewModel.dataUser(receiverUser.getId());
         viewModel.getUserMutableLiveData().observe(this,user -> {
-            dataUser=user;
+                dataUser=user;
              String name=user.getName();
              String story=user.getStory();
              String imageProfile=user.getImgProfile();

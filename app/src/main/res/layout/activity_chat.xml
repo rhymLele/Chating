@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="center"
-            android:maxLines="1"
+            android:maxLines="2"
             android:text="mih duc"
             android:textColor="@color/whiteAccent"
             android:textSize="@dimen/_14ssp"

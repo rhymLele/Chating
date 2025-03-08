@@ -70,7 +70,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().isEmpty()){
+                   if(s.toString().isEmpty()){
                     viewModel.getUserGroup();
                 }else{
                     viewModel.getUserGroupForPhoneNumber(s.toString());
@@ -105,7 +105,8 @@ public class GroupChatActivity extends AppCompatActivity {
                             user.getId(),
                             user.getName(),
                             user.getImgProfile(),
-                            message);
+                            message
+                    );
                     Intent intent=new Intent(this,ChatActivity.class);
                     intent.putExtra(Contants.KEY_USER,user);
                     startActivity(intent);

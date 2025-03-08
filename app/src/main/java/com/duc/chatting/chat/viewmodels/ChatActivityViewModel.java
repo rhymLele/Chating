@@ -242,8 +242,10 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
                             ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, receiverIDL, fileName, urlFile, dateTime, dateObject);
                             chatMessages.add(chatMessage);
-                            //message image
-                        } else if (urlImage != null) {
+
+                        }
+                        //message image
+                        else if (urlImage != null) {
                             String messageID = dataSnapshot.getKey();
                             Date date = dataSnapshot.child("dateTime").getValue(Date.class);
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
@@ -263,7 +265,8 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, receiverIDL, message, date, dateObject, messageRepLocal, urlFileRepLocal, urlImageRepLocal);
                             chatMessages.add(chatMessage);
                         }
-                    }//for receiver
+                    }
+                    //for receiver
                     else if (senderID.equals(receiverIDL) && receiverID.equals(senderIDL)) {
                         //file pdf message
                         if (fileName != null) {
@@ -305,7 +308,8 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             String senderName = dataSnapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
                             String senderImage = dataSnapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
 
-                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL, senderName, senderImage, receiverIDL, fileName, urlFile, date, dateObject);
+                            ChatMessage chatMessage = new ChatMessage(messageID, statusMessage, senderIDL,
+                                    senderName, senderImage, receiverIDL, fileName, urlFile, date, dateObject);
                             chatMessages.add(chatMessage);
 
                         } else if (urlImage != null) {
@@ -314,7 +318,8 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
                             String senderName = dataSnapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
                             String senderImage = dataSnapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
-                            ChatMessage chatMessage = new ChatMessage(messageID, senderIDL, senderName, senderImage, receiverIDL, date, dateObject, urlImage, statusMessage);
+                            ChatMessage chatMessage = new ChatMessage(messageID, senderIDL, senderName, senderImage,
+                                    receiverIDL, date, dateObject, urlImage, statusMessage);
                             chatMessages.add(chatMessage);
                         } else {
                             String messageID = dataSnapshot.getKey();
@@ -474,7 +479,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
         }
     }
 
-    private String encodeFileToBase64(Uri fileUri, Context context) {
+    private String  encodeFileToBase64(Uri fileUri, Context context) {
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
             byte[] bytes = new byte[inputStream.available()];

@@ -59,6 +59,17 @@ public class ChatMessage implements Serializable {
         this.urlImageRepLocal = urlImageRepLocal;
     }
 
+    public ChatMessage(String senderID, String senderName, String receiverID, String message, Date dateObject, String conservationID, String conservationName, String conservationImage) {
+        this.senderID = senderID;
+        this.senderName = senderName;
+        this.receiverID = receiverID;
+        this.message = message;
+        this.dateObject = dateObject;
+        this.conservationID = conservationID;
+        this.conservationName = conservationName;
+        this.conservationImage = conservationImage;
+    }
+
     public ChatMessage(String senderID, String senderName, String receiverID, String message, Date dateObject,
                        String conservationID, String conservationName, String conservationImage, String conId) {
         this.senderID = senderID;

@@ -26,7 +26,7 @@ public class RecentConservationAdapter extends RecyclerView.Adapter<RecentConser
     private List<ChatMessage> chatMessages;
 
     @SuppressLint("NotifyDataSetChanged")
-    public RecentConservationAdapter(ConservationListener conservationListener, List<ChatMessage> chatMessages) {
+    public RecentConservationAdapter( List<ChatMessage> chatMessages,ConservationListener conservationListener) {
         this.conservationListener = conservationListener;
         this.chatMessages = chatMessages;
         notifyDataSetChanged();
@@ -62,13 +62,14 @@ public class RecentConservationAdapter extends RecyclerView.Adapter<RecentConser
                 binding.imageProfile.setImageBitmap(getConservationImage(chatMessage.getConservationImage()));
             }
             binding.textName.setText(chatMessage.getConservationName());
-            String nameAndMessage=chatMessage.getSenderName()+" "+chatMessage.getMessage();
+            String receiverMessage=chatMessage.getSenderName()+":"+chatMessage.getMessage();
+            String senderMessage="You:"+chatMessage.getMessage();
             if(chatMessage.getSenderName()!=null){
-                binding.textRecentMessage.setText(nameAndMessage);
-                binding.textDate.setText(" . " + getReadableDate(chatMessage.getDateTime()));
+                binding.textRecentMessage.setText(receiverMessage);
+                binding.textDate.setText(" . " + getReadableDate(chatMessage.getDateObject()));
             }else {
-                binding.textRecentMessage.setText(chatMessage.getMessage());
-                binding.textDate.setText(" . " + getReadableDate(chatMessage.getDateTime()));
+                binding.textRecentMessage.setText(senderMessage);
+                binding.textDate.setText(" . " + getReadableDate(chatMessage.getDateObject()));
             }
             binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,10 +83,16 @@ public class RecentConservationAdapter extends RecyclerView.Adapter<RecentConser
             });
         }
         public Bitmap getConservationImage(String image){
+            if (image == null || image.isEmpty()) {
+                return null; // Tránh lỗi nếu dữ liệu bị null
+            }
             byte[] bytes = Base64.decode(image, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         }
         public String getReadableDate(Date date){
+            if (date == null) {
+                return ""; // hoặc trả về giá trị mặc định khác
+            }
             return new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date);
         }
     }

@@ -305,7 +305,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void loadReceiverDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Contants.KEY_USER);
-        Log.d("User",receiverUser.getPhoneNumber().toString());
+//        Log.d("User",receiverUser.getPhoneNumber().toString());
         if (!binding.textName.toString().isEmpty()) {
             binding.textName.setText(receiverUser.getName());
         }

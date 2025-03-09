@@ -21,7 +21,10 @@ public class MessageBotAdapter extends RecyclerView.Adapter<MessageBotAdapter.My
      public MessageBotAdapter(List<MessageBot> messageList) {
          this.messageList = messageList;
      }
-
+    public void updateMessages(List<MessageBot> newMessages) {
+        this.messageList = newMessages;
+        notifyDataSetChanged();
+    }
      @NonNull
      @Override
      public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

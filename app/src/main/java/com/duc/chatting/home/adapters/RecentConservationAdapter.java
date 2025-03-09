@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.duc.chatting.R;
 import com.duc.chatting.chat.models.ChatMessage;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.databinding.ItemContainerRecentConservationBinding;
@@ -60,6 +61,9 @@ public class RecentConservationAdapter extends RecyclerView.Adapter<RecentConser
         public void setData(ChatMessage chatMessage) {
             if(chatMessage.getConservationName()!=null){
                 binding.imageProfile.setImageBitmap(getConservationImage(chatMessage.getConservationImage()));
+            }else {
+                binding.imageProfile.setImageResource(R.drawable.baseline_person_24v2);
+                binding.imageProfile.setBackgroundResource(R.drawable.background_profile);
             }
             binding.textName.setText(chatMessage.getConservationName());
             String receiverMessage=chatMessage.getSenderName()+":"+chatMessage.getMessage();

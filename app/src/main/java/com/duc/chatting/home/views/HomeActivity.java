@@ -87,6 +87,11 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,fragment);
         fragmentTransaction.commit();
+        if (fragment instanceof ConservationFragment) {
+            Objects.requireNonNull(getSupportActionBar()).show();
+        } else {
+            Objects.requireNonNull(getSupportActionBar()).hide();
+        }
     }
 
 }

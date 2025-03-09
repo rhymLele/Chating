@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +51,15 @@ public class BotFragment extends Fragment {
         model = GenerativeModelFutures.from(gm);
 
     }
-
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable suggestionRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (messageList.isEmpty()) { // Chỉ hiển thị nếu chưa có tin nhắn nào
+                addToChat("Hi my name is Gem! Tell me about your day!'", MessageBot.SENT_BY_BOT);
+            }
+        }
+    };
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -63,11 +73,15 @@ public class BotFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
+        handler.postDelayed(suggestionRunnable, 10000);
         sendButton.setOnClickListener((v)->{
             String question = messageEditText.getText().toString();
-            addToChat(question,MessageBot.SENT_BY_ME);
-            messageEditText.setText("");
-            getResponse(question);
+            if (!question.trim().isEmpty()) {
+                handler.removeCallbacks(suggestionRunnable); // Hủy gợi ý nếu user gửi tin nhắn
+                addToChat(question, MessageBot.SENT_BY_ME);
+                messageEditText.setText("");
+                getResponse(question);
+            }
         });
 
     }
@@ -100,11 +114,13 @@ public class BotFragment extends Fragment {
             @Override
             public void onSuccess(GenerateContentResponse result) {
                 String resultText = result.getText();
+                removeTypingIndicator();
                 requireActivity().runOnUiThread(() -> addToChat(resultText,MessageBot.SENT_BY_BOT));
             }
 
             @Override
             public void onFailure(Throwable t) {
+                removeTypingIndicator();
                 requireActivity().runOnUiThread(() -> addToChat("Error"+t,MessageBot.SENT_BY_BOT));
             }
         }, getMainExecutor(getContext()));
@@ -114,5 +130,22 @@ public class BotFragment extends Fragment {
             messageList.add(new MessageBot("Bot typing...", MessageBot.SENT_BY_BOT));
             messageAdapter.notifyDataSetChanged();
         });
+    }
+    private void removeTypingIndicator() {
+        requireActivity().runOnUiThread(() -> {
+            for (int i = messageList.size() - 1; i >= 0; i--) {
+                if (messageList.get(i).getMessage().equals("Bot typing...")) {
+                    messageList.remove(i);
+                    break; // Chỉ xóa một lần
+                }
+            }
+            messageAdapter.notifyDataSetChanged();
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(suggestionRunnable); //
     }
 }

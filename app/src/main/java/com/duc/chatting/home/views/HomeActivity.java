@@ -51,6 +51,9 @@ public class HomeActivity extends AppCompatActivity {
             }else if(id==R.id.personal){
                 replaceFragment(new PersonalFragment());
             }
+            else if(id==R.id.chatgpt){
+                replaceFragment(new BotFragment());
+            }
             return true;
         });
     }

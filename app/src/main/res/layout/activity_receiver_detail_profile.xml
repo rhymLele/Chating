@@ -111,7 +111,7 @@
             android:id="@+id/buttonMoreHoriz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chat"
+            android:text="Block"
             android:background="@drawable/btn_background"
             android:layout_marginLeft="@dimen/_10sdp"
             android:textSize="@dimen/_12sdp"

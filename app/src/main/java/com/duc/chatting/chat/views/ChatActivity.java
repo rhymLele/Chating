@@ -38,6 +38,7 @@ import com.duc.chatting.chat.models.PDFClass;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.chat.viewmodels.ChatActivityViewModel;
 import com.duc.chatting.databinding.ActivityChatBinding;
+import com.duc.chatting.home.views.ConservationFragment;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
@@ -154,6 +155,15 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setListener() {
+
+
+        binding.textName.setOnClickListener(v -> {
+            Conservation conservation= new Conservation(conservationID,receiverUser.getId());
+            Intent i=new Intent(this, ReceiverConservationActivity.class);
+            i.putExtra(Contants.KEY_CONVERSATION,conservation);
+            startActivity(i);
+        });
+
         binding.imageBack.setOnClickListener(v -> {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);

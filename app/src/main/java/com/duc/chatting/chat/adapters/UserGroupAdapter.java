@@ -22,7 +22,7 @@ public class UserGroupAdapter extends RecyclerView.Adapter<UserGroupAdapter.User
     private UserListeners userListeners;
 
     @SuppressLint("NotifyDataSetChanged")
-    public UserGroupAdapter(UserListeners userListeners, List<User> userList) {
+    public UserGroupAdapter( List<User> userList,UserListeners userListeners) {
         this.userListeners = userListeners;
         this.userList = userList;
         notifyDataSetChanged();
@@ -58,6 +58,7 @@ public class UserGroupAdapter extends RecyclerView.Adapter<UserGroupAdapter.User
             if (user.getImgProfile() != null) {
                 binding.imageProfile.setImageBitmap(getConservationImage(user.getImgProfile()));
             }
+            binding.textName.setText(user.getName());
             if (!user.getId().equals(user.getIsAdd())) {
                 String aDDByName = "Added by " + user.getNameAdd();
                 binding.textRecentMessage.setText(aDDByName);

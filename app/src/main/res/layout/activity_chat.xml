@@ -272,7 +272,7 @@
             android:padding="@dimen/_5sdp"
             android:scaleType="centerCrop"
             android:src="@drawable/baseline_close_24"
-            android:visibility="gone"
+            android:visibility="visible"
             app:riv_corner_radius="@dimen/_10sdp" />
     </LinearLayout>
 

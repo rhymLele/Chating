@@ -1,5 +1,6 @@
 package com.duc.chatting.sign.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -9,9 +10,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.duc.chatting.R;
+import com.duc.chatting.home.views.HomeActivity;
+import com.duc.chatting.utilities.Contants;
+import com.duc.chatting.utilities.PreferenceManager;
 
 public class MainSignActivity extends AppCompatActivity {
-
+    PreferenceManager preferenceManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,5 +26,11 @@ public class MainSignActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        preferenceManager=new PreferenceManager(getApplicationContext());
+        if(preferenceManager.getBoolean(Contants.KEY_IS_SIGNED_IN)==true)
+        {
+            Intent intent=new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -155,8 +155,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-
-
         binding.textName.setOnClickListener(v -> {
             Conservation conservation= new Conservation(conservationID,receiverUser.getId());
             Intent i=new Intent(this, ReceiverConservationActivity.class);
@@ -233,12 +231,6 @@ public class ChatActivity extends AppCompatActivity {
         //click select file on device
         binding.fileSend.setOnClickListener(v -> {
             selectFile();
-        });
-        binding.textName.setOnClickListener(v -> {
-//            Conservation conservation=new Conservation(conservationID,receiverUser.getId());
-//            Intent intent=new Intent(this,...);
-//            intent.putExtra(Contants.KEY_CONVERSATION,conservation);
-//            startActivity(intent);
         });
         //select image
         binding.imgSend.setOnClickListener(v -> {

@@ -75,16 +75,15 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String senderIDCon = snapshot.child(Contants.KEY_SENDER_ID).getValue(String.class);
                         String receiverIDCon = snapshot.child(Contants.KEY_RECEIVER_ID).getValue(String.class);
-                        if (senderIDCon.equals(receiverIDCon)) {
+                        if (senderIDCon.equals(receiverID)) {
                             String receiverImage = snapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
                             String receiverName = snapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
-                            User user=new User(receiverID,receiverName,receiverImage);
+                            User user = new User(receiverID, receiverName, receiverImage);
                             receiverMutableLiveData.postValue(user);
-                        }else if(receiverIDCon.equals(receiverID))
-                        {
+                        } else if (receiverIDCon.equals(receiverID)) {
                             String receiverImage = snapshot.child(Contants.KEY_RECEIVER_IMAGE).getValue(String.class);
                             String receiverName = snapshot.child(Contants.KEY_RECEIVER_NAME).getValue(String.class);
-                            User user=new User(receiverID,receiverName,receiverImage);
+                            User user = new User(receiverID, receiverName, receiverImage);
                             receiverMutableLiveData.postValue(user);
                         }
                     }
@@ -97,11 +96,9 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
         databaseReference.child(Contants.KEY_COLLECTION_GROUP_CHAT).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot:snapshot.getChildren())
-                {
-                    String groupChatID=postSnapshot.getKey();
-                    if(groupChatID.equals(receiverID))
-                    {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    String groupChatID = postSnapshot.getKey();
+                    if (groupChatID.equals(receiverID)) {
                         isCheckedGroupChatPersonalMutableLiveData.postValue(Boolean.TRUE);
                     }
                 }
@@ -113,28 +110,25 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
             }
         });
     }
-    public void setNameGroup(String conservationID,String receiverID,String newName)
-    {
+
+    public void setNameGroup(String conservationID, String receiverID, String newName) {
         databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).child(conservationID).child(Contants.KEY_RECEIVER_NAME).setValue(newName);
         databaseReference.child(Contants.KEY_COLLECTION_GROUP_CHAT).child(receiverID).child(Contants.KEY_GROUP_CHAT_NAME).setValue(newName);
     }
 
-    public void getMemeberGroupChat(String groupID)
-    {
+    public void getMemeberGroupChat(String groupID) {
         listUser.clear();
         databaseReference.child(Contants.KEY_COLLECTION_GROUP_MEMBER).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot postSnapshot:snapshot.getChildren())
-                {
-                    if(groupID.equals(postSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class)))
-                    {
-                        String userID=postSnapshot.child(Contants.KEY_USER_ID).getValue(String.class);
-                        String image=postSnapshot.child(Contants.KEY_IMAGE).getValue(String.class);
-                        String name=postSnapshot.child(Contants.KEY_NAME).getValue(String.class);
-                        String userIDAdd=postSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class);
-                        String userNameAdd=postSnapshot.child(Contants.KEY_GROUP_MEMBER_USER_NAME_ADD).getValue(String.class);
-                        User user=new User(userID,name,image,userIDAdd,userNameAdd);
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    if (groupID.equals(postSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class))) {
+                        String userID = postSnapshot.child(Contants.KEY_USER_ID).getValue(String.class);
+                        String image = postSnapshot.child(Contants.KEY_IMAGE).getValue(String.class);
+                        String name = postSnapshot.child(Contants.KEY_NAME).getValue(String.class);
+                        String userIDAdd = postSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class);
+                        String userNameAdd = postSnapshot.child(Contants.KEY_GROUP_MEMBER_USER_NAME_ADD).getValue(String.class);
+                        User user = new User(userID, name, image, userIDAdd, userNameAdd);
                         listUser.add(user);
                     }
                 }
@@ -147,6 +141,62 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
         });
     }
 
+    public void getListFile(String conservationID) {
+        listPDF.clear();
+        databaseReference.child(Contants.KEY_COLLECTION_FILE).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    String conservationIdFile = postSnapshot.child(Contants.KEY_CONVERSATION_ID).getValue(String.class);
+                    if (conservationID.equals(conservationIdFile)) {
+                        String name = postSnapshot.child("name").getValue(String.class);
+                        String url = postSnapshot.child("url").getValue(String.class);
+                        String statusFile = postSnapshot.child(Contants.KEY_STATUS_FILE).getValue(String.class);
+                        PDFClass pdfClass = new PDFClass(name, url, statusFile);
+                        listPDF.add(pdfClass);
+                    }
+                }
+                listPDFMutableLiveData.postValue(listPDF);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    public void getListImage(String conservationID) {
+        listImage.clear();
+        databaseReference.child(Contants.KEY_COLLECTION_IMAGE).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    String conservationIdImage = postSnapshot.child(Contants.KEY_CONVERSATION_ID).getValue(String.class);
+                    if (conservationID.equals(conservationIdImage)) {
+                        String imageUrl = postSnapshot.child(Contants.KEY_URL_IMAGE).getValue(String.class);
+
+                        String statusImage = postSnapshot.child(Contants.KEY_STATUS_IMAGE).getValue(String.class);
+                        ImageClass imageClass = new ImageClass(imageUrl, statusImage);
+                        listImage.add(imageClass);
+                    }
+                }
+                listImageMutableLiveData.postValue(listImage);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    public void setThemeConservation(String conservationId,String theme)
+    {
+        databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).child(conservationId).child(Contants.KEY_BACKGROUND_CONVERSATION).setValue(theme);
+    }
 
 
 

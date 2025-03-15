@@ -1,14 +1,21 @@
 package com.duc.chatting.home.views;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,11 +27,20 @@ import com.duc.chatting.R;
 import com.duc.chatting.chat.views.GroupChatActivity;
 import com.duc.chatting.chat.views.UserActivity;
 import com.duc.chatting.databinding.ActivityHomeBinding;
+import com.duc.chatting.utilities.Contants;
+import com.duc.chatting.utilities.PreferenceManager;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
+    DatabaseReference databaseReference = FirebaseDatabase
+            .getInstance()
+            .getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
+    PreferenceManager preferenceManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        preferenceManager=new PreferenceManager(getApplicationContext());
         setSupportActionBar(binding.header.myToolBar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Zalo");
         if (savedInstanceState == null) { // Chỉ load lần đầu tiên khi Activity được tạo
@@ -56,6 +73,24 @@ public class HomeActivity extends AppCompatActivity {
             }
             return true;
         });
+        getFCMtoken();
+    }
+
+    private void getFCMtoken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener( task -> {
+
+            if(task.isSuccessful())
+            {
+                String token= task.getResult();
+                Log.d("MyToken of "+preferenceManager.getString(Contants.KEY_USER_ID),": "+token);
+
+                databaseReference.child(Contants.KEY_COLLECTION_USERS)
+                        .child(preferenceManager.getString(Contants.KEY_USER_ID))
+                        .child("fcmToken").setValue(token)
+                        .addOnSuccessListener(aVoid -> System.out.println("FCM Token updated!"))
+                        .addOnFailureListener(e -> System.err.println("Failed to update FCM Token: " + e.getMessage()));;
+            }
+        } );
     }
 
     @Override
@@ -93,5 +128,26 @@ public class HomeActivity extends AppCompatActivity {
             Objects.requireNonNull(getSupportActionBar()).hide();
         }
     }
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                } else {
+                    //
+                }
+            });
+    private void askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // FCM SDK (and your app) can post notifications.
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
 
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
 }

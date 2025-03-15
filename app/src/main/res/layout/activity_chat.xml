@@ -54,17 +54,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="10dp"
         android:src="@drawable/baseline_videocam_24"
-        app:layout_constraintRight_toLeftOf="@+id/imageInfor"
-        app:layout_constraintTop_toTopOf="parent" />
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/imageInfor"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/baseline_info_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <LinearLayout
         android:id="@+id/llNameAndVisible"
@@ -74,7 +66,7 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@id/imageBack"
-        app:layout_constraintEnd_toStartOf="@id/imageInfor"
+        app:layout_constraintEnd_toStartOf="@id/imageCall"
         app:layout_constraintStart_toEndOf="@id/imageBack"
         app:layout_constraintTop_toTopOf="@+id/imageBack">
 

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cdl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/clMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/roboto_mono_bold"
+            android:text="@string/_00_00"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAlert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/roboto_mono"
+            android:text="@string/remember_you_just_have_60_seconds_to_record"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTimer" />
+
+        <com.duc.chatting.utilities.WaveFormView
+            android:id="@+id/wfv"
+            android:layout_width="match_parent"
+            android:layout_height="200px"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvAlert" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnRecord"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginVertical="30dp"
+            android:background="@drawable/bg_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wfv" />
+
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnCancel"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/bg_circle"
+            android:backgroundTint="#DB2C2C"
+            android:scaleType="fitXY"
+            android:src="@drawable/baseline_cancel_24"
+            app:layout_constraintBottom_toBottomOf="@id/btnRecord"
+            app:layout_constraintEnd_toStartOf="@id/btnRecord"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnRecord" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnConfirm"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/bg_circle"
+            android:backgroundTint="#2AD724"
+            android:scaleType="fitXY"
+            android:src="@drawable/baseline_check_circle_24"
+            app:layout_constraintBottom_toBottomOf="@id/btnRecord"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnRecord"
+            app:layout_constraintTop_toTopOf="@id/btnRecord" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

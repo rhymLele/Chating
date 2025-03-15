@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.duc.chatting.information_profile.views.InformationProfileActivity;
 import com.duc.chatting.sign.view.MainSignActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import android.util.Base64;
 
@@ -77,6 +79,16 @@ public class PersonalFragment extends Fragment {
             startActivity(i);
         });
         binding.lnLogout.setOnClickListener(v -> {
+
+            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
+                if(task.isSuccessful())
+                {
+                    Log.d("LogOut","Delete FCM token");
+                }else
+                {
+                    Log.d("LogOut","!Delete FCM token");
+                }
+            });
             viewModel.signOut();
         });
     }

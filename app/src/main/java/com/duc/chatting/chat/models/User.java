@@ -13,6 +13,16 @@ public class User implements Serializable {
     private String isAdd;
     private String nameAdd;
     private Boolean isChecked;
+    private String  fcmToken;
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
     public User(String id){
         this.id=id ;
     }

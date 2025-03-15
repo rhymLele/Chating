@@ -6,7 +6,9 @@ plugins {
 android {
     namespace = "com.duc.chatting"
     compileSdk = 35
-
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+    }
     defaultConfig {
         applicationId = "com.duc.chatting"
         minSdk = 26
@@ -60,6 +62,15 @@ dependencies {
     implementation( "androidx.multidex:multidex:$multidex_version")
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("com.google.firebase:firebase-messaging")
+    implementation ("com.google.auth:google-auth-library-bom:1.30.1")
+    // Replace with the module(s) that are needed
+    implementation ("com.google.auth:google-auth-library-oauth2-http")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.karumi:dexter:6.2.3")
+    implementation(libs.socket.io.client)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

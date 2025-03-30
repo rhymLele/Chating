@@ -147,7 +147,7 @@ public class GroupChatViewModel extends AndroidViewModel {
         }
         String groupChatID = databaseReference.child(Contants.KEY_COLLECTION_GROUP_CHAT).push().getKey();
         databaseReference.child(Contants.KEY_COLLECTION_GROUP_CHAT).child(groupChatID).child(Contants.KEY_GROUP_CHAT_NAME).setValue(nameGroup1);
-
+        databaseReference.child(Contants.KEY_COLLECTION_GROUP_CHAT).child(groupChatID).child(Contants.KEY_GROUP_MEMBER_CNT_MEMBERS).setValue(userNumberGroup.size());
         User userGroup = new User(groupChatID, nameGroup1);
         userGroupMutableLiveData.postValue(userGroup);
         for (User user : userNumberGroup) {

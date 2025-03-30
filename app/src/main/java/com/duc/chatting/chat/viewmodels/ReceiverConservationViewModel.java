@@ -123,7 +123,7 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     if (groupID.equals(postSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class))) {
-                        String userID = postSnapshot.child(Contants.KEY_USER_ID).getValue(String.class);
+                        String userID = postSnapshot.child("userID").getValue(String.class);
                         String image = postSnapshot.child(Contants.KEY_IMAGE).getValue(String.class);
                         String name = postSnapshot.child(Contants.KEY_NAME).getValue(String.class);
                         String userIDAdd = postSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class);
@@ -132,6 +132,7 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
                         listUser.add(user);
                     }
                 }
+                listUserMutableLiveData.postValue(listUser);
             }
 
             @Override

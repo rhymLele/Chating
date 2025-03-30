@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -53,7 +55,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> loadProgressBarMutableLiveData;
     private MutableLiveData<String> themeConservationMutableLiveData;
     private MutableLiveData<Boolean> isCheckActiveMutableLiveData;
-    private MutableLiveData<String> conservationIDMutableLiveData;
+    private MutableLiveData<String> conservationIdMutableLiveData;
     private List<ChatMessage> chatMessages;
     private String conservationID = null;
     private boolean isChecked = false;
@@ -90,7 +92,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<String> getConservationIDMutableLiveData() {
-        return conservationIDMutableLiveData;
+        return conservationIdMutableLiveData;
     }
 
     public ChatActivityViewModel(@NonNull Application application) {
@@ -104,9 +106,10 @@ public class ChatActivityViewModel extends AndroidViewModel {
         loadProgressBarMutableLiveData = new MutableLiveData<>();
         themeConservationMutableLiveData = new MutableLiveData<>();
         isCheckActiveMutableLiveData = new MutableLiveData<>();
-        conservationIDMutableLiveData = new MutableLiveData<>();
+        conservationIdMutableLiveData = new MutableLiveData<>();
     }
 
+    //send message text
     public void sendMessage(String senderID, String senderName, String senderImage, String receiverID, String receiveName, String receiverImage, String messageChat) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -115,9 +118,11 @@ public class ChatActivityViewModel extends AndroidViewModel {
                 databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().setValue(c);
                 sentInputMessage.postValue(true);
                 if (conservationID != null) {
+                    Log.d("ChatActivity", "update Message");
+                    Log.d("ChatActivity", conservationID);
                     updateConservation(messageChat, senderID, senderName, senderImage, receiverID, receiveName, receiverImage);
                 } else if (conservationID == null) {
-                    Log.d("ChatAct", "create new Message");
+                    Log.d("ChatActivity", "create new Message");
                     Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiveName, receiverImage, messageChat, new Date());
                     addConservation(conservation);
                 }
@@ -130,6 +135,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
         });
     }
 
+    //for message rep local
     public void sendMessageRepLocal(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, String messageChat, String messageRepLocal, String urlFileRepLocal, String urlImageRepLocal) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -152,50 +158,6 @@ public class ChatActivityViewModel extends AndroidViewModel {
         });
     }
 
-    public void sendMesageFile(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String reiceiverImage, Uri data, String fileName) {
-
-        String base64File = encodeFileToBase64(data, getApplication());
-        databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ChatMessage chatMessage = new ChatMessage(senderID, senderName, senderImage, receiverID, fileName, base64File, new Date());
-                String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
-                sentInputMessage.postValue(Boolean.TRUE);
-                if (conservationID != null) {
-                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
-                    databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
-                    updateConservation(fileName, senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage);
-                } else if (conservationID == null) {
-                    Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage, fileName, new Date());
-                    addConservation(conservation);
-                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
-                    databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    public void sendMessageImage(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Uri data) {
-//            String fileImage=encodeImage(Uri.c)
-        databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
-//                    ChatMessage chatMessage=new ChatMessage(senderID,senderName,senderImage,receiverID,new Date(),)
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
 
     public void listenMessages(String senderID, String receiverID) {
@@ -206,12 +168,11 @@ public class ChatActivityViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (receiverID.equals(dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class))) {
-                        String userID = dataSnapshot.child(Contants.KEY_USER_ID).getValue(String.class);
+                        String userID = dataSnapshot.child("userID").getValue(String.class);
                         String userIDAdd = dataSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class);
                         listenSenderID.add(userID);
                         listenSenderID.add(userIDAdd);
                     }
-
                 }
             }
 
@@ -344,7 +305,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
                     checkForConservation(senderID, receiverID);
                 }
                 chatMessages.sort(Comparator.comparing(ChatMessage::getDateObject));
-                if (chatMessages.size() == 0) {
+                if (chatMessages.isEmpty()) {
                     count0MutableLiveData.postValue(Boolean.TRUE);
                 } else {
                     count0MutableLiveData.postValue(Boolean.FALSE);
@@ -361,7 +322,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
     }
 
     private void checkForConservation(String senderID, String receiverID) {
-        if (chatMessages.size() != 0) {
+        if (!chatMessages.isEmpty()) {
             checkForConservationRemotely(senderID, receiverID);
         }
     }
@@ -375,7 +336,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (receiverID.equals(dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class))) {
-                        String userID = dataSnapshot.child(Contants.KEY_USER_ID).getValue(String.class);
+                        String userID = dataSnapshot.child("userID").getValue(String.class);
                         String userIDAdd = dataSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class);
                         listenSenderID.add(userID);
                         listenSenderID.add(userIDAdd);
@@ -397,13 +358,13 @@ public class ChatActivityViewModel extends AndroidViewModel {
                     String receiverIDcon = dataSnapshot.child(Contants.KEY_RECEIVER_ID).getValue(String.class);
                     if (senderID.equals(senderIDcon) && receiverID.equals(receiverIDcon)) {
                         conservationID = dataSnapshot.getKey();
-                        conservationIDMutableLiveData.postValue(conservationID);
+                        conservationIdMutableLiveData.postValue(conservationID);
                         String theme = dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
                         themeConservationMutableLiveData.postValue(theme);
                         continue;
                     } else if (senderID.equals(receiverIDcon) && receiverID.equals(senderIDcon)) {
                         conservationID = dataSnapshot.getKey();
-                        conservationIDMutableLiveData.postValue(conservationID);
+                        conservationIdMutableLiveData.postValue(conservationID);
 
                         String theme = dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
                         themeConservationMutableLiveData.postValue(theme);
@@ -412,7 +373,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
                     //get conservationID of group
                     else if (receiverID.equals(receiverIDcon) && listenSenderID.contains(senderID)) {
                         conservationID = dataSnapshot.getKey();
-                        conservationIDMutableLiveData.postValue(conservationID);
+                        conservationIdMutableLiveData.postValue(conservationID);
                         isChecked = true;
                         String theme = dataSnapshot.child(Contants.KEY_BACKGROUND_CONVERSATION).getValue(String.class);
                         themeConservationMutableLiveData.postValue(theme);
@@ -469,6 +430,144 @@ public class ChatActivityViewModel extends AndroidViewModel {
 
     }
 
+
+
+    public void sendMesageFile(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String reiceiverImage, Uri data, String fileName) {
+
+        String base64File = encodeFileToBase64(data, getApplication());
+        databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ChatMessage chatMessage = new ChatMessage(senderID, senderName, senderImage, receiverID, fileName, base64File, new Date());
+                String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
+                sentInputMessage.postValue(Boolean.TRUE);
+                if (conservationID != null) {
+                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
+                    databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
+                    updateConservation(fileName, senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage);
+                } else if (conservationID == null) {
+                    Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage, fileName, new Date());
+                    addConservation(conservation);
+                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
+                    databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    public void sendMessageFileFB(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Uri fileUri, String fileName, Context context) {
+        try {
+            // Đọc dữ liệu từ file
+            InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            inputStream.close();
+
+            // Chuyển thành chuỗi Base64
+            String encodedFile = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+            // Lưu vào Firebase Realtime Database
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                    .child("ChatFiles");
+            String fileID = databaseReference.push().getKey();
+
+            if (fileID != null) {
+                HashMap<String, Object> fileData = new HashMap<>();
+                fileData.put("senderID", senderID);
+                fileData.put("senderName", senderName);
+                fileData.put("senderImage", senderImage);
+                fileData.put("receiverID", receiverID);
+                fileData.put("receiverName", receiverName);
+                fileData.put("receiverImage", receiverImage);
+                fileData.put("fileName", fileName);
+                fileData.put("fileData", encodedFile); // Lưu chuỗi Base64
+                fileData.put("timestamp", System.currentTimeMillis());
+
+                databaseReference.child(fileID).setValue(fileData);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void downloadFileFB(String fileID, Context context) {
+        DatabaseReference fileRef = FirebaseDatabase.getInstance().getReference()
+                .child("ChatFiles").child(fileID);
+
+        fileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String fileName = snapshot.child("fileName").getValue(String.class);
+                    String encodedFile = snapshot.child("fileData").getValue(String.class);
+
+                    // Giải mã Base64 thành byte[]
+                    byte[] decodedBytes = Base64.decode(encodedFile, Base64.DEFAULT);
+
+                    // Lưu file vào bộ nhớ trong
+                    File file = new File(context.getExternalFilesDir(null), fileName);
+                    try (FileOutputStream fos = new FileOutputStream(file)) {
+                        fos.write(decodedBytes);
+                        fos.flush();
+                        Toast.makeText(context, "File đã tải về: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Lỗi khi tải file: " + error.getMessage());
+            }
+        });
+    }
+    public void sendMessageImage(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Uri data) {
+//            String fileImage=encodeImage(Uri.c)
+        databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
+//                    ChatMessage chatMessage=new ChatMessage(senderID,senderName,senderImage,receiverID,new Date(),)
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void sendMessageImageFB(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Bitmap imageBitmap) {
+        // Chuyển ảnh Bitmap thành chuỗi Base64
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        // Tạo đối tượng tin nhắn
+        String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
+        ChatMessage chatMessage = new ChatMessage(senderID, senderName, senderImage, receiverID,
+                new Date(), encodedImage);
+
+        // Lưu tin nhắn vào Firebase
+        databaseReference.child(Contants.KEY_COLLECTION_CHAT).child(chatID).setValue(chatMessage)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("Firebase", "Lưu ảnh Base64 thành công!");
+                    } else {
+                        Log.e("Firebase", "Lỗi khi lưu ảnh Base64!", task.getException());
+                    }
+                });
+    }
+    public void downloadImageFB(String base64String, ImageView imageView) {
+        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        imageView.setImageBitmap(decodedBitmap);
+    }
     private void decodeBase64ToFile(String base64String, String fileName, Context context) {
         byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
         File file = new File(context.getFilesDir(), fileName);

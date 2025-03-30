@@ -52,7 +52,7 @@
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
         android:padding="@dimen/_10sdp"
-        android:textColor="@color/greyLight"
+        android:textColor="@color/black"
         android:hint="Group name (optional)"
         android:background="@drawable/et_background_name"
         />

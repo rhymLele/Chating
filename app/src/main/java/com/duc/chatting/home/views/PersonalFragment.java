@@ -68,8 +68,6 @@ public class PersonalFragment extends Fragment {
             byte[] bytes = Base64.decode(preferenceManager.getString(Contants.KEY_IMAGE), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             binding.imgProfile.setImageBitmap(bitmap);
-
-
         }
     }
 

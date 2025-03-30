@@ -81,6 +81,11 @@ public class AuthenticationViewModel extends AndroidViewModel {
                                         .child(phoneNumber)
                                         .child(Contants.KEY_STORY_HISTORY)
                                         .getValue(String.class));
+                                preferenceManager.putString(Contants.KEY_USER_STATUS,snapshot
+                                        .child(phoneNumber)
+                                        .child(Contants.KEY_USER_STATUS)
+                                        .getValue(String.class)
+                                );
                                 userData.postValue(snapshot
                                         .child(phoneNumber)
                                         .child(Contants.KEY_EMAIL)
@@ -118,7 +123,7 @@ public class AuthenticationViewModel extends AndroidViewModel {
                             databaseReference.child(Contants.KEY_COLLECTION_USERS).child(phoneNumber).child(Contants.KEY_PASSWORD).setValue(password);
                             databaseReference.child(Contants.KEY_COLLECTION_USERS).child(phoneNumber).child(Contants.KEY_PHONE_NUMBER).setValue(phoneNumber);
                             databaseReference.child(Contants.KEY_COLLECTION_USERS).child(phoneNumber).child(Contants.KEY_NAME).setValue(name);
-
+                            databaseReference.child(Contants.KEY_COLLECTION_USERS).child(phoneNumber).child(Contants.KEY_USER_STATUS).setValue("Online");
                             preferenceManager.putBoolean(Contants.KEY_IS_SIGNED_IN,true);
                             preferenceManager.putString(Contants.KEY_USER_ID,phoneNumber);
                             preferenceManager.putString(Contants.KEY_EMAIL,email);

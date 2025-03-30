@@ -62,6 +62,8 @@ public class ConservationFragment extends Fragment {
         });
 
     }
+    public void handleDeleteConservation()
+    {}
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

@@ -8,7 +8,7 @@ public class Contants {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_PREFERENCE_NAME = "Chatting";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
-
+    public static final String KEY_USER_STATUS="status";
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_IMAGE_BANNER = "imageBanner";
@@ -51,6 +51,7 @@ public class Contants {
     public static final String KEY_COLLECTION_GROUP_MEMBER = "groupChatMember";
     public static final String KEY_GROUP_MEMBER_TIME_USERID_ADD = "userIdAdd";
     public static final String KEY_GROUP_MEMBER_USER_NAME_ADD = "userNameAdd";
+    public static final String KEY_GROUP_MEMBER_CNT_MEMBERS = "cntMembers";
 
     // Friend
     public static final String KEY_COLLECTION_FRIEND = "listFriend";

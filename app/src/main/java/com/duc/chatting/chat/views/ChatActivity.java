@@ -70,15 +70,16 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Log.d("Chat", "Iam here");
+        Log.d("ChatActivity", "OnCreated");
         preferenceManager = new PreferenceManager(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ChatActivityViewModel.class);
 
@@ -133,6 +134,9 @@ public class ChatActivity extends AppCompatActivity {
                 if (theme.equals("Friend")) {
                     binding.chatRecyclerView.setBackgroundResource(R.color.greyLight);
                 }
+                if (theme.equals("Dark")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.color.black);
+                }
             }
         });
         setListener();
@@ -161,7 +165,12 @@ public class ChatActivity extends AppCompatActivity {
             i.putExtra(Contants.KEY_CONVERSATION,conservation);
             startActivity(i);
         });
-
+        binding.llNameAndVisible.setOnClickListener(v -> {
+            Conservation conservation= new Conservation(conservationID,receiverUser.getId());
+            Intent i=new Intent(this, ReceiverConservationActivity.class);
+            i.putExtra(Contants.KEY_CONVERSATION,conservation);
+            startActivity(i);
+        });
         binding.imageBack.setOnClickListener(v -> {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
@@ -344,6 +353,12 @@ public class ChatActivity extends AppCompatActivity {
         dialog.show();
         textDisableInboxForMe.setOnClickListener(v -> {
             String status = "disableForMe";
+            viewModel.setStatusMessage(chatMessage.getMessageID(), status);
+
+            dialog.dismiss();
+        });
+        textDisableInboxForAll.setOnClickListener(v -> {
+            String status = "disableForAll";
             viewModel.setStatusMessage(chatMessage.getMessageID(), status);
 
             dialog.dismiss();

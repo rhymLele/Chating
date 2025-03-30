@@ -70,7 +70,7 @@ public class SignUpFragment extends Fragment {
             {
                 if(isValid(password))
                 {
-                    Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Create Successfully.Hold on a minute!", Toast.LENGTH_SHORT).show();
                     viewModel.register(email,password,phoneNumber,name);
                 }
 
@@ -83,25 +83,25 @@ public class SignUpFragment extends Fragment {
 
     public Boolean isValidSignUpDetails() {
         if (binding.etSignEmail.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getContext(), "Enter email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter email pls", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.etSignEmail.getText().toString()).matches()) {
             Toast.makeText(getContext(), "Email is invalid ...@gmail.com", Toast.LENGTH_SHORT).show();
             return false;
         } else if (binding.etSignPhone.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getContext(), "Enter phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter phone number pls", Toast.LENGTH_SHORT).show();
             return false;
         } else if (binding.etSignEmail.length() < 6) {
-            Toast.makeText(getContext(), "phone number is invalid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Phone number is invalid", Toast.LENGTH_SHORT).show();
             return false;
         } else if (binding.etSignName.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getContext(), "Enter phone name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter phone name pls", Toast.LENGTH_SHORT).show();
             return false;
         } else if (binding.etSignPassw.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getContext(), "Enter password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter password pls", Toast.LENGTH_SHORT).show();
             return false;
         } else if (binding.etSignConf.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getContext(), "Enter confirm password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter confirm password pls", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!binding.etSignPassw.getText().toString().equals(binding.etSignConf.getText().toString())) {
             Toast.makeText(getContext(), "Password is not match", Toast.LENGTH_SHORT).show();

@@ -15,7 +15,7 @@
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         android:layout_marginTop="@dimen/_20sdp"
-        android:background="@drawable/background_image"
+        android:background="@drawable/background_profile"
         android:src="@drawable/baseline_person_24v2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

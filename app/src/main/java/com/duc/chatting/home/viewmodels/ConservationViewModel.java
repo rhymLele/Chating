@@ -43,6 +43,10 @@ public class ConservationViewModel extends AndroidViewModel {
     }
     public void signOut() {
         isCheckLogged.postValue(Boolean.TRUE);
+        databaseReference.child(Contants.KEY_COLLECTION_USERS).child(preferenceManager.getString(Contants.KEY_USER_ID))
+                .child(Contants.KEY_STATUS).setValue("Offline")
+                .addOnSuccessListener(aVoid -> System.out.println("Status updated!"))
+                .addOnFailureListener(e -> System.err.println("Failed to update status: " + e.getMessage()));;
         preferenceManager.clear();
     }
     public void listenConservations(String userID) {
@@ -52,21 +56,26 @@ public class ConservationViewModel extends AndroidViewModel {
         databaseReference.child(Contants.KEY_COLLECTION_GROUP_MEMBER).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("ConservationViewModel","UseID:"+preferenceManager.getString(Contants.KEY_USER_ID));
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Log.d("Daspot",dataSnapshot.getKey());
-                    if (preferenceManager.getString(Contants.KEY_USER_ID).equals(dataSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class))) {
-                        String groupIDCon = dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class);
-                        listGroupID.add(groupIDCon);
-                        Log.d("list","NGUOI DUOC THEM VAO "+preferenceManager.getString(Contants.KEY_USER_ID)+" "+dataSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD));
+                    Log.d("ConservationViewModel","IDGR con: "+dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class));
+                    if (preferenceManager.getString(Contants.KEY_USER_ID)
+                            .equals(dataSnapshot.child(Contants.KEY_GROUP_MEMBER_TIME_USERID_ADD).getValue(String.class))) {
 
-                    } else if (preferenceManager.getString(Contants.KEY_USER_ID).equals(dataSnapshot.child(Contants.KEY_USER_ID).getValue(String.class))) {
                         String groupIDCon = dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class);
                         listGroupID.add(groupIDCon);
-                        Log.d("list","NGUOI  THEM VAO "+preferenceManager.getString(Contants.KEY_USER_ID)+" "+dataSnapshot.child(Contants.KEY_USER_ID));
+                        Log.d("ConservationViewModel","IDGroup:"+dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class));
+
+                    } else if (preferenceManager.getString(Contants.KEY_USER_ID)
+                            .equals(dataSnapshot.child("userID").getValue(String.class))) {
+
+                        String groupIDCon = dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class);
+                        listGroupID.add(groupIDCon);
+                        Log.d("ConservationViewModel","IDGroup2:"+dataSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class));
                     }
                 }
                 for(String s : listGroupID){
-                    Log.d("GroupIDCon",s);
+                    Log.d("ConservationViewModel","IDgroup:"+ s);
                 }
             }
 
@@ -126,7 +135,6 @@ public class ConservationViewModel extends AndroidViewModel {
                                 ChatMessage chatMessage = new ChatMessage(senderID, senderName, receiverID, lastMessage, dateObject,
                                         conservationID, conservationName, conservationImage);
                                 conservations.add(chatMessage);
-                                Log.d("CVM", "Added chat message: " + chatMessage.toString());
                             }
                         }
                     }

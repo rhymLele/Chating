@@ -13,6 +13,7 @@ public class User implements Serializable {
     private String isAdd;
     private String nameAdd;
     private Boolean isChecked;
+    private String status;
     private String  fcmToken;
 
     public String getFcmToken() {

@@ -74,6 +74,10 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
         getFCMtoken();
+        databaseReference.child(Contants.KEY_COLLECTION_USERS).child(preferenceManager.getString(Contants.KEY_USER_ID))
+                .child(Contants.KEY_STATUS).setValue("Online")
+                .addOnSuccessListener(aVoid -> System.out.println("Status updated!"))
+                .addOnFailureListener(e -> System.err.println("Failed to update status: " + e.getMessage()));;
     }
 
     private void getFCMtoken() {

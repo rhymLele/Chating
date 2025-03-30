@@ -1,21 +1,24 @@
 package com.duc.chatting.chat.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class GroupMember implements Serializable {
     private String groupChatID;
-    private String userID;
+    @SerializedName("userId")
+    private String userId;
     private String name;
     private String image;
     private Date timeAdd;
-
+    private int cntMembers;
     private String userIdAdd;
     private String userNameAdd;
 
-    public GroupMember(String groupChatID, String userID, String name, String image, Date timeAdd, String userIdAdd, String userNameAdd) {
+    public GroupMember(String groupChatID, String userId, String name, String image, Date timeAdd, String userIdAdd, String userNameAdd) {
         this.groupChatID = groupChatID;
-        this.userID = userID;
+        this.userId = userId;
         this.name = name;
         this.image = image;
         this.timeAdd = timeAdd;
@@ -23,15 +26,21 @@ public class GroupMember implements Serializable {
         this.userNameAdd = userNameAdd;
     }
 
-    public GroupMember(String groupChatID, String userID, String name, Date timeAdd, String userIdAdd, String userNameAdd) {
+    public GroupMember(String groupChatID, String userId, String name, Date timeAdd, String userIdAdd, String userNameAdd) {
         this.groupChatID = groupChatID;
-        this.userID = userID;
+        this.userId = userId;
         this.name = name;
         this.timeAdd = timeAdd;
         this.userIdAdd = userIdAdd;
         this.userNameAdd = userNameAdd;
     }
+    public int getCntMembers() {
+        return cntMembers;
+    }
 
+    public void setCntMembers(int cntMembers) {
+        this.cntMembers = cntMembers;
+    }
     public String getGroupChatID() {
         return groupChatID;
     }
@@ -41,11 +50,11 @@ public class GroupMember implements Serializable {
     }
 
     public String getUserID() {
-        return userID;
+        return userId;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserID(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {

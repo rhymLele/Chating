@@ -40,9 +40,6 @@ public class UserActivity extends AppCompatActivity {
         binding=ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         viewModel=new ViewModelProvider(this).get(ChatUserViewModel.class);
-
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

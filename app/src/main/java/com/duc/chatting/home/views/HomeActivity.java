@@ -56,6 +56,7 @@ public class HomeActivity extends AppCompatActivity {
         preferenceManager=new PreferenceManager(getApplicationContext());
         setSupportActionBar(binding.header.myToolBar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Zalo");
+
         if (savedInstanceState == null) { // Chỉ load lần đầu tiên khi Activity được tạo
             replaceFragment(new ConservationFragment());
             binding.bottomNavigationView.setSelectedItemId(R.id.conservation);
@@ -65,11 +66,16 @@ public class HomeActivity extends AppCompatActivity {
             if(id==R.id.conservation)
             {
                 replaceFragment(new ConservationFragment());
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Zalo");
             }else if(id==R.id.personal){
                 replaceFragment(new PersonalFragment());
             }
             else if(id==R.id.chatgpt){
                 replaceFragment(new BotFragment());
+            }else if(id==R.id.friend)
+            {
+                replaceFragment(new FriendFragment());
+                Objects.requireNonNull(getSupportActionBar()).setTitle("List Friend");
             }
             return true;
         });
@@ -126,7 +132,7 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,fragment);
         fragmentTransaction.commit();
-        if (fragment instanceof ConservationFragment) {
+        if (fragment instanceof ConservationFragment||fragment instanceof FriendFragment) {
             Objects.requireNonNull(getSupportActionBar()).show();
         } else {
             Objects.requireNonNull(getSupportActionBar()).hide();

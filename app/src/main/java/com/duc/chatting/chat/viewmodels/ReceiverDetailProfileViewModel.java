@@ -67,7 +67,7 @@ public class ReceiverDetailProfileViewModel extends AndroidViewModel {
     }
 
     public void listenAddFriend(String userID1, String userID2) {
-        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -79,7 +79,7 @@ public class ReceiverDetailProfileViewModel extends AndroidViewModel {
                         if ((userID1.equals(userID1F) && userID2.equals(userID2F)) ||( userID1.equals(userID2F) && userID2.equals(userID1F)))
                         {
                             keyFriendId = dataSnapshot.getKey();
-                            if (status.equals("disable time")) {
+                            if (status.equals("disable")) {
                                 if (userIDSend.equals(userID1)) {
                                     isChecked.postValue("my send");
                                 } else if (userIDSend.equals(userID2)) {
@@ -110,14 +110,12 @@ public class ReceiverDetailProfileViewModel extends AndroidViewModel {
                     databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_USER_ID_1).setValue(userID1);
                     databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_USER_ID_2).setValue(userID2);
                     databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_USER_ID_SEND).setValue(userID1);
-                    databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("disable time");
-
-
+                    databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("disable");
                 } else {
                     databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyID).child(Contants.KEY_USER_ID_1).setValue(userID1);
                     databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyID).child(Contants.KEY_USER_ID_2).setValue(userID2);
                     databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyID).child(Contants.KEY_USER_ID_SEND).setValue(userID1);
-                    databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyID).child(Contants.KEY_STATUS).setValue("disable time");
+                    databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyID).child(Contants.KEY_STATUS).setValue("disable");
                     keyFriendId = keyID;
 
 
@@ -132,14 +130,14 @@ public class ReceiverDetailProfileViewModel extends AndroidViewModel {
     }
 
     public void acceptFriend() {
-        databaseReference.child(Contants.KEY_COLLECTION_USERS).child(keyFriendId).child(Contants.KEY_STATUS).setValue("enable").addOnCompleteListener(v -> {
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("enable").addOnCompleteListener(v -> {
             isCheckedFriend.postValue(Boolean.TRUE);
         });
     }
 
     public void destroyAddFriend() {
-        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("disable time").addOnCompleteListener(v -> {
-            isCheckedFriend.postValue(Boolean.TRUE);
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("disable").addOnCompleteListener(v -> {
+            isCheckedFriend.postValue(Boolean.FALSE);
         });
         keyFriendId = null;
     }

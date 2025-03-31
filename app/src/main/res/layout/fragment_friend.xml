@@ -16,6 +16,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
         android:background="@color/AcliceBlue">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Friend Requests"
+            android:textStyle="bold"
+            android:textSize="@dimen/_12sdp"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/friendRequestRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:visibility="gone" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="List Friends"
+
+            android:textStyle="bold"
+            android:textSize="@dimen/_12sdp"
+            />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/friendRecyclerView"
             android:layout_width="match_parent"
@@ -25,7 +49,7 @@
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:paddingEnd="@dimen/_20sdp"
-            android:paddingTop="@dimen/_20sdp"
+            android:paddingTop="@dimen/_10sdp"
             android:visibility="visible"
             android:paddingBottom="@dimen/_20sdp"/>
 

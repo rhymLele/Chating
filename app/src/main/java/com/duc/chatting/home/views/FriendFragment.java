@@ -18,6 +18,7 @@ import com.duc.chatting.chat.adapters.UserAdapter;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.chat.views.ReceiverDetailProfileActivity;
 import com.duc.chatting.databinding.FragmentFriendBinding;
+import com.duc.chatting.home.adapters.FriendRequestAdapter;
 import com.duc.chatting.home.viewmodels.ListFriendViewModel;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
@@ -27,6 +28,7 @@ public class FriendFragment extends Fragment {
     FragmentFriendBinding binding;
     ListFriendViewModel viewModel;
     UserAdapter userAdapter;
+    FriendRequestAdapter requestAdapter;
     private PreferenceManager preferenceManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,12 @@ public class FriendFragment extends Fragment {
             binding.friendRecyclerView.setVisibility(View.VISIBLE);
             binding.progressBar.setVisibility(View.GONE);
         });
-
+        viewModel.getFriendRequestMutableLiveData().observe(this,users -> {
+            requestAdapter=new FriendRequestAdapter(users,this::onUserClicked,this::onRequestAccept,this::onRequestReject);
+            binding.friendRequestRecyclerView.setAdapter(requestAdapter);
+            if(!users.isEmpty()) binding.friendRequestRecyclerView.setVisibility(View.VISIBLE);
+            else binding.friendRequestRecyclerView.setVisibility(View.GONE);
+        });
     }
 
     @Override
@@ -52,6 +59,7 @@ public class FriendFragment extends Fragment {
     private void loadFriendList(){
         binding.progressBar.setVisibility(View.VISIBLE);
         viewModel.showListFriend();
+        viewModel.getListFriendRequest();
 
     }
     @Override
@@ -65,5 +73,15 @@ public class FriendFragment extends Fragment {
         Intent intent=new Intent(getActivity(), ReceiverDetailProfileActivity.class);
         intent.putExtra(Contants.KEY_USER,user);
         startActivity(intent);
+    }
+    public void onRequestAccept(){
+//        Intent intent=new Intent(getActivity(), ReceiverDetailProfileActivity.class);
+//        intent.putExtra(Contants.KEY_USER,user);
+//        startActivity(intent);
+    }
+    public void onRequestReject(){
+//        Intent intent=new Intent(getActivity(), ReceiverDetailProfileActivity.class);
+//        intent.putExtra(Contants.KEY_USER,user);
+//        startActivity(intent);
     }
 }

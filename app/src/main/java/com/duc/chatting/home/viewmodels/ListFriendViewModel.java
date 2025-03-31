@@ -24,17 +24,56 @@ public class ListFriendViewModel extends AndroidViewModel {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
     private PreferenceManager preferenceManager;
     private List<User> users;
+    private List<User> usersRequest;
     private MutableLiveData<List<User>> friendsMutableLiveData;
+
+    public MutableLiveData<List<User>> getFriendRequestMutableLiveData() {
+        return friendRequestMutableLiveData;
+    }
+
+    private MutableLiveData<List<User>> friendRequestMutableLiveData;
     public ListFriendViewModel(@NonNull Application application) {
 
         super(application);
         preferenceManager=new PreferenceManager(application);
         friendsMutableLiveData=new MutableLiveData<>();
+        friendRequestMutableLiveData=new MutableLiveData<>();
         users=new ArrayList<>();
+        usersRequest = new ArrayList<>();
 
     }
     public MutableLiveData<List<User>> getFriendsMutableLiveData() {
         return friendsMutableLiveData;
+    }
+    public void getListFriendRequest()
+    {
+        String myId = preferenceManager.getString(Contants.KEY_USER_ID);
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                usersRequest.clear();
+                for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
+                    String status = friendSnapshot.child("status").getValue(String.class);
+                    String userID_2 = friendSnapshot.child("userID_2").getValue(String.class);
+                    String senderID = friendSnapshot.child("userID_Send").getValue(String.class);
+                    if(userID_2!=null&&senderID!=null)
+                    if (userID_2.equals(myId) && status.equals("disable"))
+                        if (senderID != null) {
+                            getUsers(senderID, user -> {
+                                if (user != null) {
+                                    usersRequest.add(user);
+                                    friendRequestMutableLiveData.postValue(usersRequest);
+                                }
+                            });
+
+                    }
+                }
+                friendRequestMutableLiveData.postValue(usersRequest);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
     public void showListFriend(){
         String myId = preferenceManager.getString(Contants.KEY_USER_ID);
@@ -60,11 +99,17 @@ public class ListFriendViewModel extends AndroidViewModel {
                         }
 
                         if (friendId != null) {
-                            getUsers(friendId);
+                            getUsers(friendId, user -> {
+                                if (user != null) {
+                                    users.add(user);
+                                    friendsMutableLiveData.postValue(users);
+                                }
+                            });
                         }
 
                     }
                 }
+                friendsMutableLiveData.postValue(users);
             }
 
             @Override
@@ -73,8 +118,8 @@ public class ListFriendViewModel extends AndroidViewModel {
             }
         });
     }
-
-    public void getUsers(String phoneNumber) {
+    User a;
+    public void getUsers(String phoneNumber, UserCallback callback) {
         databaseReference.child(Contants.KEY_COLLECTION_USERS).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -99,21 +144,25 @@ public class ListFriendViewModel extends AndroidViewModel {
                                 if (postSnapshot.child(Contants.KEY_STORY_HISTORY).getValue(String.class) != null) {
                                     imageBanner = postSnapshot.child(Contants.KEY_STORY_HISTORY).getValue(String.class);
                                 }
-                                Log.d("FriendList",name+" "+id);
                                 User user = new User(id, email, name, phoneNumber, image, imageBanner, story);
-                                users.add(user);
+                                Log.d("FriendList",name+" "+id);
+                                callback.onUserRetrieved(user);
+                                return;
                             }
-
                         }
-                        friendsMutableLiveData.postValue(users);
+//                        if(type==1) friendsMutableLiveData.postValue(users);
+//                        else if(type==2) friendRequestMutableLiveData.postValue(users);
+                        callback.onUserRetrieved(null);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        callback.onUserRetrieved(null);
                     }
                 }
         );
     }
-
+    public interface UserCallback {
+        void onUserRetrieved(User user);
+    }
 }

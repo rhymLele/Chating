@@ -137,21 +137,56 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/_15sdp"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
-                <TextView
-                    android:id="@+id/themLove"
+                android:visibility="gone">
+
+                <!-- Mục "Love" -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:text="Love"/>
-                <TextView
-                    android:id="@+id/themFriend"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_8sdp">
+
+                    <TextView
+                        android:id="@+id/themLove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Love"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black" />
+
+                    <ImageView
+                        android:id="@+id/colorLove"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@color/redAccent"/>
+                </LinearLayout>
+
+                <!-- Mục "Friend" -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:text="Friend"/>
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_8sdp">
+
+                    <TextView
+                        android:id="@+id/themFriend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friend"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black" />
+
+                    <ImageView
+                        android:id="@+id/colorFriend"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@color/AcliceBlue"/>
+                </LinearLayout>
+
             </LinearLayout>
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/group_member_chat"
@@ -165,7 +200,7 @@
                 android:id="@+id/textUserGroupChat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Seen all member of group"
+                android:text="All member of group"
             android:textSize="@dimen/_14sdp"/>
             
             <androidx.recyclerview.widget.RecyclerView

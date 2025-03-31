@@ -20,4 +20,5 @@
     <color name="friendColor">#b664cc</color>
     <color name="Grey">#4f4f4f</color>
     <color name="AcliceBlue">#f0f8ff</color>
+    <color name="ActiveUser">#16C47F</color>
 </resources>

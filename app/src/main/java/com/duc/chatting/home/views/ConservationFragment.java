@@ -25,9 +25,21 @@ import com.duc.chatting.home.adapters.RecentConservationAdapter;
 import com.duc.chatting.home.viewmodels.ConservationViewModel;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ConservationFragment extends Fragment {
@@ -36,7 +48,9 @@ public class ConservationFragment extends Fragment {
     private RecentConservationAdapter adapter;
     private PreferenceManager preferenceManager;
     private List<ChatMessage> mListChatMessage;
-
+    DatabaseReference databaseReference = FirebaseDatabase
+            .getInstance()
+            .getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -75,25 +89,71 @@ public class ConservationFragment extends Fragment {
         intent.putExtra(Contants.KEY_USER,user);
         startActivity(intent);
     }
+    public void reportUser(String postId, String userId) {
+        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
+        Map<String, Object> report = new HashMap<>();
+        report.put("reportedBy", currentUserId);
+        report.put("messageId", postId);
+        report.put("messageOwnerId", userId);
+        report.put("timestamp", FieldValue.serverTimestamp());
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
+        FirebaseFirestore.getInstance().collection("Reports")
+                .add(report)
+                .addOnSuccessListener(documentReference ->
+                        Log.d("Firebase", "Report submitted successfully"))
+                .addOnFailureListener(e ->
+                        Log.e("Firebase", "Failed to submit report", e));
+    }
+    public void blockUser(String userId) {
+        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(currentUserId)
+                .collection("BlockedUsers")
+                .document(userId)
+                .set(new HashMap<>())  // Lưu một document rỗng
+                .addOnSuccessListener(aVoid ->
+                        Log.d("Firebase", "User blocked successfully"))
+                .addOnFailureListener(e ->
+                        Log.e("Firebase", "Failed to block user", e));
+    }
+    public void unblockUser(String blockUserId) {
+        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(currentUserId)
+                .collection("BlockedUsers")
+                .document(blockUserId)
+                .delete()
+                .addOnSuccessListener(aVoid ->
+                        Log.d("Firebase", "User unblocked successfully"))
+                .addOnFailureListener(e ->
+                        Log.e("Firebase", "Failed to unblock user", e));
+    }
+    public void getBlockedUsers() {
+        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
+        FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(currentUserId)
+                .collection("BlockedUsers")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<String> blockedUsers = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        blockedUsers.add(doc.getId());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Failed to fetch blocked users", e);
+                });
+    }
+    public void deleteAccount(String uid) {
+        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
+        // Xóa user
+        databaseReference.child("users").child(currentUserId).removeValue()
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "User deleted"))
+                .addOnFailureListener(e -> Log.e("Firebase", "Failed to delete user", e));
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int id=item.getItemId();
-//        if(id==R.id.addPerson)
-//        {
-////            Intent intent=new Intent(getContext(),...);
-////            startActivity(intent);
-//        }
-//        if(id==R.id.addGroup)
-//        {
-////            Intent intent=new Intent(getContext(),...);
-////            startActivity(intent);
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+
 }

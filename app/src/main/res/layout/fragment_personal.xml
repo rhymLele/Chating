@@ -53,7 +53,7 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:layout_weight="1"
-            android:text="Personal Page"
+            android:text="View my profile"
             android:textColor="@color/test"
             android:textSize="@dimen/_10ssp" />
 
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20sdp"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lnName">
@@ -75,7 +75,7 @@
             android:layout_height="@dimen/_40sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
-            android:src="@drawable/ic_schedule" />
+            android:src="@drawable/baseline_storage_24" />
 
         <LinearLayout
 
@@ -85,26 +85,16 @@
             android:orientation="vertical">
 
             <TextView
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_15sdp"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
-                android:text="Schedule"
+                android:text="Storage"
                 android:textColor="@color/test"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:layout_weight="1"
-                android:text="detail schedule"
-                android:textColor="@color/test"
-                android:textSize="@dimen/_10ssp" />
-
         </LinearLayout>
 
     </LinearLayout>
@@ -114,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20sdp"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lnSchedule">
@@ -124,7 +114,7 @@
             android:layout_height="@dimen/_40sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
-            android:src="@drawable/baseline_note_24" />
+            android:src="@drawable/baseline_block_24" />
 
         <LinearLayout
             android:layout_width="@dimen/_220sdp"
@@ -138,10 +128,37 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
-                android:text="Note"
+                android:text="Block List"
+                android:gravity="center"
                 android:textColor="@color/test"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lnNotifcation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lnNote">
+
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_gravity="center_vertical"
+            android:scrollbarSize="@dimen/_50sdp"
+            android:src="@drawable/baseline_notifications_active_24" />
+
+        <LinearLayout
+            android:layout_width="@dimen/_220sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -149,12 +166,57 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
-                android:text="detail note"
+                android:text="Notification"
+                android:gravity="center_vertical"
                 android:textColor="@color/test"
-                android:textSize="@dimen/_10ssp" />
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+
 
         </LinearLayout>
 
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lnMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lnNotifcation">
+
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_gravity="center_vertical"
+            android:scrollbarSize="@dimen/_50sdp"
+            android:src="@drawable/baseline_dark_mode_24" />
+
+        <LinearLayout
+            android:layout_width="@dimen/_220sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:text="Dark Mode"
+                android:textColor="@color/test"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+            <Switch
+                android:id="@+id/sw_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
 
     </LinearLayout>
     <LinearLayout
@@ -165,7 +227,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lnNote">
+        app:layout_constraintTop_toBottomOf="@id/lnMode">
 
         <ImageView
             android:layout_width="@dimen/_40sdp"

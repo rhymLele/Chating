@@ -55,6 +55,9 @@ public class ChatActivityViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> loadProgressBarMutableLiveData;
     private MutableLiveData<String> themeConservationMutableLiveData;
     private MutableLiveData<Boolean> isCheckActiveMutableLiveData;
+
+
+    private MutableLiveData<Boolean> isUserActive;
     private MutableLiveData<String> conservationIdMutableLiveData;
     private List<ChatMessage> chatMessages;
     private String conservationID = null;
@@ -83,6 +86,9 @@ public class ChatActivityViewModel extends AndroidViewModel {
         return loadProgressBarMutableLiveData;
     }
 
+    public MutableLiveData<Boolean> getIsUserActive() {
+        return isUserActive;
+    }
     public MutableLiveData<String> getThemeConservationMutableLiveData() {
         return themeConservationMutableLiveData;
     }
@@ -107,6 +113,7 @@ public class ChatActivityViewModel extends AndroidViewModel {
         themeConservationMutableLiveData = new MutableLiveData<>();
         isCheckActiveMutableLiveData = new MutableLiveData<>();
         conservationIdMutableLiveData = new MutableLiveData<>();
+        isUserActive = new MutableLiveData<>(false);
     }
 
     //send message text
@@ -134,7 +141,32 @@ public class ChatActivityViewModel extends AndroidViewModel {
             }
         });
     }
+    private long onlineUsers = 0;
+    public void  countMemberOnline(){
+        databaseReference.child(Contants.KEY_USER)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                      for(DataSnapshot dataSnapshot:snapshot.getChildren())
+                      {
+                          if(dataSnapshot.child("status").equals("Online"))
+                          {
+                              Log.d("Firebase", "user online: " + dataSnapshot.child("status").getValue(String.class));
+                              onlineUsers++;
+                          }
+                      }
+                        Log.d("Firebase", "user online: " + onlineUsers);
+                        if(onlineUsers>0) isUserActive.postValue(Boolean.TRUE);
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase", "Lỗi khi đếm user online", error.toException());
+                    }
+                });
+        if (onlineUsers>0)isUserActive.postValue(Boolean.TRUE);
+        else isUserActive.postValue(Boolean.FALSE);
+    }
     //for message rep local
     public void sendMessageRepLocal(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, String messageChat, String messageRepLocal, String urlFileRepLocal, String urlImageRepLocal) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {

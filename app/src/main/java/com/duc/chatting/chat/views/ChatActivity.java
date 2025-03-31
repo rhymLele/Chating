@@ -82,9 +82,7 @@ public class ChatActivity extends AppCompatActivity {
         Log.d("ChatActivity", "OnCreated");
         preferenceManager = new PreferenceManager(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ChatActivityViewModel.class);
-
         loadReceiverDetails();
-
         viewModel.getChatMessagesMutableLiveData().observe(this, chatMessages -> {
             if (receiverUser.getImgProfile() == null) {
                 chatAdapter = new ChatAdapter(chatMessages
@@ -123,18 +121,25 @@ public class ChatActivity extends AppCompatActivity {
                 binding.progressBar.setVisibility(View.GONE);
             }
         });
+        viewModel.getIsUserActive().observe(this, Boolean -> {
+            if (Boolean == java.lang.Boolean.TRUE) {
+
+                binding.checkUserOn.setBackgroundResource(R.drawable.user_active);
+                Log.d("ChatActivity","Stattus"+Boolean);
+            }else   binding.checkUserOn.setBackgroundResource(R.drawable.user_inactive);
+        });
         viewModel.getConservationIDMutableLiveData().observe(this, mutConservationId -> {
             conservationID = mutConservationId;
         });
         viewModel.getThemeConservationMutableLiveData().observe(this, theme -> {
             if (theme != null) {
-                if (theme.equals("Love")) {
+                if (theme.equals("love")) {
                     binding.chatRecyclerView.setBackgroundResource(R.color.redAccent);
                 }
-                if (theme.equals("Friend")) {
-                    binding.chatRecyclerView.setBackgroundResource(R.color.greyLight);
+                if (theme.equals("friend")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.color.AcliceBlue);
                 }
-                if (theme.equals("Dark")) {
+                if (theme.equals("dark")) {
                     binding.chatRecyclerView.setBackgroundResource(R.color.black);
                 }
             }
@@ -316,6 +321,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void loadReceiverDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Contants.KEY_USER);
+        viewModel.countMemberOnline();
 //        Log.d("User",receiverUser.getPhoneNumber().toString());
         if (!binding.textName.toString().isEmpty()) {
             binding.textName.setText(receiverUser.getName());

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp"
+    tools:context=".poliso.views.BlockListActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/imageBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            android:layout_marginBottom="@dimen/_20sdp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Users Block List"
+            android:gravity="center"
+            android:textSize="@dimen/_18sdp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/list_blockUsers"
+      android:layout_width="match_parent"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+      android:layout_height="wrap_content"/>
+
+</LinearLayout>

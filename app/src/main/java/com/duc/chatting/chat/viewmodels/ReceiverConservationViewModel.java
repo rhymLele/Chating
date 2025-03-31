@@ -68,7 +68,7 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
     }
 
     public void getReiverConservation(String conservationID, String receiverID) {
-        isCheckedGroupChatPersonalMutableLiveData.postValue(Boolean.TRUE);
+        isCheckedGroupChatPersonalMutableLiveData.postValue(Boolean.FALSE);
         databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).child(conservationID)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

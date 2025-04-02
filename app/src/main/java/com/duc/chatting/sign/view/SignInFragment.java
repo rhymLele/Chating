@@ -35,13 +35,11 @@ public class SignInFragment extends Fragment {
                 binding.textCheckLogin.setVisibility(View.GONE);
 //                navController.navigate(R.id.action_signInFragment_to_mainActivity);
                 navController.navigate(R.id.action_signInFragment_to_homeActivity);
-                Log.d("O","here1");
             }
         });
         viewModel.getIsCheckPhoneNumberAndPasswordLogin().observe(this,isChecked->{
             if(isChecked!=null)
             {
-                Log.d("o","here2");
                 binding.textCheckLogin.setVisibility(View.VISIBLE);
 
             }
@@ -69,6 +67,8 @@ public class SignInFragment extends Fragment {
             if(isValidSignInDetails())
             {
                 viewModel.login(pN,pW);
+            }else{
+                Toast.makeText(getContext(), "Phone number of password is invalid!", Toast.LENGTH_SHORT).show();
             }
         });
     }

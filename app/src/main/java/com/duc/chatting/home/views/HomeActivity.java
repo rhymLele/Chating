@@ -75,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
             }else if(id==R.id.friend)
             {
                 replaceFragment(new FriendFragment());
-                Objects.requireNonNull(getSupportActionBar()).setTitle("List Friend");
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Friend");
             }
             return true;
         });

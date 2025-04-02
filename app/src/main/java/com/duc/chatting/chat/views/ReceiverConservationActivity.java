@@ -1,6 +1,7 @@
 package com.duc.chatting.chat.views;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,10 @@ import android.util.Base64;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -87,27 +92,43 @@ public class ReceiverConservationActivity extends AppCompatActivity {
         viewModel.getReiverConservation(conservation.getConservationID(),conservation.getReceiverID());
 
     }
-
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        String resultTheme=intent.getStringExtra("selectedTheme");
+                        viewModel.setThemeConservation(conservation.getConservationID(),resultTheme);
+                        // Handle the Intent
+                    }
+                }
+            });
     private void setClicked()
     {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
         binding.theme.setOnClickListener(v -> {
-            if(binding.listThemeBackground.getVisibility()==View.GONE)
-            {
-                binding.listThemeBackground.setVisibility(View.VISIBLE);
-            }else if(binding.listThemeBackground.getVisibility()==View.VISIBLE)
-            {
-                binding.listThemeBackground.setVisibility(View.GONE);
-            }
+//            if(binding.listThemeBackground.getVisibility()==View.GONE)
+//            {
+//                binding.listThemeBackground.setVisibility(View.VISIBLE);
+//            }else if(binding.listThemeBackground.getVisibility()==View.VISIBLE)
+//            {
+//                binding.listThemeBackground.setVisibility(View.GONE);
+//            }
+            mStartForResult.launch(new Intent(this, ThemeActivity.class));
         });
-        binding.themLove.setOnClickListener(v -> {
-            String theme="love";
-            viewModel.setThemeConservation(conservation.getConservationID(),theme);
-        });
-        binding.themFriend.setOnClickListener(v -> {
-            String theme="friend";
-            viewModel.setThemeConservation(conservation.getConservationID(),theme);
-        });
+//        binding.theme.setOnLongClickListener(v -> {
+//            mStartForResult.launch(new Intent(this, ThemeActivity.class));
+//            return  false;
+//        });
+//        binding.themLove.setOnClickListener(v -> {
+//            String theme="love";
+//            viewModel.setThemeConservation(conservation.getConservationID(),theme);
+//        });
+//        binding.themFriend.setOnClickListener(v -> {
+//            String theme="friend";
+//            viewModel.setThemeConservation(conservation.getConservationID(),theme);
+//        });
         binding.textFileAndImage.setOnClickListener(v -> {
             if(binding.groupFileAndImage.getVisibility()==View.GONE)
             {

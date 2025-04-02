@@ -133,14 +133,23 @@ public class ChatActivity extends AppCompatActivity {
         });
         viewModel.getThemeConservationMutableLiveData().observe(this, theme -> {
             if (theme != null) {
-                if (theme.equals("love")) {
-                    binding.chatRecyclerView.setBackgroundResource(R.color.redAccent);
+                if (theme.equals("Love")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.love);
                 }
-                if (theme.equals("friend")) {
+                if (theme.equals("Default")) {
                     binding.chatRecyclerView.setBackgroundResource(R.color.AcliceBlue);
                 }
-                if (theme.equals("dark")) {
-                    binding.chatRecyclerView.setBackgroundResource(R.color.black);
+                if (theme.equals("Star")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.star);
+                }
+                if (theme.equals("Ocean")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.element);
+                }
+                if (theme.equals("Kids")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.kids);
+                }
+                if (theme.equals("Sun")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.sun);
                 }
             }
         });

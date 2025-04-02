@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chat.views.ReceiverConservationActivity">
-
-    
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageBack"
         android:layout_width="@dimen/_30ssp"
@@ -131,61 +129,54 @@
                 android:text="Theme"
                 android:textSize="@dimen/_14sdp"
                 />
-            <LinearLayout
-                android:id="@+id/listThemeBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/_15sdp"
-                android:orientation="vertical"
-                android:visibility="gone">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/listThemeBackground"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginLeft="@dimen/_15sdp"-->
+<!--                android:orientation="vertical"-->
+<!--                android:visibility="visible">-->
 
-                <!-- Mục "Love" -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/_8sdp">
+<!--                &lt;!&ndash; Mục "Love" &ndash;&gt;-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="@dimen/_150sdp"-->
+<!--                    android:layout_height="@dimen/_24sdp"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:layout_marginTop="@dimen/_8sdp">-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/themLove"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Love"-->
+<!--                        android:textSize="16sp"-->
+<!--                        android:background="@drawable/love"-->
+<!--                        android:textColor="@android:color/black" />-->
+<!--                </LinearLayout>-->
 
-                    <TextView
-                        android:id="@+id/themLove"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Love"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black" />
+<!--                &lt;!&ndash; Mục "Friend" &ndash;&gt;-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:layout_marginTop="@dimen/_8sdp">-->
 
-                    <ImageView
-                        android:id="@+id/colorLove"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="8dp"
-                        android:background="@color/redAccent"/>
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/themFriend"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Friend"-->
+<!--                        android:textSize="16sp"-->
+<!--                        android:textColor="@android:color/black" />-->
 
-                <!-- Mục "Friend" -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/_8sdp">
+<!--                    <ImageView-->
+<!--                        android:id="@+id/colorFriend"-->
+<!--                        android:layout_width="24dp"-->
+<!--                        android:layout_height="24dp"-->
+<!--                        android:layout_marginLeft="8dp"-->
+<!--                        android:background="@color/AcliceBlue"/>-->
+<!--                </LinearLayout>-->
 
-                    <TextView
-                        android:id="@+id/themFriend"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Friend"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black" />
-
-                    <ImageView
-                        android:id="@+id/colorFriend"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="8dp"
-                        android:background="@color/AcliceBlue"/>
-                </LinearLayout>
-
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
         </LinearLayout>
         <LinearLayout

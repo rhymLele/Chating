@@ -68,10 +68,10 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 userListeners.onUserClicked(user);
             });
             binding.btnAccept.setOnClickListener(v -> {
-                acceptRequest.onRequestAccept();
+                acceptRequest.onRequestAccept(user);
             });
             binding.btnReject.setOnClickListener(v -> {
-                rejectRequest.onRequestReject();
+                rejectRequest.onRequestReject(user);
             });
         }
     }

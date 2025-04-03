@@ -16,7 +16,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,24 +29,52 @@ public class ListFriendViewModel extends AndroidViewModel {
     private List<User> users;
     private List<User> usersRequest;
     private MutableLiveData<List<User>> friendsMutableLiveData;
+    private MutableLiveData<Integer> frRequest;
+    private MutableLiveData<List<User>> friendRequestMutableLiveData;
+    private MutableLiveData<Integer> frAll;
+    private String keyFriendId=null;
+    public MutableLiveData<Integer> getFrAll() {
+        return frAll;
+    }
+
+    public MutableLiveData<Integer> getFrRequest() {
+        return frRequest;
+    }
+
+
 
     public MutableLiveData<List<User>> getFriendRequestMutableLiveData() {
         return friendRequestMutableLiveData;
     }
 
-    private MutableLiveData<List<User>> friendRequestMutableLiveData;
+
     public ListFriendViewModel(@NonNull Application application) {
 
         super(application);
         preferenceManager=new PreferenceManager(application);
         friendsMutableLiveData=new MutableLiveData<>();
         friendRequestMutableLiveData=new MutableLiveData<>();
+        frRequest=new MutableLiveData<>();
+        frAll=new MutableLiveData<>();
         users=new ArrayList<>();
         usersRequest = new ArrayList<>();
 
     }
     public MutableLiveData<List<User>> getFriendsMutableLiveData() {
         return friendsMutableLiveData;
+    }
+    public void cacheFriendsList(List<User> users) {
+        Gson gson = new Gson();
+        String json = gson.toJson(users);
+        preferenceManager.putString("cachedFriends", json);
+    }
+    public List<User> getCachedFriends() {
+        String json = preferenceManager.getString("cachedFriends");
+        if (json != null && !json.isEmpty()) {
+            Type type = new TypeToken<List<User>>() {}.getType();
+            return new Gson().fromJson(json, type);
+        }
+        return new ArrayList<>();
     }
     public void getListFriendRequest()
     {
@@ -56,19 +87,22 @@ public class ListFriendViewModel extends AndroidViewModel {
                     String status = friendSnapshot.child("status").getValue(String.class);
                     String userID_2 = friendSnapshot.child("userID_2").getValue(String.class);
                     String senderID = friendSnapshot.child("userID_Send").getValue(String.class);
-                    if(userID_2!=null&&senderID!=null)
+                    if(userID_2!=null&&status!=null)
                     if (userID_2.equals(myId) && status.equals("disable"))
                         if (senderID != null) {
+                            keyFriendId=friendSnapshot.getKey();
                             getUsers(senderID, user -> {
                                 if (user != null) {
                                     usersRequest.add(user);
                                     friendRequestMutableLiveData.postValue(usersRequest);
+                                    frRequest.postValue(usersRequest.size());
                                 }
                             });
-
                     }
                 }
-                friendRequestMutableLiveData.postValue(usersRequest);
+//                Log.d("LF","FrRequest"+String.valueOf(usersRequest.size()));
+//                friendRequestMutableLiveData.postValue(usersRequest);
+//                frRequest.postValue(usersRequest.size());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -76,6 +110,10 @@ public class ListFriendViewModel extends AndroidViewModel {
         });
     }
     public void showListFriend(){
+//        List<User> cachedUsers = getCachedFriends();
+//        if (!cachedUsers.isEmpty()) {
+//            friendsMutableLiveData.postValue(cachedUsers);
+//        }
         String myId = preferenceManager.getString(Contants.KEY_USER_ID);
         databaseReference.child(Contants.KEY_COLLECTION_FRIEND).addValueEventListener(new ValueEventListener() {
             @Override
@@ -91,25 +129,25 @@ public class ListFriendViewModel extends AndroidViewModel {
                         if(myId.equals(userID_1))
                         {
                             friendId = userID_2;
-                            Log.d("FriendList",userID_2);
                         }else if(myId.equals(userID_2))
                         {
                             friendId = userID_1;
-                            Log.d("FriendList",userID_1);
                         }
-
                         if (friendId != null) {
                             getUsers(friendId, user -> {
-                                if (user != null) {
+                                if (user != null && !users.contains(user)) {  // Kiểm tra tránh trùng lặp
                                     users.add(user);
                                     friendsMutableLiveData.postValue(users);
+                                    frAll.postValue(users.size());
                                 }
                             });
                         }
-
                     }
                 }
-                friendsMutableLiveData.postValue(users);
+//                Log.d("LF","FrList"+String.valueOf(users.size()));
+//                friendsMutableLiveData.postValue(users);
+//                frAll.postValue(users.size());
+//                cacheFriendsList(users);
             }
 
             @Override
@@ -164,5 +202,27 @@ public class ListFriendViewModel extends AndroidViewModel {
     }
     public interface UserCallback {
         void onUserRetrieved(User user);
+    }
+    public void acceptFriend(User user) {
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("enable").addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Xóa khỏi danh sách yêu cầu kết bạn
+                usersRequest.remove(user);
+                friendRequestMutableLiveData.postValue(usersRequest);
+
+                // Thêm vào danh sách bạn bè
+//                users.add(user);
+                friendsMutableLiveData.postValue(users);
+                frRequest.postValue(usersRequest.size());
+            }
+        });
+    }
+
+    public void destroyAddFriend(User user) {
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("disable").addOnCompleteListener(v -> {
+            usersRequest.remove(user);
+            friendRequestMutableLiveData.postValue(usersRequest);
+            frRequest.postValue(usersRequest.size());
+        });
     }
 }

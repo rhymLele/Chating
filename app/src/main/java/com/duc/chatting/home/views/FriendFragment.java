@@ -48,6 +48,12 @@ public class FriendFragment extends Fragment {
             if(!users.isEmpty()) binding.friendRequestRecyclerView.setVisibility(View.VISIBLE);
             else binding.friendRequestRecyclerView.setVisibility(View.GONE);
         });
+        viewModel.getFrAll().observe(this,ob->{
+            binding.frAll.setText(String.valueOf(ob));
+        });
+        viewModel.getFrRequest().observe(this,ob->{
+            binding.frRequest.setText(String.valueOf(ob));
+        });
     }
 
     @Override
@@ -74,14 +80,10 @@ public class FriendFragment extends Fragment {
         intent.putExtra(Contants.KEY_USER,user);
         startActivity(intent);
     }
-    public void onRequestAccept(){
-//        Intent intent=new Intent(getActivity(), ReceiverDetailProfileActivity.class);
-//        intent.putExtra(Contants.KEY_USER,user);
-//        startActivity(intent);
+    public void onRequestAccept(User user){
+    viewModel.acceptFriend(user);
     }
-    public void onRequestReject(){
-//        Intent intent=new Intent(getActivity(), ReceiverDetailProfileActivity.class);
-//        intent.putExtra(Contants.KEY_USER,user);
-//        startActivity(intent);
+    public void onRequestReject(User user){
+    viewModel.destroyAddFriend(user);
     }
 }

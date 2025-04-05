@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +26,12 @@ import java.util.Locale;
 public class RecentConservationAdapter extends RecyclerView.Adapter<RecentConservationAdapter.ConservationViewHolder> {
     private ConservationListener conservationListener;
     private List<ChatMessage> chatMessages;
-
     @SuppressLint("NotifyDataSetChanged")
     public RecentConservationAdapter( List<ChatMessage> chatMessages,ConservationListener conservationListener) {
         this.conservationListener = conservationListener;
         this.chatMessages = chatMessages;
         notifyDataSetChanged();
     }
-
     @NonNull
     @Override
     public ConservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -96,5 +95,11 @@ public class RecentConservationAdapter extends RecyclerView.Adapter<RecentConser
             }
             return new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date);
         }
+    }
+    public String getConservationIdAt(int position) {
+        if (position >= 0 && position < chatMessages.size()) {
+            return chatMessages.get(position).getConservationID();
+        }
+        return null;
     }
 }

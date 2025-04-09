@@ -72,6 +72,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.karumi:dexter:6.2.3")
+
+    implementation ("com.mesibo.api:webrtc:1.0.5")
+//    implementation ("com.guolindev.permissionx:permissionx:1.6.1")
     implementation(libs.socket.io.client)
     implementation(libs.appcompat)
     implementation(libs.material)

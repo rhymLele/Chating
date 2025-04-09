@@ -70,4 +70,8 @@ public class Contants {
     // File Collection
     public static final String KEY_COLLECTION_FILE = "file";
     public static final String KEY_STATUS_FILE = "statusFile";
+
+    //BlockUser
+    public static final String KEY_BLOCK_LIST = "BlockList";
+    public static final String KEY_CALL = "Call";
 }

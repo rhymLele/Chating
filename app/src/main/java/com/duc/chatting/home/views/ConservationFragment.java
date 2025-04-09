@@ -150,49 +150,9 @@ public class ConservationFragment extends Fragment {
                 .addOnFailureListener(e ->
                         Log.e("Firebase", "Failed to submit report", e));
     }
-    public void blockUser(String userId) {
-        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
-        FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(currentUserId)
-                .collection("BlockedUsers")
-                .document(userId)
-                .set(new HashMap<>())  // Lưu một document rỗng
-                .addOnSuccessListener(aVoid ->
-                        Log.d("Firebase", "User blocked successfully"))
-                .addOnFailureListener(e ->
-                        Log.e("Firebase", "Failed to block user", e));
-    }
-    public void unblockUser(String blockUserId) {
-        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
-        FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(currentUserId)
-                .collection("BlockedUsers")
-                .document(blockUserId)
-                .delete()
-                .addOnSuccessListener(aVoid ->
-                        Log.d("Firebase", "User unblocked successfully"))
-                .addOnFailureListener(e ->
-                        Log.e("Firebase", "Failed to unblock user", e));
-    }
-    public void getBlockedUsers() {
-        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
-        FirebaseFirestore.getInstance()
-                .collection("Users")
-                .document(currentUserId)
-                .collection("BlockedUsers")
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    List<String> blockedUsers = new ArrayList<>();
-                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                        blockedUsers.add(doc.getId());
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firebase", "Failed to fetch blocked users", e);
-                });
-    }
+
+
+
     public void deleteAccount(String uid) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
         // Xóa user

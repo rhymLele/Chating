@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.duc.chatting.R;
+import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.databinding.FragmentSignInBinding;
 import com.duc.chatting.sign.viewmodel.AuthenticationViewModel;
 
@@ -61,12 +62,16 @@ public class SignInFragment extends Fragment {
         binding.tvCreateNewAccount.setOnClickListener(v -> {
             navController.navigate(R.id.action_signInFragment_to_signUpFragment);
         });
+//        MainRepository mainRepository=MainRepository.getInstance();
         binding.buttonSignIn.setOnClickListener(v->{
             String pN=binding.etSignPhone.getText().toString();
             String pW=binding.etSignPassw.getText().toString();
             if(isValidSignInDetails())
             {
                 viewModel.login(pN,pW);
+//                mainRepository.login(pN,getActivity(),()->{
+
+//                });
             }else{
                 Toast.makeText(getContext(), "Phone number of password is invalid!", Toast.LENGTH_SHORT).show();
             }

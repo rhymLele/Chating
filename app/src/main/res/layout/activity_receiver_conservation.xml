@@ -249,6 +249,47 @@
 
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textReport"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Report User"
+                android:textSize="@dimen/_14sdp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textBlock"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Block User"
+                android:visibility="gone"
+                android:textSize="@dimen/_14sdp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textLeaveChat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Leave Chat"
+                android:visibility="gone"
+                android:textSize="@dimen/_14sdp"/>
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

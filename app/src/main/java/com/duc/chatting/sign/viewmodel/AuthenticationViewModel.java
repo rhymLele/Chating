@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +22,7 @@ public class AuthenticationViewModel extends AndroidViewModel {
     private MutableLiveData<String> userData;
     private MutableLiveData<Boolean> isCheckPhoneNumberAlready;
     private MutableLiveData<Boolean> isCheckPhoneNumberAndPasswordLogin;
-
+    private MainRepository mainRepository;
     public MutableLiveData<String> getUserData() {
         return userData;
     }
@@ -44,6 +45,7 @@ public class AuthenticationViewModel extends AndroidViewModel {
         userData = new MutableLiveData<>();
         isCheckPhoneNumberAlready = new MutableLiveData<>();
         isCheckPhoneNumberAndPasswordLogin = new MutableLiveData<>();
+        mainRepository=MainRepository.getInstance();
     }
     public void login(String phoneNumber,String password){
         String password1=String.valueOf(password.hashCode());
@@ -90,6 +92,9 @@ public class AuthenticationViewModel extends AndroidViewModel {
                                         .child(phoneNumber)
                                         .child(Contants.KEY_EMAIL)
                                         .getValue(String.class));
+                                mainRepository.login(phoneNumber,getApplication(),()->{
+
+                                });
 
                             }else{
                                 Log.d("Auth", "Password incorrect");

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -31,6 +32,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.duc.chatting.R;
+import com.duc.chatting.call.models.DataModelType;
+import com.duc.chatting.call.repository.MainRepository;
+import com.duc.chatting.call.views.CallActivity;
 import com.duc.chatting.chat.adapters.ChatAdapter;
 import com.duc.chatting.chat.models.ChatMessage;
 import com.duc.chatting.chat.models.Conservation;
@@ -50,7 +54,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity{
     private ActivityChatBinding binding;
     private User receiverUser;
     private String conservationID = "";
@@ -67,6 +71,9 @@ public class ChatActivity extends AppCompatActivity {
     private Uri dataFile = null;
     private Uri dataImage = null;
 
+    private MainRepository mainRepository;
+    private Boolean isCameraMuted = false;
+    private Boolean isMicrophoneMuted = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,7 +178,6 @@ public class ChatActivity extends AppCompatActivity {
             dialog.dismiss();
         });
     }
-
     private void setListener() {
         binding.textName.setOnClickListener(v -> {
             Conservation conservation= new Conservation(conservationID,receiverUser.getId());
@@ -261,7 +267,19 @@ public class ChatActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             pickImageBanner.launch(intent);
         });
-
+        binding.imageCall.setOnClickListener(v -> {
+//            Intent intent=new Intent(this, CallActivity.class);
+//            intent.putExtra("Target",receiverUser.getId());
+//            startActivity(intent);
+//            if(binding.chatScreen.getVisibility()==View.VISIBLE)
+//            {
+//                binding.chatScreen.setVisibility(View.GONE);
+//                binding.callScreen.setVisibility(View.VISIBLE);
+//                mainRepository.sendCallRequest(receiverUser.getId(),()->{
+//                    Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
+//                });
+//            }
+        });
     }
 
     private final ActivityResultLauncher<Intent> pickImageBanner = registerForActivityResult(

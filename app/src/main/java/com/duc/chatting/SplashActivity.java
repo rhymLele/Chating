@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
 import com.duc.chatting.sign.view.MainSignActivity;
 
 public class SplashActivity extends AppCompatActivity {
@@ -27,6 +28,8 @@ public class SplashActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        BlockUserViewModel blockUserViewModel=new BlockUserViewModel(getApplication());
+        blockUserViewModel.getBlockedUsers();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

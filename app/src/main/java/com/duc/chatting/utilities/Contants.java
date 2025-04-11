@@ -73,5 +73,9 @@ public class Contants {
 
     //BlockUser
     public static final String KEY_BLOCK_LIST = "BlockList";
+    public static final String KEY_BLOCK_SENDER = "blockSender";
+    public static final String KEY_BLOCK_RECEIVER = "blockReceiver";
+    public static final String KEY_BLOCKED_MAP = "blocked_map";
+
     public static final String KEY_CALL = "Call";
 }

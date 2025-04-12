@@ -19,6 +19,13 @@
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:src="@drawable/logo" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/splash_animationView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_70sdp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

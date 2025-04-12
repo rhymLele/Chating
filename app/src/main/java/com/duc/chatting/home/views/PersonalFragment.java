@@ -23,6 +23,7 @@ import com.duc.chatting.databinding.FragmentPersonalBinding;
 import com.duc.chatting.home.viewmodels.ConservationViewModel;
 import com.duc.chatting.information_profile.views.InformationProfileActivity;
 import com.duc.chatting.messaging.views.NotificationActivity;
+import com.duc.chatting.otherComponents.views.AboutActivity;
 import com.duc.chatting.otherComponents.views.HelpActivity;
 import com.duc.chatting.poliso.views.BlockListActivity;
 import com.duc.chatting.sign.view.MainSignActivity;
@@ -129,6 +130,10 @@ public class PersonalFragment extends Fragment {
         });
         binding.lnHelp.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), HelpActivity.class);
+            startActivity(i);
+        });
+        binding.lnAbout.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), AboutActivity.class);
             startActivity(i);
         });
     }

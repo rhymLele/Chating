@@ -85,8 +85,8 @@ public class ReceiverConservationActivity extends AppCompatActivity {
         viewModel.getIsCheckedGroupChatPersonalMutableLiveData().observe(this, isChecked -> {
             if (isChecked.equals(Boolean.TRUE)) {
                 binding.personChatView.setVisibility(View.GONE);
-                binding.textBlock.setVisibility(View.GONE);
-                binding.textLeaveChat.setVisibility(View.VISIBLE);
+                binding.lnBlock.setVisibility(View.GONE);
+                binding.lnLeave.setVisibility(View.VISIBLE);
                 binding.groupChatView.setVisibility(View.VISIBLE);
                 binding.groupMemberChat.setVisibility(View.VISIBLE);
                 binding.textReport.setText("Report");

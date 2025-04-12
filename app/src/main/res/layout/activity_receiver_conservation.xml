@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AcliceBlue"
     tools:context=".chat.views.ReceiverConservationActivity">
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageBack"
@@ -108,25 +109,27 @@
         android:padding="@dimen/_8sdp"
         android:layout_marginLeft="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@id/top_navigation">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Information of group chat"
-            android:textSize="@dimen/_16sdp"
-            android:textStyle="bold"
-            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
             android:gravity="center_vertical"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             >
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="center_vertical"
+                android:scrollbarSize="@dimen/_50sdp"
+                android:src="@drawable/cus" />
             <TextView
                 android:id="@+id/theme"
                 android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:layout_height="wrap_content"
-                android:text="Theme"
+                android:gravity="center"
+                android:text="Custom Background Chat"
                 android:textSize="@dimen/_14sdp"
                 />
 <!--            <LinearLayout-->
@@ -180,6 +183,29 @@
 
         </LinearLayout>
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="center_vertical"
+                android:scrollbarSize="@dimen/_50sdp"
+                android:src="@drawable/colorchat" />
+            <TextView
+                android:id="@+id/chatC"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Custom Color Chat"
+                android:textSize="@dimen/_14sdp"
+                />
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/group_member_chat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -209,17 +235,32 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/textFileAndImage"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="File pdf and image"
-                android:textSize="@dimen/_14sdp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="center_vertical"
+                    android:scrollbarSize="@dimen/_50sdp"
+                    android:src="@drawable/media" />
+                <TextView
+                    android:id="@+id/textFileAndImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:text="Media files"
+                    android:textSize="@dimen/_14sdp"/>
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/groupFileAndImage"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_marginLeft="@dimen/_35sdp"
                 android:orientation="vertical"
                 android:visibility="visible"
                 >
@@ -228,7 +269,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:text="File Image"/>
+                    android:text="Image"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewFileImage"
                     android:layout_width="wrap_content"
@@ -239,7 +280,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:text="File pdf"/>
+                    android:text="Pdf"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewFile"
                     android:layout_width="wrap_content"
@@ -251,43 +292,71 @@
         </LinearLayout>
         <LinearLayout
             android:gravity="center_vertical"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="center_vertical"
+                android:scrollbarSize="@dimen/_50sdp"
+                android:src="@drawable/report" />
             <TextView
                 android:id="@+id/textReport"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:text="Report User"
+                android:gravity="center"
+                android:textColor="@color/redAccent"
                 android:textSize="@dimen/_14sdp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/lnBlock"
             android:gravity="center_vertical"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="center_vertical"
+                android:scrollbarSize="@dimen/_50sdp"
+                android:src="@drawable/block" />
             <TextView
                 android:id="@+id/textBlock"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Block User"
+                android:textColor="@color/redAccent"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:gravity="center"
                 android:visibility="visible"
                 android:textSize="@dimen/_14sdp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/lnLeave"
             android:gravity="center_vertical"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="center_vertical"
+                android:scrollbarSize="@dimen/_50sdp"
+                android:src="@drawable/logout" />
             <TextView
                 android:id="@+id/textLeaveChat"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Leave Chat"
-                android:visibility="gone"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textColor="@color/redAccent"
+                android:visibility="visible"
                 android:textSize="@dimen/_14sdp"/>
         </LinearLayout>
     </LinearLayout>

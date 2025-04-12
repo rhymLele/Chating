@@ -39,7 +39,7 @@
             android:id="@+id/textName"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_15sdp"
-            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_18sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:layout_weight="1"
             android:text="Username"
@@ -50,7 +50,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_15sdp"
-            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_18sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:layout_weight="1"
             android:text="View my profile"

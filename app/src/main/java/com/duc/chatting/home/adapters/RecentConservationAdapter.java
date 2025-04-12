@@ -62,14 +62,14 @@ public class RecentConservationAdapter extends RecyclerView.Adapter<RecentConser
                 binding.imageProfile.setImageBitmap(getConservationImage(chatMessage.getConservationImage()));
             }
             binding.textName.setText(chatMessage.getConservationName());
-            String receiverMessage=chatMessage.getSenderName()+":"+chatMessage.getMessage();
-            String senderMessage="You:"+chatMessage.getMessage();
+            String receiverMessage=chatMessage.getSenderName()+": "+chatMessage.getMessage();
+            String senderMessage=chatMessage.getMessage();
             if(chatMessage.getSenderName()!=null){
                 binding.textRecentMessage.setText(receiverMessage);
-                binding.textDate.setText(" . " + getReadableDate(chatMessage.getDateObject()));
+                binding.textDate.setText(getReadableDate(chatMessage.getDateObject()));
             }else {
                 binding.textRecentMessage.setText(senderMessage);
-                binding.textDate.setText(" . " + getReadableDate(chatMessage.getDateObject()));
+                binding.textDate.setText(getReadableDate(chatMessage.getDateObject()));
             }
             binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override

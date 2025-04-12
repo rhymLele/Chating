@@ -55,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
         });
         preferenceManager=new PreferenceManager(getApplicationContext());
         setSupportActionBar(binding.header.myToolBar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Zalo");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("WeLog");
 
         if (savedInstanceState == null) { // Chỉ load lần đầu tiên khi Activity được tạo
             replaceFragment(new ConservationFragment());

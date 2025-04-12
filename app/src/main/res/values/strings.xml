@@ -10,4 +10,6 @@
     <string name="intro_message_3">Ensure privacy with encrypted messages.</string>
     <string name="intro_title_4">Cross-Platform Compatibility</string>
     <string name="intro_message_4">Access chats on any device seamlessly.</string>
+    <string name="message">message</string>
+    <string name="name">name</string>
 </resources>

@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,14 +53,14 @@ public class AppPreference {
         return sharedPreferences.getStringSet(key, new HashSet<>());
     }
 
-    public void putMap(String key, Map<String, String> map) {
+    public void putMap(String key, Map<String, List<String>> map) {
         String json = gson.toJson(map);
         sharedPreferences.edit().putString(key, json).apply();
     }
 
-    public Map<String, String> getMap(String key) {
+    public Map<String, List<String>> getMap(String key) {
         String json = sharedPreferences.getString(key, "{}");
-        Type type = new TypeToken<HashMap<String, String>>() {}.getType();
+        Type type = new TypeToken<HashMap<String, List<String>>>() {}.getType();
         return gson.fromJson(json, type);
     }
 

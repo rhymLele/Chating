@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.duc.chatting.chat.models.User;
+import com.duc.chatting.home.viewmodels.ListFriendViewModel;
 import com.duc.chatting.utilities.AppPreference;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
@@ -30,18 +31,29 @@ public class BlockUserViewModel extends AndroidViewModel {
     private final MutableLiveData<String> errorMessage ;
     private final MutableLiveData<User> user ;
     private User userBlocked;
-    private  List<String> userBlockIdList;
+    private  List<User> userBlockIdList;
     private PreferenceManager preferenceManager;
     private final MutableLiveData<Boolean> userrBlocker ;
     private final MutableLiveData<Boolean> userrBlocked ;
-    Map<String, String> blockedUserMap = new HashMap<>();
+    Map<String, List<String>> blockedUserMap = new HashMap<>();
+
+
+    private MutableLiveData<List<User>> friendsMutableLiveData;
     DatabaseReference databaseReference = FirebaseDatabase
             .getInstance()
             .getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
     AppPreference prefs ;
 
+    public MutableLiveData<Boolean> getIsBlockedBetweenUsers() {
+        return isBlockedBetweenUsers;
+    }
+
+    private final MutableLiveData<Boolean> isBlockedBetweenUsers;
     public MutableLiveData<User> getUser() {
         return user;
+    }
+    public MutableLiveData<List<User>> getFriendsMutableLiveData() {
+        return friendsMutableLiveData;
     }
 
     public BlockUserViewModel(@NonNull Application application) {
@@ -53,6 +65,8 @@ public class BlockUserViewModel extends AndroidViewModel {
         userrBlocked=new MutableLiveData<>();
         userrBlocker=new MutableLiveData<>();
         prefs=AppPreference.getInstance(application);
+        friendsMutableLiveData=new MutableLiveData<>();
+        isBlockedBetweenUsers = new MutableLiveData<>();
         preferenceManager=new PreferenceManager(application);
     }
 
@@ -75,12 +89,56 @@ public class BlockUserViewModel extends AndroidViewModel {
                         // Xử lý thành công, đã block người dùng
                         Log.d("BlockUser", "User blocked successfully.");
                         blockStatus.postValue(Boolean.TRUE);
+                        blockedUserMap.computeIfAbsent(currentUserId, k -> new ArrayList<>()).add(userId);
+
+                        prefs.putMap(Contants.KEY_BLOCKED_MAP, blockedUserMap);
                     } else {
                         // Xử lý lỗi
                         Log.d("BlockUser", "Error blocking user.");
                     }
                 });
     }
+    public void observeBlockStatusRealtime(String otherUserId) {
+        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
+        DatabaseReference ref = databaseReference.child(Contants.KEY_BLOCK_LIST);
+        // Khi mình block người kia
+        ref.child(currentUserId).child(otherUserId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean youBlockedThem = snapshot.exists();
+                        checkAndPostBlockStatus(youBlockedThem, null);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
+
+        // Khi bị người kia block
+        ref.child(otherUserId).child(currentUserId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean theyBlockedYou = snapshot.exists();
+                        checkAndPostBlockStatus(null, theyBlockedYou);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
+    }
+
+    private Boolean lastYouBlockedThem = false;
+    private Boolean lastTheyBlockedYou = false;
+
+    private void checkAndPostBlockStatus(Boolean youBlockedThem, Boolean theyBlockedYou) {
+        if (youBlockedThem != null) lastYouBlockedThem = youBlockedThem;
+        if (theyBlockedYou != null) lastTheyBlockedYou = theyBlockedYou;
+
+        boolean isBlocked = lastYouBlockedThem || lastTheyBlockedYou;
+        isBlockedBetweenUsers.postValue(isBlocked);
+    }
+
     public void listenBlock(String userId) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
         databaseReference.child(Contants.KEY_BLOCK_LIST)
@@ -100,18 +158,28 @@ public class BlockUserViewModel extends AndroidViewModel {
     public void unblockUser(String blockUserId) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
         databaseReference.child(Contants.KEY_BLOCK_LIST)
-                .child(currentUserId)  // ID của người dùng hiện tại
-                .child(blockUserId)         // ID của người bị unblock
-                .removeValue()         // Xóa người dùng khỏi danh sách block
+                .child(currentUserId)
+                .child(blockUserId)
+                .removeValue()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Xử lý thành công, đã unblock người dùng
                         Log.d("UnblockUser", "User unblocked successfully.");
+                        if (blockedUserMap.containsKey(currentUserId)) {
+                            blockedUserMap.get(currentUserId).remove(blockUserId);
+                            prefs.putMap(Contants.KEY_BLOCKED_MAP, blockedUserMap);
+                        }
+                        for (User u : new ArrayList<>(userBlockIdList)) {
+                            if (u.getId().equals(blockUserId)) {
+                                userBlockIdList.remove(u);
+                                break;
+                            }
+                        }
+                        friendsMutableLiveData.postValue(userBlockIdList);
                     } else {
-                        // Xử lý lỗi
                         Log.d("UnblockUser", "Error unblocking user.");
                     }
                 });
+
     }
 
     public void getBlockedUsers() {
@@ -127,8 +195,12 @@ public class BlockUserViewModel extends AndroidViewModel {
                         if (dataSnapshot.exists()) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String blockedUserId = snapshot.getKey();
-                                blockedUserMap.put(currentUserId, blockedUserId);
-                                prefs.putMap(Contants.KEY_BLOCKED_MAP,blockedUserMap);
+                                getUsers(blockedUserId, user -> {
+                                    if (user != null && !userBlockIdList.contains(user)) {
+                                        userBlockIdList.add(user);
+                                        friendsMutableLiveData.postValue(userBlockIdList);
+                                    }
+                                });
                             }
                             Log.d("BlockedUserMap", "Loaded: " + blockedUserMap);
                         } else {
@@ -142,6 +214,52 @@ public class BlockUserViewModel extends AndroidViewModel {
                     }
                 });
     }
+
+
+    public interface UserCallback {
+        void onUserRetrieved(User user);
+    }
+    public void getUsers(String phoneNumber, UserCallback callback) {
+        databaseReference.child(Contants.KEY_COLLECTION_USERS).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<User> users = new ArrayList<>();
+                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                            if (preferenceManager.getString(Contants.KEY_USER_ID).equals(postSnapshot.child(Contants.KEY_PHONE_NUMBER).getValue(String.class))) {
+                                continue;
+                            }
+                            String phoneNumberTest = postSnapshot.child(Contants.KEY_PHONE_NUMBER).getValue(String.class);
+                            if (phoneNumber.equals(phoneNumberTest)) {
+                                String id = postSnapshot.child(Contants.KEY_PHONE_NUMBER).getValue(String.class);
+                                String email = postSnapshot.child(Contants.KEY_EMAIL).getValue(String.class);
+                                String name = postSnapshot.child(Contants.KEY_NAME).getValue(String.class);
+                                String image = null, imageBanner = null, story = null;
+                                if (postSnapshot.child(Contants.KEY_IMAGE).getValue(String.class) != null) {
+                                    image = postSnapshot.child(Contants.KEY_IMAGE).getValue(String.class);
+                                }
+                                if (postSnapshot.child(Contants.KEY_IMAGE_BANNER).getValue(String.class) != null) {
+                                    imageBanner = postSnapshot.child(Contants.KEY_IMAGE_BANNER).getValue(String.class);
+                                }
+                                if (postSnapshot.child(Contants.KEY_STORY_HISTORY).getValue(String.class) != null) {
+                                    imageBanner = postSnapshot.child(Contants.KEY_STORY_HISTORY).getValue(String.class);
+                                }
+                                User user = new User(id, email, name, phoneNumber, image, imageBanner, story);
+                                Log.d("FriendList",name+" "+id);
+                                callback.onUserRetrieved(user);
+                                return;
+                            }
+                        }
+                        callback.onUserRetrieved(null);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        callback.onUserRetrieved(null);
+                    }
+                }
+        );
+    }
     public void getBlockedUsers(Runnable onComplete) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
         databaseReference
@@ -154,8 +272,10 @@ public class BlockUserViewModel extends AndroidViewModel {
                         if (dataSnapshot.exists()) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String blockedUserId = snapshot.getKey();
-                                blockedUserMap.put(currentUserId, blockedUserId);
+                                blockedUserMap.computeIfAbsent(currentUserId, k -> new ArrayList<>()).add(blockedUserId);
+                                Log.d("BlockID",String.valueOf(blockedUserId));
                             }
+
                         }
                         // lưu local
                         prefs.putMap(Contants.KEY_BLOCKED_MAP, blockedUserMap);

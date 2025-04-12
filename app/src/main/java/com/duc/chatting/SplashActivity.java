@@ -14,30 +14,35 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
+import com.duc.chatting.intro.IntroActivity;
 import com.duc.chatting.sign.view.MainSignActivity;
+import com.duc.chatting.utilities.AppPreference;
 
 public class SplashActivity extends AppCompatActivity {
-
+    AppPreference prefManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
+        prefManager = AppPreference.getInstance(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
         BlockUserViewModel blockUserViewModel=new BlockUserViewModel(getApplication());
-        blockUserViewModel.getBlockedUsers();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        blockUserViewModel.getBlockedUsers(() -> {
+            new Handler().postDelayed(() -> {
                 createNotificationChannel();
-                startActivity(new Intent(SplashActivity.this, MainSignActivity.class));
+                if (prefManager.isFirstTimeLaunch()) {
+                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+                } else {
+                    startActivity(new Intent(SplashActivity.this, MainSignActivity.class));
+                }
                 finish();
-            }
-        },2000);
+            }, 2000);
+        });
     }
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

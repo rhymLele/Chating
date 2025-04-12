@@ -1,5 +1,6 @@
 package com.duc.chatting.sign.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +18,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.duc.chatting.R;
+import com.duc.chatting.SplashActivity;
 import com.duc.chatting.databinding.FragmentSignUpBinding;
+import com.duc.chatting.intro.IntroActivity;
 import com.duc.chatting.sign.viewmodel.AuthenticationViewModel;
+import com.duc.chatting.utilities.widgets.LoadingDialog;
 
 
 public class SignUpFragment extends Fragment {
@@ -28,13 +33,19 @@ public class SignUpFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel=new ViewModelProvider(this).get(AuthenticationViewModel.class);
+        LoadingDialog loadingDialog=new LoadingDialog(getActivity());
         viewModel.getUserData().observe(this,firebaseUser->{
             if(firebaseUser!=null)
             {
                 binding.textPhoneNumberCheckAlready.setVisibility(View.GONE);
                 binding.llCheckPassword.setVisibility(View.GONE);
 //                navController.navigate(R.id.action_signUpFragment_to_mainActivity);
-                navController.navigate(R.id.action_signUpFragment_to_homeActivity);
+                loadingDialog.show();
+                new Handler().postDelayed(() -> {
+                    loadingDialog.dismiss();
+                    navController.navigate(R.id.action_signUpFragment_to_homeActivity);
+                }, 2000);
+
             }
         });
         viewModel.getIsCheckPhoneNumberAlready().observe(this,isCheck->{
@@ -61,6 +72,7 @@ public class SignUpFragment extends Fragment {
         binding.tvHaveAccount.setOnClickListener(v -> {
             navController.navigate(R.id.action_signUpFragment_to_signInFragment);
         });
+
         binding.buttonSignIn.setOnClickListener(v -> {
             String email=binding.etSignEmail.getText().toString();
             String password=binding.etSignPassw.getText().toString();

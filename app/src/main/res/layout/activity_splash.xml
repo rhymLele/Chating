@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/my_primary"
+    android:background="@color/AcliceBlue"
 
     tools:context=".SplashActivity">
 
@@ -18,7 +18,7 @@
         <ImageView
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:src="@drawable/baseline_message_24" />
+            android:src="@drawable/logo" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

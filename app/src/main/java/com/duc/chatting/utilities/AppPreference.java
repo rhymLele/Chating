@@ -16,13 +16,19 @@ public class AppPreference {
     private static final String PREF_NAME = "chat_app_prefs";
     private static AppPreference instance;
     private final SharedPreferences sharedPreferences;
+    private static final String IS_FIRST_TIME = "is_first_time";
     private final Gson gson;
 
     private AppPreference(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         gson = new Gson();
     }
-
+    public void setFirstTimeLaunch(boolean isFirstTime) {
+        sharedPreferences.edit().putBoolean(IS_FIRST_TIME, isFirstTime).apply();
+    }
+    public boolean isFirstTimeLaunch() {
+        return sharedPreferences.getBoolean(IS_FIRST_TIME, true);
+    }
     public static synchronized AppPreference getInstance(Context context) {
         if (instance == null) {
             instance = new AppPreference(context.getApplicationContext());

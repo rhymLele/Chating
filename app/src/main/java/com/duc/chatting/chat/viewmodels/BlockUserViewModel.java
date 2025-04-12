@@ -142,5 +142,32 @@ public class BlockUserViewModel extends AndroidViewModel {
                     }
                 });
     }
+    public void getBlockedUsers(Runnable onComplete) {
+        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
+        databaseReference
+                .child(Contants.KEY_BLOCK_LIST)
+                .child(currentUserId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        blockedUserMap.clear();
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String blockedUserId = snapshot.getKey();
+                                blockedUserMap.put(currentUserId, blockedUserId);
+                            }
+                        }
+                        // lưu local
+                        prefs.putMap(Contants.KEY_BLOCKED_MAP, blockedUserMap);
+                        if (onComplete != null) onComplete.run();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        if (onComplete != null) onComplete.run(); // vẫn tiếp tục vào app
+                    }
+                });
+    }
+
 
 }

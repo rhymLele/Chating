@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.duc.chatting.ChatGPT.adapters.MessageBotAdapter;
 import com.duc.chatting.ChatGPT.models.MessageBot;
+import com.duc.chatting.ChatGPT.viewmodels.ChatBotViewModel;
 import com.duc.chatting.R;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
@@ -41,6 +43,7 @@ public class BotFragment extends Fragment {
     List<MessageBot> messageList;
     MessageBotAdapter messageAdapter;
     private GenerativeModelFutures model;
+    private ChatBotViewModel botViewModel;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,17 +66,20 @@ public class BotFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        messageList = new ArrayList<>();
-
+//        messageList = new ArrayList<>();
+        botViewModel = new ViewModelProvider(requireActivity()).get(ChatBotViewModel.class);
         recyclerView = view.findViewById(R.id.recycler_view);
         messageEditText = view.findViewById(R.id.message_edit_text);
         sendButton = view.findViewById(R.id.send_btn);
+        messageList = botViewModel.messageList;
         messageAdapter = new MessageBotAdapter(messageList);
         recyclerView.setAdapter(messageAdapter);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-        handler.postDelayed(suggestionRunnable, 10000);
+        if (messageList.isEmpty()) {
+            handler.postDelayed(suggestionRunnable, 10000);
+        }
         sendButton.setOnClickListener((v)->{
             String question = messageEditText.getText().toString();
             if (!question.trim().isEmpty()) {

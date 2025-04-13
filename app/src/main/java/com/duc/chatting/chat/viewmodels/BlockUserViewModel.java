@@ -28,7 +28,6 @@ import java.util.Set;
 public class BlockUserViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> blockStatus ;
-    private final MutableLiveData<String> errorMessage ;
     private final MutableLiveData<User> user ;
     private User userBlocked;
     private  List<User> userBlockIdList;
@@ -60,7 +59,6 @@ public class BlockUserViewModel extends AndroidViewModel {
         super(application);
         blockStatus=new MutableLiveData<>();
         user=new MutableLiveData<>();
-        errorMessage=new MutableLiveData<>();
         userBlockIdList=new ArrayList<>();
         userrBlocked=new MutableLiveData<>();
         userrBlocker=new MutableLiveData<>();
@@ -72,10 +70,6 @@ public class BlockUserViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> getBlockStatus() {
         return blockStatus;
-    }
-
-    public MutableLiveData<String> getErrorMessage() {
-        return errorMessage;
     }
 
     public void blockUser(String userId) {
@@ -137,23 +131,6 @@ public class BlockUserViewModel extends AndroidViewModel {
 
         boolean isBlocked = lastYouBlockedThem || lastTheyBlockedYou;
         isBlockedBetweenUsers.postValue(isBlocked);
-    }
-
-    public void listenBlock(String userId) {
-        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
-        databaseReference.child(Contants.KEY_BLOCK_LIST)
-                .child(currentUserId)  // ID của người dùng hiện tại
-                .child(userId)         // ID của người bị block
-                .setValue(true)        // Gán giá trị true để đánh dấu người dùng này bị block
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Xử lý thành công, đã block người dùng
-                        Log.d("BlockUser", "User blocked successfully.");
-                    } else {
-                        // Xử lý lỗi
-                        Log.d("BlockUser", "Error blocking user.");
-                    }
-                });
     }
     public void unblockUser(String blockUserId) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);

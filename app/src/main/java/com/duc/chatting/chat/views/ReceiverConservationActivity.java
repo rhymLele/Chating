@@ -3,14 +3,17 @@ package com.duc.chatting.chat.views;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -33,10 +36,12 @@ import com.duc.chatting.chat.adapters.UserGroupAdapter;
 import com.duc.chatting.chat.models.Conservation;
 import com.duc.chatting.chat.models.PDFClass;
 import com.duc.chatting.chat.models.User;
+import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
 import com.duc.chatting.chat.viewmodels.ReceiverConservationViewModel;
 import com.duc.chatting.databinding.ActivityReceiverConservationBinding;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.StartGameDialogFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FieldValue;
@@ -44,8 +49,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class ReceiverConservationActivity extends AppCompatActivity {
+public class ReceiverConservationActivity extends AppCompatActivity implements StartGameDialogFragment.StartGameDialogListener {
 
     private ActivityReceiverConservationBinding binding;
     private ReceiverConservationViewModel viewModel;
@@ -55,6 +61,8 @@ public class ReceiverConservationActivity extends AppCompatActivity {
     private Conservation conservation;
     private PreferenceManager preferenceManager;
     private User userA;
+    private BlockUserViewModel blockUserViewModel;
+    StartGameDialogFragment dialog;
     DatabaseReference databaseReference = FirebaseDatabase
             .getInstance()
             .getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
@@ -71,16 +79,33 @@ public class ReceiverConservationActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        userA = (User) getIntent().getSerializableExtra(Contants.KEY_USER);
         preferenceManager=new PreferenceManager(this);
         viewModel = new ViewModelProvider(this).get(ReceiverConservationViewModel.class);
-        viewModel.getReceiverMutableLiveData().observe(this, user -> {
-            userA=user;
-            binding.profileName.setText(user.getName());
-            if (user.getImgProfile() != null) {
-                binding.profileImage.setImageBitmap(getBitmapFromEncodeString(user.getImgProfile()));
+        blockUserViewModel=new  ViewModelProvider(this).get(BlockUserViewModel.class);
+
+        viewModel.getIsCheckedCon().observe(this,ob->{
+            if(ob==Boolean.TRUE)
+            {
+                viewModel.getReceiverMutableLiveData().observe(this, user -> {
+
+                    userA=user;
+                    binding.profileName.setText(user.getName());
+                    if (user.getImgProfile() != null) {
+                        binding.profileImage.setImageBitmap(getBitmapFromEncodeString(user.getImgProfile()));
+                    }
+
+
+                });
+            }else
+            {
+                binding.profileName.setText(userA.getName());
+                if (userA.getImgProfile() != null) {
+                    binding.profileImage.setImageBitmap(getBitmapFromEncodeString(userA.getImgProfile()));
+                }
             }
         });
+
 
         viewModel.getIsCheckedGroupChatPersonalMutableLiveData().observe(this, isChecked -> {
             if (isChecked.equals(Boolean.TRUE)) {
@@ -215,6 +240,13 @@ public class ReceiverConservationActivity extends AppCompatActivity {
                 Toast.makeText(this, "Oppss!", Toast.LENGTH_SHORT).show();
             }
         });
+        dialog = new StartGameDialogFragment();
+
+
+        binding.lnBlock.setOnClickListener(v -> {
+            dialog.show(getSupportFragmentManager(), "StartGameDialog");
+
+        });
     }
     private void showReportDialog(String conservationId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -223,24 +255,41 @@ public class ReceiverConservationActivity extends AppCompatActivity {
         // Tạo EditText để nhập nội dung báo cáo
         final EditText input = new EditText(this);
         input.setHint("Enter report reason...");
+//        input.setPadding(50, 40, 50, 10); // Tuỳ chỉnh padding cho đẹp
         builder.setView(input);
 
         // Nút Gửi Báo Cáo
-        builder.setPositiveButton("Report", (dialog, which) -> {
-            String reportMessage = input.getText().toString().trim();
-            if (!reportMessage.isEmpty()) {
-                reportUser(conservationId, reportMessage);
-            } else {
-                Toast.makeText(this, "Please enter a reason for reporting!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        builder.setPositiveButton("Report", null); // Gán null để xử lý sau trong setOnShowListener
 
         // Nút Hủy
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
-        builder.show();
-    }
+        AlertDialog dialog = builder.create();
 
+        // Tuỳ chỉnh sau khi dialog hiển thị
+        dialog.setOnShowListener(dialogInterface -> {
+            // Tuỳ chỉnh màu nền
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.custom_dialog_background);
+
+            // Tuỳ chỉnh màu nút
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            negativeButton.setTextColor(Color.RED);
+
+            // Gắn sự kiện click cho nút Report (vì lúc tạo đã set null)
+            positiveButton.setOnClickListener(v -> {
+                String reportMessage = input.getText().toString().trim();
+                if (!reportMessage.isEmpty()) {
+                    reportUser(conservationId, reportMessage);
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(this, "Please enter a reason for reporting!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        dialog.show();
+    }
     public void reportUser(String postId,String message) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
         Map<String, Object> report = new HashMap<>();
@@ -255,38 +304,6 @@ public class ReceiverConservationActivity extends AppCompatActivity {
                         Log.d("Firebase", "Report submitted successfully"))
                 .addOnFailureListener(e ->
                         Log.e("Firebase", "Failed to submit report", e));
-    }
-    public void blockUser(String userId) {
-        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
-        databaseReference.child(Contants.KEY_BLOCK_LIST)
-                .child(currentUserId)  // ID của người dùng hiện tại
-                .child(userId)         // ID của người bị block
-                .setValue(true)        // Gán giá trị true để đánh dấu người dùng này bị block
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Xử lý thành công, đã block người dùng
-                        Log.d("BlockUser", "User blocked successfully.");
-                    } else {
-                        // Xử lý lỗi
-                        Log.d("BlockUser", "Error blocking user.");
-                    }
-                });
-    }
-    public void unblockUser(String blockUserId) {
-        String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
-        databaseReference.child(Contants.KEY_BLOCK_LIST)
-                .child(currentUserId)  // ID của người dùng hiện tại
-                .child(blockUserId)         // ID của người bị unblock
-                .removeValue()         // Xóa người dùng khỏi danh sách block
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Xử lý thành công, đã unblock người dùng
-                        Log.d("UnblockUser", "User unblocked successfully.");
-                    } else {
-                        // Xử lý lỗi
-                        Log.d("UnblockUser", "Error unblocking user.");
-                    }
-                });
     }
     public void onUserClicked(User user)
     {
@@ -312,4 +329,13 @@ public class ReceiverConservationActivity extends AppCompatActivity {
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
+    @Override
+    public void onStartGame() {
+        blockUserViewModel.blockUser(userA.getId());
+    }
+
+    @Override
+    public void onCancelGame() {
+        dialog.dismiss();
+    }
 }

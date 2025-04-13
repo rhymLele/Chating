@@ -30,12 +30,18 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
     private MutableLiveData<List<User>> listUserMutableLiveData;
     private MutableLiveData<List<PDFClass>> listPDFMutableLiveData;
     private MutableLiveData<List<ImageClass>> listImageMutableLiveData;
+
+
+    private MutableLiveData<Boolean> isCheckedCon;
     private List<User> listUser;
     private List<PDFClass> listPDF;
     private List<ImageClass> listImage;
 
     public MutableLiveData<User> getReceiverMutableLiveData() {
         return receiverMutableLiveData;
+    }
+    public MutableLiveData<Boolean> getIsCheckedCon() {
+        return isCheckedCon;
     }
 
     public MutableLiveData<Boolean> getIsCheckedGroupChatPersonalMutableLiveData() {
@@ -62,6 +68,7 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
         listUserMutableLiveData = new MutableLiveData<>();
         listImageMutableLiveData = new MutableLiveData<>();
         listPDFMutableLiveData = new MutableLiveData<>();
+        isCheckedCon=new MutableLiveData<>();
         listUser = new ArrayList<>();
         listPDF = new ArrayList<>();
         listImage = new ArrayList<>();
@@ -75,17 +82,25 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String senderIDCon = snapshot.child(Contants.KEY_SENDER_ID).getValue(String.class);
                         String receiverIDCon = snapshot.child(Contants.KEY_RECEIVER_ID).getValue(String.class);
-                        if (senderIDCon.equals(receiverID)) {
-                            String receiverImage = snapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
-                            String receiverName = snapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
-                            User user = new User(receiverID, receiverName, receiverImage);
-                            receiverMutableLiveData.postValue(user);
-                        } else if (receiverIDCon.equals(receiverID)) {
-                            String receiverImage = snapshot.child(Contants.KEY_RECEIVER_IMAGE).getValue(String.class);
-                            String receiverName = snapshot.child(Contants.KEY_RECEIVER_NAME).getValue(String.class);
-                            User user = new User(receiverID, receiverName, receiverImage);
-                            receiverMutableLiveData.postValue(user);
+                        if(senderIDCon!=null&&receiverIDCon!=null)
+                        {
+                            isCheckedCon.postValue(Boolean.TRUE);
+                            if (senderIDCon.equals(receiverID)) {
+                                String receiverImage = snapshot.child(Contants.KEY_SENDER_IMAGE).getValue(String.class);
+                                String receiverName = snapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);
+                                User user = new User(receiverID, receiverName, receiverImage);
+                                receiverMutableLiveData.postValue(user);
+                            } else if (receiverIDCon.equals(receiverID)) {
+                                String receiverImage = snapshot.child(Contants.KEY_RECEIVER_IMAGE).getValue(String.class);
+                                String receiverName = snapshot.child(Contants.KEY_RECEIVER_NAME).getValue(String.class);
+                                User user = new User(receiverID, receiverName, receiverImage);
+                                receiverMutableLiveData.postValue(user);
+                            }
+                        }else
+                        {
+                            isCheckedCon.postValue(Boolean.FALSE);
                         }
+
                     }
 
                     @Override

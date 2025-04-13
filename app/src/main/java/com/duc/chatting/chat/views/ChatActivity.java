@@ -40,10 +40,12 @@ import com.duc.chatting.chat.models.ChatMessage;
 import com.duc.chatting.chat.models.Conservation;
 import com.duc.chatting.chat.models.PDFClass;
 import com.duc.chatting.chat.models.User;
+import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
 import com.duc.chatting.chat.viewmodels.ChatActivityViewModel;
 import com.duc.chatting.databinding.ActivityChatBinding;
 import com.duc.chatting.home.views.ConservationFragment;
 import com.duc.chatting.home.views.HomeActivity;
+import com.duc.chatting.utilities.AppPreference;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
 import com.squareup.picasso.Picasso;
@@ -53,6 +55,9 @@ import org.checkerframework.checker.units.qual.C;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity{
     private ActivityChatBinding binding;
@@ -60,7 +65,7 @@ public class ChatActivity extends AppCompatActivity{
     private String conservationID = "";
     private PreferenceManager preferenceManager;
     private ChatActivityViewModel viewModel;
-
+    private BlockUserViewModel blockUserViewModel;
     //for dialog able and disable or rep ibox
 
     private Dialog dialog;
@@ -74,6 +79,7 @@ public class ChatActivity extends AppCompatActivity{
     private MainRepository mainRepository;
     private Boolean isCameraMuted = false;
     private Boolean isMicrophoneMuted = false;
+    AppPreference prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +95,7 @@ public class ChatActivity extends AppCompatActivity{
         Log.d("ChatActivity", "OnCreated");
         preferenceManager = new PreferenceManager(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ChatActivityViewModel.class);
+        blockUserViewModel= new ViewModelProvider(this).get(BlockUserViewModel.class);
         loadReceiverDetails();
         viewModel.getChatMessagesMutableLiveData().observe(this, chatMessages -> {
             if (receiverUser.getImgProfile() == null) {
@@ -177,7 +184,19 @@ public class ChatActivity extends AppCompatActivity{
         textDestroy.setOnClickListener(v -> {
             dialog.dismiss();
         });
+        blockUserViewModel.observeBlockStatusRealtime(receiverUser.getId());
+
+        blockUserViewModel.getIsBlockedBetweenUsers().observe(this, blocked -> {
+            findViewById(R.id.llGrSend).setVisibility(blocked ? View.GONE : View.VISIBLE);
+            findViewById(R.id.layoutSend).setVisibility(blocked ? View.GONE : View.VISIBLE);
+            findViewById(R.id.textBlockedNotice).setVisibility(blocked ? View.VISIBLE : View.GONE);
+        });
+
     }
+
+    
+
+
     private void setListener() {
         binding.textName.setOnClickListener(v -> {
             Conservation conservation= new Conservation(conservationID,receiverUser.getId());
@@ -188,6 +207,7 @@ public class ChatActivity extends AppCompatActivity{
         binding.llNameAndVisible.setOnClickListener(v -> {
             Conservation conservation= new Conservation(conservationID,receiverUser.getId());
             Intent i=new Intent(this, ReceiverConservationActivity.class);
+            i.putExtra(Contants.KEY_USER,receiverUser);
             i.putExtra(Contants.KEY_CONVERSATION,conservation);
             startActivity(i);
         });

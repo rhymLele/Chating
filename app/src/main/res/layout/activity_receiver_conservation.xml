@@ -341,6 +341,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/_8sdp"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView

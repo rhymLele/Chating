@@ -6,8 +6,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.duc.chatting.chat.models.BlockStatus;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.home.viewmodels.ListFriendViewModel;
 import com.duc.chatting.utilities.AppPreference;
@@ -35,14 +37,15 @@ public class BlockUserViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> userrBlocker ;
     private final MutableLiveData<Boolean> userrBlocked ;
     Map<String, List<String>> blockedUserMap = new HashMap<>();
-
-
     private MutableLiveData<List<User>> friendsMutableLiveData;
     DatabaseReference databaseReference = FirebaseDatabase
             .getInstance()
             .getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
     AppPreference prefs ;
-
+    private final MutableLiveData<BlockStatus> blockStatusLiveData = new MutableLiveData<>();
+    public MutableLiveData<BlockStatus> getBlockStatusLiveData() {
+        return blockStatusLiveData;
+    }
     public MutableLiveData<Boolean> getIsBlockedBetweenUsers() {
         return isBlockedBetweenUsers;
     }
@@ -130,7 +133,7 @@ public class BlockUserViewModel extends AndroidViewModel {
         if (theyBlockedYou != null) lastTheyBlockedYou = theyBlockedYou;
 
         boolean isBlocked = lastYouBlockedThem || lastTheyBlockedYou;
-        isBlockedBetweenUsers.postValue(isBlocked);
+        blockStatusLiveData.postValue(new BlockStatus(lastYouBlockedThem, lastTheyBlockedYou));
     }
     public void unblockUser(String blockUserId) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);

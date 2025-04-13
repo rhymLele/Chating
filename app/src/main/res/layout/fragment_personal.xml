@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/AcliceBlue"
-    android:padding="@dimen/_25sdp"
+    android:padding="@dimen/_10sdp"
 
     tools:context=".home.views.PersonalFragment">
 
@@ -71,8 +71,8 @@
         app:layout_constraintTop_toBottomOf="@id/lnName">
 
         <ImageView
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
             android:src="@drawable/hosting" />
@@ -88,7 +88,7 @@
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:text="Storage"
@@ -110,8 +110,8 @@
         app:layout_constraintTop_toBottomOf="@id/lnSchedule">
 
         <ImageView
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
             android:src="@drawable/ebel" />
@@ -125,7 +125,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:text="Notification"
@@ -150,14 +150,14 @@
         app:layout_constraintTop_toBottomOf="@id/lnNotifcation">
 
         <ImageView
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
             android:src="@drawable/mode" />
 
         <LinearLayout
-            android:layout_width="@dimen/_220sdp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:gravity="center"
             android:orientation="horizontal">
@@ -165,7 +165,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_25sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:text="Dark Mode"
@@ -192,8 +192,8 @@
         app:layout_constraintTop_toBottomOf="@id/lnMode">
 
         <ImageView
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
             android:src="@drawable/about" />
@@ -207,7 +207,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_25sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:text="About"
@@ -231,8 +231,8 @@
         app:layout_constraintTop_toBottomOf="@id/lnAbout">
 
         <ImageView
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
             android:src="@drawable/help" />
@@ -246,7 +246,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_25sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:text="Help Center"
@@ -271,8 +271,8 @@
         app:layout_constraintTop_toBottomOf="@id/lnHelp">
 
         <ImageView
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
             android:src="@drawable/block" />
@@ -286,7 +286,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:text="Block List"
@@ -309,8 +309,8 @@
         app:layout_constraintTop_toBottomOf="@id/lnNote">
 
         <ImageView
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
             android:scrollbarSize="@dimen/_50sdp"
             android:src="@drawable/logout" />
@@ -324,7 +324,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:text="Logout"

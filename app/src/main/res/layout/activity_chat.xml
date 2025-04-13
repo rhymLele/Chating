@@ -90,7 +90,7 @@
                 android:id="@+id/check_user_on"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/user_inactive"
+                android:src="@drawable/user_active"
                 android:layout_marginEnd="@dimen/_10sdp"
                 />
             <TextView
@@ -295,7 +295,7 @@
         android:background="@color/AcliceBlue"
         app:layout_constraintEnd_toEndOf="parent">
         <TextView
-
+            android:id="@+id/textBlock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"

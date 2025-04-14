@@ -93,7 +93,7 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/buttonAddFriend"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/_120sdp"
             android:layout_height="wrap_content"
             android:text="Add Friend"
             android:background="@drawable/btn_background"
@@ -101,21 +101,23 @@
             />
         <Button
             android:id="@+id/buttonInbox"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/_120sdp"
             android:layout_height="wrap_content"
             android:text="Chat"
             android:background="@drawable/btn_background"
-            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_10sdp"
             android:textSize="@dimen/_12sdp"
             />
-        <Button
-            android:id="@+id/buttonMoreHoriz"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Block"
+        <ImageButton
+            android:id="@+id/moreRes"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/menu"
             android:background="@drawable/btn_background"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:textSize="@dimen/_12sdp"
+            app:tint="@color/my_primary"
+            android:scaleType="fitCenter"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_gravity="center"
             />
 
     </LinearLayout>

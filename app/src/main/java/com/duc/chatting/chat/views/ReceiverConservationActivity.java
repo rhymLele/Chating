@@ -117,6 +117,21 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
                 binding.textReport.setText("Report");
             }
         });
+        blockUserViewModel.observeBlockStatusRealtime(userA.getId());
+        blockUserViewModel.getBlockStatusLiveData().observe(this, status -> {
+            if (status == null) return;
+
+            if (status.youBlockedThem) {
+                binding.textBlock.setText("Unblock User");
+                binding.lnBlock.setVisibility(View.VISIBLE);
+            } else if (status.theyBlockedYou) {
+                binding.lnBlock.setVisibility(View.GONE); // bạn bị chặn => ẩn block
+            } else {
+                binding.textBlock.setText("Block User");
+                binding.lnBlock.setVisibility(View.VISIBLE);
+            }
+        });
+
         viewModel.getListUserMutableLiveData().observe(this, users -> {
             userGroupAdapter = new UserGroupAdapter(users, this::onUserClicked);
             binding.recyclerViewUserGroupChat.setAdapter(userGroupAdapter);
@@ -282,6 +297,7 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
                 if (!reportMessage.isEmpty()) {
                     reportUser(conservationId, reportMessage);
                     dialog.dismiss();
+                    Toast.makeText(this, "Reported ", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Please enter a reason for reporting!", Toast.LENGTH_SHORT).show();
                 }
@@ -330,12 +346,19 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
     }
 
     @Override
-    public void onStartGame() {
-        blockUserViewModel.blockUser(userA.getId());
+    public void onConfirm() {
+        if ("Block User".contentEquals(binding.textBlock.getText())) {
+            blockUserViewModel.blockUser(userA.getId());
+            Toast.makeText(this, "Blocked this person", Toast.LENGTH_SHORT).show();
+        } else if ("Unblock User".contentEquals(binding.textBlock.getText())) {
+            blockUserViewModel.unblockUser(userA.getId());
+            Toast.makeText(this, "Unblocked this person", Toast.LENGTH_SHORT).show();
+        }
+        dialog.dismiss();
     }
 
     @Override
-    public void onCancelGame() {
+    public void onDiscard() {
         dialog.dismiss();
     }
 }

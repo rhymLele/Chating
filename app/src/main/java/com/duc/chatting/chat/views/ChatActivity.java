@@ -135,12 +135,13 @@ public class ChatActivity extends AppCompatActivity{
                 binding.progressBar.setVisibility(View.GONE);
             }
         });
-        viewModel.getIsUserActive().observe(this, Boolean -> {
-            if (Boolean == java.lang.Boolean.TRUE) {
-
+        viewModel.getIsUserActive().observe(this, isActive  -> {
+            if (isActive  == Boolean.TRUE) {
                 binding.checkUserOn.setBackgroundResource(R.drawable.user_active);
-                Log.d("ChatActivity","Stattus"+Boolean);
-            }else   binding.checkUserOn.setBackgroundResource(R.drawable.user_inactive);
+                Log.d("ChatActivity","Stattus"+isActive );
+            }else   {
+                binding.checkUserOn.setBackgroundResource(R.drawable.user_inactive);
+            }
         });
         viewModel.getConservationIDMutableLiveData().observe(this, mutConservationId -> {
             conservationID = mutConservationId;
@@ -186,11 +187,29 @@ public class ChatActivity extends AppCompatActivity{
         });
         blockUserViewModel.observeBlockStatusRealtime(receiverUser.getId());
 
-        blockUserViewModel.getIsBlockedBetweenUsers().observe(this, blocked -> {
-            findViewById(R.id.llGrSend).setVisibility(blocked ? View.GONE : View.VISIBLE);
-            findViewById(R.id.layoutSend).setVisibility(blocked ? View.GONE : View.VISIBLE);
-            findViewById(R.id.textBlockedNotice).setVisibility(blocked ? View.VISIBLE : View.GONE);
+        blockUserViewModel.getBlockStatusLiveData().observe(this, status -> {
+            if (status == null) return;
+
+            if (status.youBlockedThem) {
+                // A chặn B
+                binding.textBlock.setText("You blocked this person.Go to list block to unblock");
+                binding.llGrSend.setVisibility(View.GONE);
+                binding.layoutSend.setVisibility(View.GONE);
+                binding.textBlockedNotice.setVisibility(View.VISIBLE);
+            } else if (status.theyBlockedYou) {
+                // B chặn A
+                binding.textBlock.setText("This person is not available!");
+                binding.llGrSend.setVisibility(View.GONE);
+                binding.layoutSend.setVisibility(View.GONE);
+                binding.textBlockedNotice.setVisibility(View.VISIBLE);
+            } else {
+                // Không ai chặn ai
+                binding.llGrSend.setVisibility(View.VISIBLE);
+                binding.layoutSend.setVisibility(View.VISIBLE);
+                binding.textBlockedNotice.setVisibility(View.GONE);
+            }
         });
+
 
     }
 

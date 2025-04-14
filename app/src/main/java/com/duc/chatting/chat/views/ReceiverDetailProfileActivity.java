@@ -7,9 +7,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,10 +23,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.duc.chatting.R;
 import com.duc.chatting.chat.models.User;
+import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
 import com.duc.chatting.chat.viewmodels.ReceiverDetailProfileViewModel;
 import com.duc.chatting.databinding.ActivityReceiverDetailProfileBinding;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class ReceiverDetailProfileActivity extends AppCompatActivity {
     private ActivityReceiverDetailProfileBinding binding;
@@ -33,7 +38,7 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
     private User dataUser;
     Dialog dialog;
     Button btnDialogCancel,getBtnDialogConfirm;
-
+    private BlockUserViewModel blockUserViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,7 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
 
 
         viewModel=new ViewModelProvider(this).get(ReceiverDetailProfileViewModel.class);
+        blockUserViewModel=new  ViewModelProvider(this).get(BlockUserViewModel.class);
         preferenceManager=new PreferenceManager(getApplicationContext());
         loadReceiverDetails();
 
@@ -57,7 +63,7 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
         dialog=new Dialog(this);
         dialog.setContentView(R.layout.custom_dialog_box_unfriend);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.et_background));
+        dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.custom_dialog_background));
         dialog.setCancelable(false);
         btnDialogCancel=dialog.findViewById(R.id.btnDialogCancel);
         getBtnDialogConfirm=dialog.findViewById(R.id.btnDialogConfirm);
@@ -74,6 +80,34 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
         binding.imageBack.setOnClickListener(v -> {
             finish();
         });
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View sheetView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_menu, null);
+        bottomSheetDialog.setContentView(sheetView);
+
+        TextView report = sheetView.findViewById(R.id.reportOption);
+        TextView block = sheetView.findViewById(R.id.blockOption);
+        blockUserViewModel.observeBlockStatusRealtime(receiverUser.getId());
+        blockUserViewModel.getBlockStatusLiveData().observe(this, status -> {
+            if (status == null) return;
+            if (status.youBlockedThem) {
+                block.setText("Unblock User");
+            }
+        });
+        binding.moreRes.setOnClickListener(v -> {
+            report.setOnClickListener(view -> {
+                Toast.makeText(this, "Reported!", Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            });
+
+            block.setOnClickListener(view -> {
+                blockUserViewModel.blockUser(receiverUser.getId());
+                Toast.makeText(this, "Blocked!", Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomSheetDialog.show();
+        });
+
         viewModel.dataUser(receiverUser.getId());
         viewModel.getUserMutableLiveData().observe(this,user -> {
                 dataUser=user;

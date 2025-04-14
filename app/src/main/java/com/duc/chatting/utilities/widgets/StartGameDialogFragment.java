@@ -14,8 +14,8 @@ import com.duc.chatting.R;
 
 public class StartGameDialogFragment extends DialogFragment {
     public interface StartGameDialogListener {
-        void onStartGame();
-        void onCancelGame();
+        void onDiscard();
+        void onConfirm();
     }
     private StartGameDialogListener mListener;
     @Override
@@ -23,14 +23,14 @@ public class StartGameDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Are you sure?")
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onStartGame(); // Call the method in Activity
+                        mListener.onDiscard(); // Call the method in Activity
                     }
                 })
-                .setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Confirm", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onCancelGame(); // Call the method in Activity
+                        mListener.onConfirm(); // Call the method in Activity
                     }
                 });
         AlertDialog dialog = builder.create();

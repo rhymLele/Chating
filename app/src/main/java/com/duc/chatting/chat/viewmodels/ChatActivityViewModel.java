@@ -16,6 +16,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.duc.chatting.chat.models.ChatMessage;
 import com.duc.chatting.chat.models.Conservation;
+import com.duc.chatting.chat.models.ImageClass;
 import com.duc.chatting.chat.models.PDFClass;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
@@ -559,13 +560,26 @@ public class ChatActivityViewModel extends AndroidViewModel {
             }
         });
     }
-    public void sendMessageImage(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Uri data) {
-//            String fileImage=encodeImage(Uri.c)
+    public void sendMessageImage(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, String data) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
-//                    ChatMessage chatMessage=new ChatMessage(senderID,senderName,senderImage,receiverID,new Date(),)
+                String chatID=databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
+                ChatMessage chatMessageId=new ChatMessage(senderID,senderName,senderImage,receiverID,new Date(),data);
+                databaseReference.child(Contants.KEY_COLLECTION_CHAT).child(chatID).setValue(chatMessageId);
+                sentInputMessage.postValue(true);
+                String messsage =senderName +" sent an image";
+                if (conservationID != null) {
+                    ImageClass imageClass=new ImageClass(conservationID,chatID,senderID,receiverID,data,new Date(),"enable");
+                    databaseReference.child(Contants.KEY_COLLECTION_IMAGE).push().setValue(imageClass);
+                    updateConservation(messsage, senderID, senderName, senderImage, receiverID, receiverName, receiverImage);
+                } else if (conservationID == null) {
+                    Log.d("ChatActivity", "create new Message");
+                    Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiverName, receiverImage, messsage, new Date());
+                    ImageClass imageClass=new ImageClass(conservationID,chatID,senderID,receiverID,data,new Date(),"enable");
+                    databaseReference.child(Contants.KEY_COLLECTION_IMAGE).push().setValue(imageClass);
+                    addConservation(conservation);
+                }
             }
 
             @Override

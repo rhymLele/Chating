@@ -18,6 +18,7 @@ import com.duc.chatting.chat.models.PDFClass;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.databinding.ItemContainerReceiverMessageBinding;
 import com.duc.chatting.databinding.ItemContainerSentMessageBinding;
+import com.duc.chatting.utilities.Contants;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -130,7 +131,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 //message image
                 else if(chatMessage.getUrlImage()!=null){
                     binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
-                    Picasso.get().load(chatMessage.getUrlImage()).into(binding.roundImageViewItemSent);
+//                    Picasso.get().load(chatMessage.getUrlImage()).into(binding.roundImageViewItemSent);
+                    binding.roundImageViewItemSent.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImage()));
                     binding.roundImageViewItemSent.setVisibility(View.VISIBLE);
                     binding.textMessage.setVisibility(View.GONE);
                     binding.getRoot().setOnClickListener(v -> {
@@ -158,7 +160,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                     }else if(chatMessage.getUrlImageRepLocal()!=null){
                         binding.roundImageViewRepLocal.setVisibility(View.VISIBLE);
-                        Picasso.get().load(chatMessage.getUrlImageRepLocal()).into(binding.roundImageViewRepLocal);
+                        binding.roundImageViewRepLocal.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImageRepLocal()));
+//                        Picasso.get().load(chatMessage.getUrlImageRepLocal()).into(binding.roundImageViewRepLocal);
 
                     }
                     binding.getRoot().setOnClickListener(v -> {
@@ -259,7 +262,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         binding.textNameSender.setVisibility(View.VISIBLE);
                         binding.textNameSender.setText(chatMessage.getSenderName());
                     }
-                    Picasso.get().load(chatMessage.getUrlImage()).into(binding.roundedImageViewItemReceiver);
+                    binding.roundedImageViewItemReceiver.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImage()));
+//                    Picasso.get().load(chatMessage.getUrlImage()).into(binding.roundedImageViewItemReceiver);
                     binding.roundedImageViewItemReceiver.setVisibility(View.VISIBLE);
                     binding.textMessage.setVisibility(View.GONE);
                     binding.getRoot().setOnClickListener(v -> {
@@ -295,7 +299,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         binding.textMessageRepLocal.setText(chatMessage.getMessageRepLocal());
                     }else if(chatMessage.getUrlImageRepLocal()!=null){
                         binding.roundImageViewRepLocal.setVisibility(View.VISIBLE);
-                        Picasso.get().load(chatMessage.getUrlImageRepLocal()).into(binding.roundImageViewRepLocal);
+                        binding.roundImageViewRepLocal.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImageRepLocal()));
+//                        Picasso.get().load(chatMessage.getUrlImageRepLocal()).into(binding.roundImageViewRepLocal);
 
                     }
                     binding.getRoot().setOnClickListener(v -> {
@@ -318,13 +323,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 return false;
             });
         }
-        private String getReadableDateTime(Date date){
 
-            return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
-        }
-        private Bitmap getBitmapFromEncodeString(String encodeImage){
-            byte[] bytes= Base64.decode(encodeImage,Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(bytes,0, bytes.length);
-        }
+    }
+    private String getReadableDateTime(Date date){
+
+        return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
+    }
+    private Bitmap getBitmapFromEncodeString(String encodeImage){
+        byte[] bytes= Base64.decode(encodeImage,Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes,0, bytes.length);
     }
 }

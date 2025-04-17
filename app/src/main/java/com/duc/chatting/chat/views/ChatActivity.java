@@ -271,7 +271,7 @@ public class ChatActivity extends AppCompatActivity{
                         binding.inputMessage.getText().toString()
                 );
                 dataFile = null;
-            } else if (dataImage != null) {
+            } else if (encodeImageSend != null) {
                 viewModel.sendMessageImage(
                         preferenceManager.getString(Contants.KEY_USER_ID),
                         preferenceManager.getString(Contants.KEY_NAME),
@@ -279,7 +279,7 @@ public class ChatActivity extends AppCompatActivity{
                         receiverUser.getId(),
                         receiverUser.getName(),
                         receiverUser.getImgProfile(),
-                        dataImage
+                        encodeImageSend
                 );
                 dataImage = null;
                 binding.roundedImageViewSend.setVisibility(View.GONE);
@@ -325,7 +325,7 @@ public class ChatActivity extends AppCompatActivity{
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     if (result.getData() != null) {
-                        dataImage = result.getData().getData();
+//                        dataImage = result.getData().getData();
                         Uri imageUri = result.getData().getData();
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);

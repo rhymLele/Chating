@@ -466,23 +466,22 @@ public class ChatActivityViewModel extends AndroidViewModel {
 
 
 
-    public void sendMesageFile(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String reiceiverImage, Uri data, String fileName) {
-
-        String base64File = encodeFileToBase64(data, getApplication());
+    public void sendMesageFile(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String reiceiverImage, String data, String fileName) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ChatMessage chatMessage = new ChatMessage(senderID, senderName, senderImage, receiverID, fileName, base64File, new Date());
+                ChatMessage chatMessageFile = new ChatMessage(senderID, senderName, senderImage, receiverID, fileName, data, new Date());
                 String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
+                databaseReference.child(Contants.KEY_COLLECTION_CHAT).child(chatID).setValue(chatMessageFile);
                 sentInputMessage.postValue(Boolean.TRUE);
                 if (conservationID != null) {
-                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
+                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, data, new Date(), "enable");
                     databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
                     updateConservation(fileName, senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage);
                 } else if (conservationID == null) {
                     Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiverName, reiceiverImage, fileName, new Date());
                     addConservation(conservation);
-                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, base64File, new Date(), "enable");
+                    PDFClass pdfClass = new PDFClass(conservationID, chatID, senderID, receiverID, fileName, data, new Date(), "enable");
                     databaseReference.child(Contants.KEY_COLLECTION_FILE).push().setValue(pdfClass);
                 }
             }
@@ -493,72 +492,6 @@ public class ChatActivityViewModel extends AndroidViewModel {
             }
         });
 
-    }
-    public void sendMessageFileFB(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Uri fileUri, String fileName, Context context) {
-        try {
-            // Đọc dữ liệu từ file
-            InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes);
-            inputStream.close();
-
-            // Chuyển thành chuỗi Base64
-            String encodedFile = Base64.encodeToString(bytes, Base64.DEFAULT);
-
-            // Lưu vào Firebase Realtime Database
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
-                    .child("ChatFiles");
-            String fileID = databaseReference.push().getKey();
-
-            if (fileID != null) {
-                HashMap<String, Object> fileData = new HashMap<>();
-                fileData.put("senderID", senderID);
-                fileData.put("senderName", senderName);
-                fileData.put("senderImage", senderImage);
-                fileData.put("receiverID", receiverID);
-                fileData.put("receiverName", receiverName);
-                fileData.put("receiverImage", receiverImage);
-                fileData.put("fileName", fileName);
-                fileData.put("fileData", encodedFile); // Lưu chuỗi Base64
-                fileData.put("timestamp", System.currentTimeMillis());
-
-                databaseReference.child(fileID).setValue(fileData);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void downloadFileFB(String fileID, Context context) {
-        DatabaseReference fileRef = FirebaseDatabase.getInstance().getReference()
-                .child("ChatFiles").child(fileID);
-
-        fileRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String fileName = snapshot.child("fileName").getValue(String.class);
-                    String encodedFile = snapshot.child("fileData").getValue(String.class);
-
-                    // Giải mã Base64 thành byte[]
-                    byte[] decodedBytes = Base64.decode(encodedFile, Base64.DEFAULT);
-
-                    // Lưu file vào bộ nhớ trong
-                    File file = new File(context.getExternalFilesDir(null), fileName);
-                    try (FileOutputStream fos = new FileOutputStream(file)) {
-                        fos.write(decodedBytes);
-                        fos.flush();
-                        Toast.makeText(context, "File đã tải về: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Lỗi khi tải file: " + error.getMessage());
-            }
-        });
     }
     public void sendMessageImage(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, String data) {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -588,71 +521,6 @@ public class ChatActivityViewModel extends AndroidViewModel {
             }
         });
     }
-    public void sendMessageImageFB(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, Bitmap imageBitmap) {
-        // Chuyển ảnh Bitmap thành chuỗi Base64
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        byte[] imageBytes = byteArrayOutputStream.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-
-        // Tạo đối tượng tin nhắn
-        String chatID = databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().getKey();
-        ChatMessage chatMessage = new ChatMessage(senderID, senderName, senderImage, receiverID,
-                new Date(), encodedImage);
-
-        // Lưu tin nhắn vào Firebase
-        databaseReference.child(Contants.KEY_COLLECTION_CHAT).child(chatID).setValue(chatMessage)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d("Firebase", "Lưu ảnh Base64 thành công!");
-                    } else {
-                        Log.e("Firebase", "Lỗi khi lưu ảnh Base64!", task.getException());
-                    }
-                });
-    }
-    public void downloadImageFB(String base64String, ImageView imageView) {
-        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
-        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        imageView.setImageBitmap(decodedBitmap);
-    }
-    private void decodeBase64ToFile(String base64String, String fileName, Context context) {
-        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
-        File file = new File(context.getFilesDir(), fileName);
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(decodedBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String  encodeFileToBase64(Uri fileUri, Context context) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes);
-            return Base64.encodeToString(bytes, Base64.DEFAULT);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private Bitmap decodeImage(String image) {
-        byte[] bytes = Base64.decode(image, Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        return bitmap;
-    }
-
-    private String encodeImage(Bitmap bitmap) {
-        int previewWidth = 150;
-        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-
     //save conservation
     private void addConservation(Conservation conservation) {
         conservationID = databaseReference.child(Contants.KEY_COLLECTION_CONVERSATIONS).push().getKey();

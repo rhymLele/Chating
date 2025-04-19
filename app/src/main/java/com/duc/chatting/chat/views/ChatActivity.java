@@ -3,6 +3,7 @@ package com.duc.chatting.chat.views;
 import android.annotation.SuppressLint;
 import android.app.ComponentCaller;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -54,7 +56,10 @@ import org.checkerframework.checker.units.qual.C;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -74,6 +79,7 @@ public class ChatActivity extends AppCompatActivity{
     private String encodeImageSend = null;
     private ChatAdapter chatAdapter;
     private Uri dataFile = null;
+    private String encodeFileSend=null;
     private Uri dataImage = null;
 
     private MainRepository mainRepository;
@@ -259,7 +265,8 @@ public class ChatActivity extends AppCompatActivity{
             }
         });
         binding.layoutSendIb.setOnClickListener(v -> {
-            if (dataFile != null) {
+            if (encodeFileSend != null) {
+
                 viewModel.sendMesageFile(
                         preferenceManager.getString(Contants.KEY_USER_ID),
                         preferenceManager.getString(Contants.KEY_NAME),
@@ -267,10 +274,10 @@ public class ChatActivity extends AppCompatActivity{
                         receiverUser.getId(),
                         receiverUser.getName(),
                         receiverUser.getImgProfile(),
-                        dataFile,
+                        encodeFileSend,
                         binding.inputMessage.getText().toString()
                 );
-                dataFile = null;
+                encodeFileSend = null;
             } else if (encodeImageSend != null) {
                 viewModel.sendMessageImage(
                         preferenceManager.getString(Contants.KEY_USER_ID),
@@ -281,7 +288,7 @@ public class ChatActivity extends AppCompatActivity{
                         receiverUser.getImgProfile(),
                         encodeImageSend
                 );
-                dataImage = null;
+                encodeImageSend = null;
                 binding.roundedImageViewSend.setVisibility(View.GONE);
 
             } else if (!binding.inputMessage.getText().toString().isEmpty()) {
@@ -368,8 +375,13 @@ public class ChatActivity extends AppCompatActivity{
 
             Uri uri = data.getData();
             String uriString = uri.toString();
-            File myFile = new File(uriString);
+//            File myFile = new File(uriString);
             String displayName = null;
+            try {
+                encodeFileSend=encodeUriToBase64(this,uri);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if (uriString.startsWith("content://")) {
                 Cursor cursor = null;
                 try {
@@ -398,13 +410,52 @@ public class ChatActivity extends AppCompatActivity{
         byte[] bytes = Base64.decode(encodeImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
+    public Uri decodeBase64ToPdfAndGetUri(Context context, String base64, String fileName) throws IOException {
+        byte[] decodedBytes = Base64.decode(base64, Base64.DEFAULT);
+        File file = new File(context.getExternalFilesDir(null), fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(decodedBytes);
+        fos.close();
 
+        return FileProvider.getUriForFile(
+                context,
+                context.getPackageName() + ".provider",
+                file
+        );
+    }
+    public void openPdf(Context context, Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.startActivity(Intent.createChooser(intent, "Xem file PDF"));
+    }
     @SuppressLint("IntentReset")
     public void onUserClickedFileMessage(PDFClass pdfClass) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setType("application/pdf");
-        intent.setData(Uri.parse(pdfClass.getUrlFile()));
-        startActivity(intent);
+
+        String url = pdfClass.getUrlFile();
+        try {
+            Uri pdfUri = decodeBase64ToPdfAndGetUri(this, url, pdfClass.getFileName());
+            openPdf(this, pdfUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Oops ,can not open file Pdf!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public String encodeUriToBase64(Context context, Uri uri) throws IOException {
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        byte[] fileBytes = outputStream.toByteArray();
+
+        return Base64.encodeToString(fileBytes, Base64.NO_WRAP);
     }
 
     public void onUserClicked(User user) {
@@ -504,8 +555,6 @@ public class ChatActivity extends AppCompatActivity{
                     binding.layoutSendRepIb.setVisibility(View.GONE);
 
                 });
-
-
             }
         });
     }

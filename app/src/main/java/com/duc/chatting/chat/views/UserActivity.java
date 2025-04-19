@@ -2,16 +2,19 @@ package com.duc.chatting.chat.views;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -26,6 +29,14 @@ import com.duc.chatting.chat.viewmodels.ChatUserViewModel;
 import com.duc.chatting.databinding.ActivityUserBinding;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.Contants;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Reader;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 public class UserActivity extends AppCompatActivity {
     ActivityUserBinding binding;
@@ -93,8 +104,7 @@ public class UserActivity extends AppCompatActivity {
                     int touchX = (int) event.getX();
 
                     if (touchX >= (editTextWidth - drawableWidth - binding.searchAddUserr.getPaddingRight())) {
-                        // Người dùng đã chạm vào drawableRight
-                        Toast.makeText(v.getContext(), "QR Scanner Clicked!", Toast.LENGTH_SHORT).show();
+                        userOp();
                         return true; // Sự kiện đã được xử lý
                     }
                 }
@@ -107,4 +117,95 @@ public class UserActivity extends AppCompatActivity {
         intent.putExtra(Contants.KEY_USER,user);
         startActivity(intent);
     }
+    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
+            result -> {
+                if(result.getContents() == null) {
+                    Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                    viewModel.getUser(result.getContents(), new ChatUserViewModel.OnUserLoadedListener() {
+                        @Override
+                        public void onUserLoaded(User user) {
+                            if (user != null) {
+                                // Dữ liệu đã sẵn sàng
+                                Intent intent=new Intent(getApplicationContext(), ReceiverDetailProfileActivity.class);
+                                intent.putExtra(Contants.KEY_USER,user);
+                                startActivity(intent);
+                            } else {
+
+                            }
+                        }
+                    });
+
+
+                }
+            });
+
+    void userOp(){
+        String[] options = {"Get from camera", "Get from gallery"};
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Options")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        launchCameraScanner();
+                    } else {
+                        pickImageFromGallery();
+                    }
+                })
+                .show();
+    }
+    // Launch
+    private void launchCameraScanner() {
+        ScanOptions options = new ScanOptions();
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+        options.setPrompt("Camera");
+        options.setBeepEnabled(true);
+        options.setBarcodeImageEnabled(true);
+        barcodeLauncher.launch(options);
+    }
+    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    decodeQRCodeFromImage(imageUri);
+                }
+            }
+    );
+
+    private void pickImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        galleryLauncher.launch(intent);
+    }
+    private void decodeQRCodeFromImage(Uri uri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            int[] intArray = new int[bitmap.getWidth() * bitmap.getHeight()];
+            bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+            RGBLuminanceSource source = new RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray);
+            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+            Reader reader = new MultiFormatReader();
+            Result result = reader.decode(binaryBitmap);
+
+            viewModel.getUser(result.getText(), new ChatUserViewModel.OnUserLoadedListener() {
+                @Override
+                public void onUserLoaded(User user) {
+                    if (user != null) {
+                        Intent intent=new Intent(getApplicationContext(), ReceiverDetailProfileActivity.class);
+                        intent.putExtra(Contants.KEY_USER,user);
+                        startActivity(intent);
+                    } else {
+
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Không thể nhận diện mã QR từ ảnh", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

@@ -106,7 +106,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
         public void setData(ChatMessage chatMessage){
             if(chatMessage.getStatusMessage()!=null&&chatMessage.getStatusMessage().equals("disableForAll")){
-                binding.textMessage.setText("Valid message");
+                binding.textMessage.setText("User unsent message");
             }else{
                 if(chatMessage.getFileName()!=null){
                     binding.textMessage.setText(chatMessage.getFileName());

@@ -25,6 +25,7 @@ import com.duc.chatting.information_profile.views.InformationProfileActivity;
 import com.duc.chatting.messaging.views.NotificationActivity;
 import com.duc.chatting.otherComponents.views.AboutActivity;
 import com.duc.chatting.otherComponents.views.HelpActivity;
+import com.duc.chatting.otherComponents.views.MyQrActivity;
 import com.duc.chatting.poliso.views.BlockListActivity;
 import com.duc.chatting.sign.view.MainSignActivity;
 import com.duc.chatting.utilities.Contants;
@@ -134,6 +135,10 @@ public class PersonalFragment extends Fragment {
         });
         binding.lnAbout.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), AboutActivity.class);
+            startActivity(i);
+        });
+        binding.imgQr.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), MyQrActivity.class);
             startActivity(i);
         });
     }

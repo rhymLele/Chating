@@ -81,4 +81,42 @@ public class ChatUserViewModel extends AndroidViewModel {
                 }
         );
     }
+    public void getUser(String phoneNumber, OnUserLoadedListener listener) {
+        databaseReference.child(Contants.KEY_COLLECTION_USERS).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                            if (preferenceManager.getString(Contants.KEY_USER_ID).equals(postSnapshot.child(Contants.KEY_PHONE_NUMBER).getValue(String.class))) {
+                                continue;
+                            }
+                            String phoneNumberTest = postSnapshot.child(Contants.KEY_PHONE_NUMBER).getValue(String.class);
+                            if (phoneNumber.equals(phoneNumberTest)) {
+                                String id = postSnapshot.child(Contants.KEY_PHONE_NUMBER).getValue(String.class);
+                                String email = postSnapshot.child(Contants.KEY_EMAIL).getValue(String.class);
+                                String name = postSnapshot.child(Contants.KEY_NAME).getValue(String.class);
+                                String image = postSnapshot.child(Contants.KEY_IMAGE).getValue(String.class);
+                                String imageBanner = postSnapshot.child(Contants.KEY_IMAGE_BANNER).getValue(String.class);
+                                String story = postSnapshot.child(Contants.KEY_STORY_HISTORY).getValue(String.class);
+
+                                User user = new User(id, email, name, phoneNumber, image, imageBanner, story);
+                                listener.onUserLoaded(user);
+                                return;
+                            }
+                        }
+                        // Không tìm thấy
+                        listener.onUserLoaded(null);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        listener.onUserLoaded(null); // hoặc handle lỗi
+                    }
+                }
+        );
+    }
+    public interface OnUserLoadedListener {
+        void onUserLoaded(User user);
+    }
+
 }

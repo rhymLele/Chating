@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,6 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chatting"
         tools:targetApi="31">
+        <activity
+            android:name=".otherComponents.views.MyQrActivity"
+            android:exported="false" />
         <activity
             android:name=".otherComponents.views.AboutActivity"
             android:exported="false" />
@@ -101,6 +105,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

@@ -189,10 +189,9 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    String conservationIdImage = postSnapshot.child(Contants.KEY_CONVERSATION_ID).getValue(String.class);
+                    String conservationIdImage = postSnapshot.child("conservationID").getValue(String.class);
                     if (conservationID.equals(conservationIdImage)) {
                         String imageUrl = postSnapshot.child(Contants.KEY_URL_IMAGE).getValue(String.class);
-
                         String statusImage = postSnapshot.child(Contants.KEY_STATUS_IMAGE).getValue(String.class);
                         ImageClass imageClass = new ImageClass(imageUrl, statusImage);
                         listImage.add(imageClass);

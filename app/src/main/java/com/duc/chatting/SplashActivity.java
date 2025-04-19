@@ -31,18 +31,27 @@ public class SplashActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        BlockUserViewModel blockUserViewModel=new BlockUserViewModel(getApplication());
-        blockUserViewModel.getBlockedUsers(() -> {
-            new Handler().postDelayed(() -> {
-                createNotificationChannel();
-                if (prefManager.isFirstTimeLaunch()) {
-                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
-                } else {
-                    startActivity(new Intent(SplashActivity.this, MainSignActivity.class));
-                }
-                finish();
-            }, 2000);
-        });
+        new Handler().postDelayed(() -> {
+            createNotificationChannel();
+            if (prefManager.isFirstTimeLaunch()) {
+                startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+            } else {
+                startActivity(new Intent(SplashActivity.this, MainSignActivity.class));
+            }
+            finish();
+        }, 2000);
+//        BlockUserViewModel blockUserViewModel=new BlockUserViewModel(getApplication());
+//        blockUserViewModel.getBlockedUsers(() -> {
+//            new Handler().postDelayed(() -> {
+//                createNotificationChannel();
+//                if (prefManager.isFirstTimeLaunch()) {
+//                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+//                } else {
+//                    startActivity(new Intent(SplashActivity.this, MainSignActivity.class));
+//                }
+//                finish();
+//            }, 2000);
+//        });
     }
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

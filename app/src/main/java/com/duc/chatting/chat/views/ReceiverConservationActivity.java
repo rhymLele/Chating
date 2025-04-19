@@ -232,7 +232,7 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
             if(binding.recyclerViewFile.getVisibility()==View.GONE)
             {
                 binding.recyclerViewFile.setVisibility(View.VISIBLE);
-                viewModel.getListFile(conservation.getReceiverID());
+                viewModel.getListFile(conservation.getConservationID());
             }else if(binding.recyclerViewFile.getVisibility()==View.VISIBLE)
             {
                 binding.recyclerViewFile.setVisibility(View.GONE);
@@ -242,7 +242,7 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
             if(binding.recyclerViewFileImage.getVisibility()==View.GONE)
             {
                 binding.recyclerViewFileImage.setVisibility(View.VISIBLE);
-                viewModel.getListImage(conservation.getReceiverID());
+                viewModel.getListImage(conservation.getConservationID());
             }else if(binding.recyclerViewFileImage.getVisibility()==View.VISIBLE)
             {
                 binding.recyclerViewFileImage.setVisibility(View.GONE);

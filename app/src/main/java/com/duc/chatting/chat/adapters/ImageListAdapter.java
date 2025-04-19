@@ -1,5 +1,8 @@
 package com.duc.chatting.chat.adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +49,14 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
 
         public void setData(ImageClass imageClass) {
             if (imageClass.getStatusImage().equals("enable")) {
-                Picasso.get().load(imageClass.getUrlImage()).into(binding.roundImageFile);
+                binding.roundImageFile.setImageBitmap(getBitmapFromEncodeString(imageClass.getUrlImage()));
+//                Picasso.get().load(imageClass.getUrlImage()).into(binding.roundImageFile);
             }
         }
 
+    }
+    private Bitmap getBitmapFromEncodeString(String encodeImage){
+        byte[] bytes= Base64.decode(encodeImage,Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes,0, bytes.length);
     }
 }

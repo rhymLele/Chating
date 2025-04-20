@@ -30,6 +30,7 @@ import com.duc.chatting.home.viewmodels.ConservationViewModel;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
 import com.duc.chatting.utilities.SwipeHelper;
+import com.duc.chatting.utilities.widgets.ReportDialogManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +43,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,8 @@ public class ConservationFragment extends Fragment {
     private RecentConservationAdapter adapter;
     private PreferenceManager preferenceManager;
     private List<ChatMessage> mListChatMessage;
+    Map<String, List<String>> reportOptions = new HashMap<>();
+
     DatabaseReference databaseReference = FirebaseDatabase
             .getInstance()
             .getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
@@ -69,6 +73,10 @@ public class ConservationFragment extends Fragment {
         viewModel=new ViewModelProvider(this).get(ConservationViewModel.class);
         preferenceManager=new PreferenceManager(getContext());
         mListChatMessage=new ArrayList<>();
+        reportOptions.put("Selling or promoting restricted items", Arrays.asList("Drugs", "Weapons", "Animals"));
+        reportOptions.put("Violent, hateful or disturbing content", Arrays.asList("Violence", "Hate speech", "Graphic content"));
+        reportOptions.put("Scam or fraud", null);
+        reportOptions.put("Adult content", null);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeHelper(getContext(), new SwipeHelper.SwipeListener() {
             @Override
             public void onEdit(int position) {
@@ -78,11 +86,16 @@ public class ConservationFragment extends Fragment {
             @Override
             public void onReport(int position) {
                 String conservationId = adapter.getConservationIdAt(position);
-                if (conservationId != null) {
-                    showReportDialog(conservationId);
-                } else {
-                    Log.e("SwipeHelper", "Error: Conservation ID is null");
-                }
+                ReportDialogManager reportDialog = new ReportDialogManager(requireActivity(), reportOptions);
+                reportDialog.show(conservationId, (conversationId, reason) -> {
+                    reportUser(conversationId, reason);
+                    Toast.makeText(getContext(), "Reported: " + reason, Toast.LENGTH_SHORT).show();
+                });
+//                if (conservationId != null) {
+//                    showReportDialog(conservationId);
+//                } else {
+//                    Log.e("SwipeHelper", "Error: Conservation ID is null");
+//                }
             }
         }));
         viewModel.getConservationsMutableLiveData().observe(this, chatMessages -> {

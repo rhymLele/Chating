@@ -23,7 +23,7 @@
 
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_20sdp"
-            android:src="@drawable/back_arrow" />
+            android:src="@drawable/arrw" />
 
         <TextView
             android:layout_width="match_parent"

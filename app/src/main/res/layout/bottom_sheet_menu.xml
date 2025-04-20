@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
+        android:layout_marginBottom="@dimen/_5sdp"
         android:layout_height="wrap_content">
         <ImageView
             android:layout_width="@dimen/_30sdp"
@@ -35,6 +36,7 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
+        android:layout_marginTop="@dimen/_5sdp"
         android:layout_height="wrap_content">
         <ImageView
             android:layout_width="@dimen/_30sdp"

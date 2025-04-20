@@ -2,7 +2,7 @@
     <string name="app_name">Chatting</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="intro_title_1">  Group Chatting</string>
+    <string name="intro_title_1">Group Chatting</string>
     <string name="intro_message_1">Connect with multiple members in group chats.</string>
     <string name="intro_title_2">Video And Voice Calls</string>
     <string name="intro_message_2">Instantly connect via video and voice calls.</string>
@@ -12,4 +12,5 @@
     <string name="intro_message_4">Access chats on any device seamlessly.</string>
     <string name="message">message</string>
     <string name="name">name</string>
+    <string name="are_you_sure">Are you sure?</string>
 </resources>

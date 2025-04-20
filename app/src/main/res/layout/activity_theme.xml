@@ -16,7 +16,7 @@
         android:padding="@dimen/_6sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/baseline_arrow_back_ios_24"/>
+        android:src="@drawable/arrw"/>
 
     <TextView
         android:id="@+id/textView2"

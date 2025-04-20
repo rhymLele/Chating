@@ -11,6 +11,7 @@
         android:layout_width="@dimen/_280sdp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        app:cardCornerRadius="@dimen/_10sdp"
         app:cardElevation="0dp">
 
         <LinearLayout

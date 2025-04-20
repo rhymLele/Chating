@@ -43,8 +43,8 @@
     </LinearLayout>
     <ImageView
         android:id="@+id/qrCode"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_marginTop="@dimen/_100sdp"
         android:layout_gravity="center"
         android:src="@drawable/logo" />
@@ -56,15 +56,7 @@
         android:textStyle="bold"
         android:textAlignment="center"/>
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Version 1.0.0"
-        android:textSize="@dimen/_14sdp"
-        android:textStyle="bold"
-        android:textAlignment="center"/>
-
-    <TextView
-        android:layout_marginTop="@dimen/_140sdp"
+        android:layout_marginTop="@dimen/_100sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Copyright © 2025 Alec (Minh Duc Le). "

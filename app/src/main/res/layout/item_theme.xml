@@ -23,7 +23,7 @@
            android:textStyle="bold"
            android:paddingBottom="@dimen/_5sdp"
            android:gravity="bottom|center_horizontal"
-           android:layout_height="@dimen/_180sdp"/>
+           android:layout_height="@dimen/_190sdp"/>
 
    </androidx.cardview.widget.CardView>
 

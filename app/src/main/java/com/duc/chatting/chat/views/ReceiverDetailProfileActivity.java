@@ -143,6 +143,7 @@ public class ReceiverDetailProfileActivity extends AppCompatActivity {
             String s=binding.buttonAddFriend.getText().toString();
             if(s.equals("Add Friend")){
                 viewModel.addFriend(preferenceManager.getString(Contants.KEY_USER_ID),receiverUser.getId());
+                Toast.makeText(this,"Sent friend request",Toast.LENGTH_SHORT).show();
                 binding.buttonAddFriend.setText("Cancel");
             }else  if(s.equals("Cancel")){
                 viewModel.destroyAddFriend();

@@ -242,32 +242,36 @@ public class BlockUserViewModel extends AndroidViewModel {
     }
     public void getBlockedUsers(Runnable onComplete) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);
-        databaseReference
-                .child(Contants.KEY_BLOCK_LIST)
-                .child(currentUserId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        blockedUserMap.clear();
-                        if (dataSnapshot.exists()) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                String blockedUserId = snapshot.getKey();
-                                blockedUserMap.computeIfAbsent(currentUserId, k -> new ArrayList<>()).add(blockedUserId);
-                                Log.d("BlockID",String.valueOf(blockedUserId));
+        if(currentUserId!=null)
+        {
+            databaseReference
+                    .child(Contants.KEY_BLOCK_LIST)
+                    .child(currentUserId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            blockedUserMap.clear();
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String blockedUserId = snapshot.getKey();
+                                    blockedUserMap.computeIfAbsent(currentUserId, k -> new ArrayList<>()).add(blockedUserId);
+                                    Log.d("BlockID",String.valueOf(blockedUserId));
+                                }
+
                             }
-
+                            // lưu local
+                            prefs.putMap(Contants.KEY_BLOCKED_MAP, blockedUserMap);
+                            if (onComplete != null) onComplete.run();
                         }
-                        // lưu local
-                        prefs.putMap(Contants.KEY_BLOCKED_MAP, blockedUserMap);
-                        if (onComplete != null) onComplete.run();
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        if (onComplete != null) onComplete.run(); // vẫn tiếp tục vào app
-                    }
-                });
-    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            if (onComplete != null) onComplete.run(); // vẫn tiếp tục vào app
+                        }
+                    });
+
+        }
+      }
 
 
 }

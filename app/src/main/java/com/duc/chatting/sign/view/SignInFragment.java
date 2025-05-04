@@ -34,6 +34,7 @@ public class SignInFragment extends Fragment {
             if(firebaseUser!=null)
             {
                 binding.textCheckLogin.setVisibility(View.GONE);
+                Toast.makeText(getContext(),"Login Successfully",Toast.LENGTH_SHORT).show();
 //                navController.navigate(R.id.action_signInFragment_to_mainActivity);
                 navController.navigate(R.id.action_signInFragment_to_homeActivity);
             }

@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -61,6 +62,7 @@ public class HomeActivity extends AppCompatActivity {
     PreferenceManager preferenceManager;
     private KeyPair keyPair;
     private float dX, dY;
+    private boolean sw_fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +78,11 @@ public class HomeActivity extends AppCompatActivity {
         preferenceManager=new PreferenceManager(getApplicationContext());
         setSupportActionBar(binding.header.myToolBar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("WeLog");
-
+        sw_fab=preferenceManager.getBoolean("s_fab");
+        if(sw_fab)
+        {
+            binding.fab.setVisibility(View.GONE); // hoặc hide()
+        }else          binding.fab.setVisibility(View.VISIBLE); // hoặc hide()
         if (savedInstanceState == null) { // Chỉ load lần đầu tiên khi Activity được tạo
             replaceFragment(new ConservationFragment());
             binding.bottomNavigationView.setSelectedItemId(R.id.conservation);
@@ -133,6 +139,15 @@ public class HomeActivity extends AppCompatActivity {
                     return false;
             }
         });
+    }
+    public void toggleFab(boolean show) {
+        if (show) {
+            binding.fab.setVisibility(View.VISIBLE);
+            preferenceManager.putBoolean("s_fab",false);// hoặc dùng show() nếu là FloatingActionButton
+        } else {
+            binding.fab.setVisibility(View.GONE); // hoặc hide()
+            preferenceManager.putBoolean("s_fab",true);// hoặc dùng sh
+        }
     }
 
     private void getFCMtoken() {

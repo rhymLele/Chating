@@ -45,7 +45,7 @@ public class PersonalFragment extends Fragment {
     SharedPreferences.Editor editor;
     private static final String PREFS_NAME = "mode_prefs";
     private static final String MODE_KEY = "mode";
-    boolean isNightMode;
+    boolean isNightMode;    private boolean sw_fab;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +57,11 @@ public class PersonalFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        sw_fab=preferenceManager.getBoolean("s_fab");
+        if(sw_fab)
+        {
+           binding.swFab.setChecked(false); // hoặc hide()
+        }else          binding.swFab.setChecked(true);; // hoặc hide()
         sharedPreferences= getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor=sharedPreferences.edit();
         isNightMode=sharedPreferences.getBoolean(MODE_KEY,false);
@@ -117,6 +122,11 @@ public class PersonalFragment extends Fragment {
         binding.swMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Toast.makeText(getContext(),"Switch Mode",Toast.LENGTH_SHORT);
 
+        });
+        binding.swFab.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (getActivity() instanceof HomeActivity) {
+                ((HomeActivity) getActivity()).toggleFab(isChecked);
+            }
         });
         binding.lnNotifcation.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), NotificationActivity.class);

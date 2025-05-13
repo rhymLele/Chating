@@ -92,9 +92,9 @@ public class AuthenticationViewModel extends AndroidViewModel {
                                         .child(phoneNumber)
                                         .child(Contants.KEY_EMAIL)
                                         .getValue(String.class));
-                                mainRepository.login(phoneNumber,getApplication(),()->{
-
-                                });
+//                                mainRepository.login(phoneNumber,getApplication(),()->{
+//
+//                                });
 
                             }else{
                                 Log.d("Auth", "Password incorrect");

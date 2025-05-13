@@ -58,10 +58,7 @@ public class PersonalFragment extends Fragment {
             }
         });
         sw_fab=preferenceManager.getBoolean("s_fab");
-        if(sw_fab)
-        {
-           binding.swFab.setChecked(false); // hoặc hide()
-        }else          binding.swFab.setChecked(true);; // hoặc hide()
+
         sharedPreferences= getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor=sharedPreferences.edit();
         isNightMode=sharedPreferences.getBoolean(MODE_KEY,false);
@@ -89,6 +86,10 @@ public class PersonalFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         btnClick();
         loadData();
+        if(sw_fab)
+        {
+            binding.swFab.setChecked(false); // hoặc hide()
+        }else          binding.swFab.setChecked(true);; // hoặc hide()
 
     }
 

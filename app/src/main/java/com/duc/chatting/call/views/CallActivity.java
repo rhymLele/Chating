@@ -2,6 +2,7 @@ package com.duc.chatting.call.views;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,16 +26,18 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         EdgeToEdge.enable(this);
         binding=ActivityCallBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
         init();
 
     }
     private void init(){
         mainRepository = MainRepository.getInstance();
+        binding.callBtn.setOnClickListener(v->{
+            //start a call request here
+            mainRepository.sendCallRequest(binding.targetUserNameEt.getText().toString(),()->{
+                Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
+            });
+
+        });
         mainRepository.initLocalView(binding.localView);
         mainRepository.initRemoteView(binding.remoteView);
         mainRepository.subscribeForLatestEvent(data->{

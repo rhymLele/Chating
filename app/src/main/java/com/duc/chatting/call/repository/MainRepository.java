@@ -90,6 +90,14 @@ public class MainRepository implements WebRTCClient.Listener {
     }
 
     public void initLocalView(SurfaceViewRenderer view){
+        if (webRTCClient == null) {
+            Log.e("WebRTC", "webRTCClient is null");
+            return;
+        }
+        if (view == null) {
+            Log.e("WebRTC", "surfaceViewRenderer is null");
+            return;
+        }
         webRTCClient.initLocalSurfaceView(view);
     }
 

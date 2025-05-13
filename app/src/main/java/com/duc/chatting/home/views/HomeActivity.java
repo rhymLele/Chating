@@ -29,6 +29,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.duc.chatting.R;
+import com.duc.chatting.call.interfaces.SuccessCallBack;
+import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.chat.views.GroupChatActivity;
 import com.duc.chatting.chat.views.UserActivity;
 import com.duc.chatting.databinding.ActivityHomeBinding;
@@ -63,6 +65,7 @@ public class HomeActivity extends AppCompatActivity {
     private KeyPair keyPair;
     private float dX, dY;
     private boolean sw_fab;
+    private MainRepository mainRepository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +109,10 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
         getFCMtoken();
+        mainRepository=MainRepository.getInstance();
+        mainRepository.login(preferenceManager.getString(Contants.KEY_USER_ID), getApplication(), () -> {
+
+        });
         databaseReference.child(Contants.KEY_COLLECTION_USERS).child(preferenceManager.getString(Contants.KEY_USER_ID))
                 .child(Contants.KEY_STATUS).setValue("Online")
                 .addOnSuccessListener(aVoid -> System.out.println("Status updated!"))

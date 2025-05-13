@@ -75,6 +75,7 @@ dependencies {
     implementation ("com.airbnb.android:lottie:6.3.0")
     implementation ("com.mesibo.api:webrtc:1.0.5")
 //    implementation ("com.guolindev.permissionx:permissionx:1.6.1")
+    implementation ("com.guolindev.permissionx:permissionx:1.8.1")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
 
     implementation(libs.socket.io.client)

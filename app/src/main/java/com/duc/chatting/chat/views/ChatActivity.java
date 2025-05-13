@@ -50,6 +50,7 @@ import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.AppPreference;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.permissionx.guolindev.PermissionX;
 import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.units.qual.C;
@@ -314,9 +315,17 @@ public class ChatActivity extends AppCompatActivity{
             pickImageBanner.launch(intent);
         });
         binding.imageCall.setOnClickListener(v -> {
-//            Intent intent=new Intent(this, CallActivity.class);
-//            intent.putExtra("Target",receiverUser.getId());
-//            startActivity(intent);
+            PermissionX.init(this)
+                    .permissions(android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO)
+                    .request((allGranted, grantedList, deniedList) -> {
+                        if (allGranted) {
+                            //login to firebase here
+                            Intent intent=new Intent(this, CallActivity.class);
+                            intent.putExtra("Target",receiverUser.getId());
+                            startActivity(intent);
+                        }
+                    });
+
 //            if(binding.chatScreen.getVisibility()==View.VISIBLE)
 //            {
 //                binding.chatScreen.setVisibility(View.GONE);

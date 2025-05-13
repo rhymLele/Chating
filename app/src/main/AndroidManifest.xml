@@ -23,6 +23,9 @@
         android:theme="@style/Theme.Chatting"
         tools:targetApi="31">
         <activity
+            android:name=".newfeature.views.FeatureActivity"
+            android:exported="false" />
+        <activity
             android:name=".otherComponents.views.MyQrActivity"
             android:exported="false" />
         <activity

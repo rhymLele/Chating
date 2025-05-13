@@ -198,7 +198,7 @@ public class UserActivity extends AppCompatActivity {
                         intent.putExtra(Contants.KEY_USER,user);
                         startActivity(intent);
                     } else {
-
+                        Toast.makeText(getApplicationContext(),"User is not exist!",Toast.LENGTH_LONG).show();
                     }
                 }
             });

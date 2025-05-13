@@ -39,5 +39,14 @@
         app:itemBackground="@android:color/transparent"
         app:itemIconSize="@dimen/_22sdp"
         />
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_16sdp"
+        android:contentDescription="TODO"
+        android:src="@drawable/baseline_explore_24"
+    app:backgroundTint="@color/AcliceBlue"
+    app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+    app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

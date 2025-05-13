@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,6 +31,7 @@ import com.duc.chatting.R;
 import com.duc.chatting.chat.views.GroupChatActivity;
 import com.duc.chatting.chat.views.UserActivity;
 import com.duc.chatting.databinding.ActivityHomeBinding;
+import com.duc.chatting.newfeature.views.FeatureActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
 import com.google.firebase.database.DatabaseReference;
@@ -58,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
             .getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
     PreferenceManager preferenceManager;
     private KeyPair keyPair;
+    private float dX, dY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +108,31 @@ public class HomeActivity extends AppCompatActivity {
 //        if (keyPair != null) {
 //            encryptAndBackupPrivateKey(this, keyPair.getPrivate(), preferenceManager.getString(Contants.KEY_PASSWORD));
 //        }
+        binding.fab.setOnClickListener(v -> {
+            startActivity(new Intent(this, FeatureActivity.class));
+        });
 
+        binding.fab.setOnTouchListener((view, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    dX = view.getX() - event.getRawX();
+                    dY = view.getY() - event.getRawY();
+                    return true;
+
+                case MotionEvent.ACTION_MOVE:
+                    view.animate()
+                            .x(event.getRawX() + dX)
+                            .y(event.getRawY() + dY)
+                            .setDuration(0)
+                            .start();
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    view.performClick(); // 👈 thêm dòng này
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
 
     private void getFCMtoken() {

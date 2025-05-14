@@ -321,7 +321,7 @@ public class ChatActivity extends AppCompatActivity{
                         if (allGranted) {
                             //login to firebase here
                             Intent intent=new Intent(this, CallActivity.class);
-                            intent.putExtra("Target",receiverUser.getId());
+                            intent.putExtra("Target",receiverUser.getPhoneNumber());
                             startActivity(intent);
                         }
                     });

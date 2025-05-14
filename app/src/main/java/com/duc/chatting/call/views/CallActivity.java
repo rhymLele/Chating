@@ -1,5 +1,6 @@
 package com.duc.chatting.call.views;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -20,23 +21,40 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
     private MainRepository mainRepository;
     private Boolean isCameraMuted = false;
     private Boolean isMicrophoneMuted = false;
+    private AlertDialog callingDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding=ActivityCallBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        String targetPhoneNumber = getIntent().getStringExtra("Target");
         init();
 
+    }
+    private void showCallingDialog(String target) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Calling...");
+        builder.setMessage("Waiting for " + target + " to accept...");
+        builder.setCancelable(false);
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            mainRepository.endCall(); // Cancel the call
+            dialog.dismiss();
+        });
+
+        callingDialog = builder.create();
+        callingDialog.show();
     }
     private void init(){
         mainRepository = MainRepository.getInstance();
         binding.callBtn.setOnClickListener(v->{
             //start a call request here
+            String target = binding.targetUserNameEt.getText().toString();
             mainRepository.sendCallRequest(binding.targetUserNameEt.getText().toString(),()->{
                 Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
+                if (callingDialog != null) callingDialog.dismiss();
             });
-
+            showCallingDialog(target);
         });
         mainRepository.initLocalView(binding.localView);
         mainRepository.initRemoteView(binding.remoteView);
@@ -89,6 +107,7 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
     public void webrtcConnected() {
         runOnUiThread(()->{
             binding.incomingCallLayout.setVisibility(View.GONE);
+            if (callingDialog != null) callingDialog.dismiss();
 //            binding.whoToCallLayout.setVisibility(View.GONE);
             binding.callLayout.setVisibility(View.VISIBLE);
         });

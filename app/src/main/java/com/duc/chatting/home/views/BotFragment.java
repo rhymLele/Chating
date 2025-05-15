@@ -2,6 +2,8 @@ package com.duc.chatting.home.views;
 
 import static androidx.core.content.ContextCompat.getMainExecutor;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,7 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.duc.chatting.ChatGPT.adapters.MessageBotAdapter;
@@ -44,6 +48,7 @@ public class BotFragment extends Fragment {
     MessageBotAdapter messageAdapter;
     private GenerativeModelFutures model;
     private ChatBotViewModel botViewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,13 +88,14 @@ public class BotFragment extends Fragment {
         sendButton.setOnClickListener((v)->{
             String question = messageEditText.getText().toString();
             if (!question.trim().isEmpty()) {
-                handler.removeCallbacks(suggestionRunnable); // Hủy gợi ý nếu user gửi tin nhắn
+                handler.removeCallbacks(suggestionRunnable);
+                stopAutoScrollAndHideSuggestions(); // <<// Hủy gợi ý nếu user gửi tin nhắn
                 addToChat(question, MessageBot.SENT_BY_ME);
                 messageEditText.setText("");
                 getResponse(question);
             }
         });
-
+        showSuggestions(view);
     }
     void addToChat(String message,String sentBy){
         requireActivity().runOnUiThread(new Runnable() {
@@ -101,6 +107,84 @@ public class BotFragment extends Fragment {
             }
         });
     }
+    private void showSuggestions(View view) {
+        String[] suggestions = {
+                "✈️ Solo travel benefits",
+                "🎓 Best schools in Europe",
+                "💬 Quotes for workout",
+                "🤖 Interview tips"
+        };
+
+        LinearLayout suggestionContainer = view.findViewById(R.id.suggestion_container);
+        HorizontalScrollView scrollView = view.findViewById(R.id.suggestion_scroll);
+        EditText messageEditText = view.findViewById(R.id.message_edit_text);
+
+        suggestionContainer.removeAllViews(); // tránh trùng
+
+        for (String suggestion : suggestions) {
+            TextView chip = new TextView(getContext());
+            chip.setText(suggestion);
+            chip.setBackgroundResource(R.drawable.suggestion_chip_bg);
+            chip.setPadding(40, 20, 40, 20);
+            chip.setTextColor(Color.WHITE);
+            chip.setTextSize(14);
+            chip.setTypeface(Typeface.DEFAULT_BOLD);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(16, 8, 16, 8);
+            chip.setLayoutParams(params);
+
+            chip.setOnClickListener(v -> {
+                messageEditText.setText(suggestion);
+                messageEditText.setSelection(suggestion.length());
+            });
+
+            suggestionContainer.addView(chip);
+        }
+
+        // Bắt đầu scroll sau khi layout sẵn sàng
+//        scrollView.post(() -> startAutoScroll(scrollView, suggestionContainer));
+    }
+
+    private Handler scrollHandler = new Handler();
+    private Runnable scrollRunnable;
+    private boolean isScrolling = true;
+    private void stopAutoScrollAndHideSuggestions() {
+        isScrolling = false;
+        scrollHandler.removeCallbacks(scrollRunnable);
+
+        HorizontalScrollView scrollView = requireView().findViewById(R.id.suggestion_scroll);
+        scrollView.setVisibility(View.GONE);
+    }
+    private void startAutoScroll(HorizontalScrollView scrollView, LinearLayout chipContainer) {
+        final int scrollStep = 40; // mỗi lần cuộn bao nhiêu pixel
+        final int delay = 100; // độ trễ giữa mỗi lần
+
+        scrollRunnable = new Runnable() {
+            int currentX = 0;
+
+            @Override
+            public void run() {
+                if (!isScrolling) return;
+
+                int maxScrollX = chipContainer.getWidth() - scrollView.getWidth();
+                if (currentX >= maxScrollX) {
+                    currentX = 0; // quay về đầu
+                } else {
+                    currentX += scrollStep;
+                }
+
+                scrollView.smoothScrollTo(currentX, 0);
+                scrollHandler.postDelayed(this, delay);
+            }
+        };
+
+        scrollHandler.post(scrollRunnable);
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -5,51 +5,63 @@
     android:layout_height="match_parent"
     android:background="@color/AcliceBlue"
     tools:context=".home.views.BotFragment">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <!-- RecyclerView phải nằm trên suggestion bar -->
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_alignParentBottom="true"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/recycler_view"
-            android:padding="@dimen/_8sdp"
-            android:layout_below="@id/bottom_layout"
+            android:layout_above="@id/suggestion_scroll"
             />
+
+        <!-- Suggestion horizontal chip scroll -->
+        <HorizontalScrollView
+            android:id="@+id/suggestion_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/bottom_layout"
+            android:padding="8dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/suggestion_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"/>
+        </HorizontalScrollView>
+
+        <!-- Bottom input layout -->
         <RelativeLayout
+            android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:padding="8dp"
-            android:id="@+id/bottom_layout">
+            android:layout_alignParentBottom="true"
+            android:padding="8dp">
+
             <EditText
+                android:id="@+id/message_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/message_edit_text"
-                android:layout_centerInParent="true"
-                android:hint="Write here "
-                android:padding="16dp"
                 android:layout_toLeftOf="@id/send_btn"
-                android:background="@drawable/et_background"
-                />
+                android:hint="Write here"
+                android:padding="16dp"
+                android:background="@drawable/et_background" />
+
             <ImageButton
+                android:id="@+id/send_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:id="@+id/send_btn"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="10dp"
                 android:padding="8dp"
                 android:src="@drawable/baseline_send_24s"
-                android:background="?attr/selectableItemBackgroundBorderless"
-
-                />
-
-
+                android:background="?attr/selectableItemBackgroundBorderless" />
         </RelativeLayout>
-
-
-
     </RelativeLayout>
 
 </FrameLayout>

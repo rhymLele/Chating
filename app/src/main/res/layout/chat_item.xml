@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/left_chat_view"
         android:background="@drawable/et_background"
-        android:backgroundTint="@color/greyLight"
+        android:backgroundTint="@color/gret"
         android:padding="8dp"
         android:layout_marginEnd="80dp"
         >
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/left_chat_text_view"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="18sp"
             />
     </LinearLayout>

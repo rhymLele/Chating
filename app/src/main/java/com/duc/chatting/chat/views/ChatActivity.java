@@ -1,6 +1,7 @@
 package com.duc.chatting.chat.views;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ComponentCaller;
 import android.app.Dialog;
 import android.content.Context;
@@ -73,7 +74,6 @@ public class ChatActivity extends AppCompatActivity{
     private ChatActivityViewModel viewModel;
     private BlockUserViewModel blockUserViewModel;
     //for dialog able and disable or rep ibox
-
     private Dialog dialog;
     private boolean isCheckedButton = false;
     private TextView textRepInbox, textDisableInboxForMe, textDisableInboxForAll, textDestroy;
@@ -82,7 +82,7 @@ public class ChatActivity extends AppCompatActivity{
     private Uri dataFile = null;
     private String encodeFileSend=null;
     private Uri dataImage = null;
-
+    private AlertDialog callingDialog;
     private MainRepository mainRepository;
     private Boolean isCameraMuted = false;
     private Boolean isMicrophoneMuted = false;
@@ -224,12 +224,12 @@ public class ChatActivity extends AppCompatActivity{
 
 
     private void setListener() {
-        binding.textName.setOnClickListener(v -> {
-            Conservation conservation= new Conservation(conservationID,receiverUser.getId());
-            Intent i=new Intent(this, ReceiverConservationActivity.class);
-            i.putExtra(Contants.KEY_CONVERSATION,conservation);
-            startActivity(i);
-        });
+//        binding.textName.setOnClickListener(v -> {
+//            Conservation conservation= new Conservation(conservationID,receiverUser.getId());
+//            Intent i=new Intent(this, ReceiverConservationActivity.class);
+//            i.putExtra(Contants.KEY_CONVERSATION,conservation);
+//            startActivity(i);
+//        });
         binding.llNameAndVisible.setOnClickListener(v -> {
             Conservation conservation= new Conservation(conservationID,receiverUser.getId());
             Intent i=new Intent(this, ReceiverConservationActivity.class);
@@ -319,10 +319,11 @@ public class ChatActivity extends AppCompatActivity{
                     .permissions(android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO)
                     .request((allGranted, grantedList, deniedList) -> {
                         if (allGranted) {
-                            //login to firebase here
                             Intent intent=new Intent(this, CallActivity.class);
-                            intent.putExtra("Target",receiverUser.getPhoneNumber());
+                            intent.putExtra("Target",receiverUser.getId());
+                            Log.d("s","sss"+receiverUser.getPhoneNumber());
                             startActivity(intent);
+
                         }
                     });
 
@@ -336,7 +337,6 @@ public class ChatActivity extends AppCompatActivity{
 //            }
         });
     }
-
     private final ActivityResultLauncher<Intent> pickImageBanner = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {

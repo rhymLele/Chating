@@ -29,7 +29,7 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         binding=ActivityCallBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         String targetPhoneNumber = getIntent().getStringExtra("Target");
-        init();
+        init(targetPhoneNumber);
 
     }
     private void showCallingDialog(String target) {
@@ -45,17 +45,13 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         callingDialog = builder.create();
         callingDialog.show();
     }
-    private void init(){
+    private void init(String phoneNumber){
         mainRepository = MainRepository.getInstance();
-        binding.callBtn.setOnClickListener(v->{
-            //start a call request here
-            String target = binding.targetUserNameEt.getText().toString();
-            mainRepository.sendCallRequest(binding.targetUserNameEt.getText().toString(),()->{
-                Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
-                if (callingDialog != null) callingDialog.dismiss();
-            });
-            showCallingDialog(target);
+        mainRepository.sendCallRequest(phoneNumber,()->{
+            Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
+            if (callingDialog != null) callingDialog.dismiss();
         });
+        showCallingDialog(phoneNumber);
         mainRepository.initLocalView(binding.localView);
         mainRepository.initRemoteView(binding.remoteView);
         mainRepository.subscribeForLatestEvent(data->{

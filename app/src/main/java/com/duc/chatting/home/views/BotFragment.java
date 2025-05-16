@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.duc.chatting.ChatGPT.adapters.MessageBotAdapter;
 import com.duc.chatting.ChatGPT.models.MessageBot;
@@ -43,12 +45,12 @@ import java.util.List;
 public class BotFragment extends Fragment {
     RecyclerView recyclerView;
     EditText messageEditText;
-    ImageButton sendButton;
+    ImageButton sendButton,mic_btn;
     List<MessageBot> messageList;
     MessageBotAdapter messageAdapter;
     private GenerativeModelFutures model;
     private ChatBotViewModel botViewModel;
-
+    SpeechAssistant assistant;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +74,11 @@ public class BotFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        messageList = new ArrayList<>();
+        assistant = new SpeechAssistant(requireContext());
         botViewModel = new ViewModelProvider(requireActivity()).get(ChatBotViewModel.class);
         recyclerView = view.findViewById(R.id.recycler_view);
         messageEditText = view.findViewById(R.id.message_edit_text);
+        mic_btn=view.findViewById(R.id.mic_btn);
         sendButton = view.findViewById(R.id.send_btn);
         messageList = botViewModel.messageList;
         messageAdapter = new MessageBotAdapter(messageList);
@@ -95,7 +99,40 @@ public class BotFragment extends Fragment {
                 getResponse(question);
             }
         });
+        mic_btn.setOnClickListener(v -> {
+            assistant.startListening(new SpeechAssistant.Callback() {
+                @Override
+                public void onResult(String userText, String aiResponse) {
+                    // Hiển thị đoạn chat vào RecyclerView
+                    addToChat(userText,MessageBot.SENT_BY_ME);
+                    addToChat(aiResponse,MessageBot.SENT_BY_BOT);
+                }
+
+                @Override
+                public void onError(String errorMsg) {
+                    Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
         showSuggestions(view);
+    }
+    private String getErrorText(int errorCode) {
+        switch (errorCode) {
+            case SpeechRecognizer.ERROR_NO_MATCH:
+                return "Không nhận diện được lời nói. Vui lòng thử lại.";
+            case SpeechRecognizer.ERROR_NETWORK:
+                return "Lỗi mạng.";
+            case SpeechRecognizer.ERROR_AUDIO:
+                return "Lỗi âm thanh.";
+            case SpeechRecognizer.ERROR_CLIENT:
+                return "Lỗi client.";
+            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                return "Không có quyền ghi âm.";
+            case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                return "Trình nhận dạng đang bận.";
+            default:
+                return "Lỗi không xác định.";
+        }
     }
     void addToChat(String message,String sentBy){
         requireActivity().runOnUiThread(new Runnable() {

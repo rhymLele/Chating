@@ -48,16 +48,26 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/send_btn"
                 android:hint="Write here"
+                android:layout_toStartOf="@id/mic_btn"
                 android:padding="16dp"
                 android:background="@drawable/et_background" />
-
+            <ImageButton
+                android:id="@+id/mic_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_toStartOf="@id/send_btn"
+                android:layout_centerInParent="true"
+                android:padding="8dp"
+                android:src="@drawable/baseline_keyboard_voice_24"
+                android:background="?attr/selectableItemBackgroundBorderless"
+         />
             <ImageButton
                 android:id="@+id/send_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
-                android:layout_marginStart="10dp"
+
                 android:padding="8dp"
                 android:src="@drawable/baseline_send_24s"
                 android:background="?attr/selectableItemBackgroundBorderless" />

@@ -1,8 +1,11 @@
 package com.duc.chatting.messaging;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -29,6 +32,10 @@ public class FCMNotificationService extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
         manager.notify(100, builder.build());
     }
 }

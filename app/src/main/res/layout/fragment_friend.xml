@@ -32,7 +32,7 @@
                 android:id="@+id/frRequest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="100"
+                android:text="0"
                 android:textSize="@dimen/_15sdp"
         />
         </LinearLayout>
@@ -62,7 +62,7 @@
                 android:id="@+id/frAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="100"
+                android:text="0"
                 android:textSize="@dimen/_15sdp"
                />
         </LinearLayout>

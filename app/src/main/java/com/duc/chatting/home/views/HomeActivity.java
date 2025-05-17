@@ -1,6 +1,7 @@
 package com.duc.chatting.home.views;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +35,7 @@ import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.chat.views.GroupChatActivity;
 import com.duc.chatting.chat.views.UserActivity;
 import com.duc.chatting.databinding.ActivityHomeBinding;
+import com.duc.chatting.messaging.service.WebSocketService;
 import com.duc.chatting.newfeature.views.FeatureActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
@@ -66,11 +68,11 @@ public class HomeActivity extends AppCompatActivity {
     private float dX, dY;
     private boolean sw_fab;
     private MainRepository mainRepository;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-//        setContentView(R.layout.activity_home);
         binding=ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -78,6 +80,8 @@ public class HomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
         preferenceManager=new PreferenceManager(getApplicationContext());
         setSupportActionBar(binding.header.myToolBar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("WeLog");
@@ -117,10 +121,6 @@ public class HomeActivity extends AppCompatActivity {
                 .child(Contants.KEY_STATUS).setValue("Online")
                 .addOnSuccessListener(aVoid -> System.out.println("Status updated!"))
                 .addOnFailureListener(e -> System.err.println("Failed to update status: " + e.getMessage()));
-//        generateAndSaveKeyPair(this);
-//        if (keyPair != null) {
-//            encryptAndBackupPrivateKey(this, keyPair.getPrivate(), preferenceManager.getString(Contants.KEY_PASSWORD));
-//        }
         binding.fab.setOnClickListener(v -> {
             startActivity(new Intent(this, FeatureActivity.class));
         });
@@ -146,6 +146,12 @@ public class HomeActivity extends AppCompatActivity {
                     return false;
             }
         });
+//        startService();
+    }
+    public void startService(){
+        Intent intent = new Intent(this, WebSocketService.class);
+        intent.putExtra("user_id", preferenceManager.getString(Contants.KEY_USER_ID));
+        startService(intent);
     }
     public void toggleFab(boolean show) {
         if (show) {
@@ -231,91 +237,4 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
-    public void generateAndSaveKeyPair(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("RSA_KEYS", MODE_PRIVATE);
-        String existingPrivateKey = preferences.getString("privateKey", null);
-        if (existingPrivateKey != null) {
-            return;
-        }
-
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            keyPair = keyPairGenerator.generateKeyPair(); // <-- gán vào biến toàn cục
-
-            String publicKey = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
-            String privateKey = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
-
-            String userId = preferenceManager.getString(Contants.KEY_USER_ID);
-            FirebaseDatabase.getInstance().getReference(Contants.KEY_COLLECTION_USERS)
-                    .child(userId)
-                    .child("publicKey")
-                    .setValue(publicKey);
-
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("privateKey", privateKey);
-            editor.apply();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public SecretKey getAESKeyFromPassword(String password, byte[] salt) throws Exception {
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 256);
-        SecretKey tmp = factory.generateSecret(spec);
-        return new SecretKeySpec(tmp.getEncoded(), "AES");
-    }
-    public void encryptAndBackupPrivateKey(Context context, PrivateKey privateKey, String password) {
-        try {
-            byte[] salt = new byte[16];
-            new SecureRandom().nextBytes(salt); // tạo salt mới
-
-            SecretKey aesKey = getAESKeyFromPassword(password, salt);
-
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-            byte[] encrypted = cipher.doFinal(privateKey.getEncoded());
-
-            // Encode để lưu lên Firebase
-            String encryptedKey = Base64.encodeToString(encrypted, Base64.DEFAULT);
-            String saltString = Base64.encodeToString(salt, Base64.DEFAULT);
-
-            String userId = preferenceManager.getString(Contants.KEY_USER_ID);
-            FirebaseDatabase.getInstance().getReference(Contants.KEY_COLLECTION_USERS)
-                    .child(userId)
-                    .child("backupPrivateKey").setValue(encryptedKey);
-            FirebaseDatabase.getInstance().getReference(Contants.KEY_COLLECTION_USERS)
-                    .child(userId)
-                    .child("backupSalt").setValue(saltString);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void restorePrivateKey(Context context, String password, String encryptedKeyStr, String saltStr) {
-        try {
-            byte[] encryptedKey = Base64.decode(encryptedKeyStr, Base64.DEFAULT);
-            byte[] salt = Base64.decode(saltStr, Base64.DEFAULT);
-
-            SecretKey aesKey = getAESKeyFromPassword(password, salt);
-
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, aesKey);
-            byte[] decodedKey = cipher.doFinal(encryptedKey);
-
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decodedKey));
-
-            // Lưu lại vào SharedPreferences
-            String privateKeyString = Base64.encodeToString(decodedKey, Base64.DEFAULT);
-            SharedPreferences.Editor editor = context.getSharedPreferences("RSA_KEYS", MODE_PRIVATE).edit();
-            editor.putString("privateKey", privateKeyString);
-            editor.apply();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

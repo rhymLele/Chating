@@ -18,6 +18,7 @@ import com.duc.chatting.chat.models.ChatMessage;
 import com.duc.chatting.chat.models.Conservation;
 import com.duc.chatting.chat.models.ImageClass;
 import com.duc.chatting.chat.models.PDFClass;
+import com.duc.chatting.utilities.AESCryptoService;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -122,15 +123,13 @@ public class ChatActivityViewModel extends AndroidViewModel {
         databaseReference.child(Contants.KEY_COLLECTION_CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ChatMessage c = new ChatMessage(senderID, senderName, senderImage, receiverID, messageChat, new Date());
+                String encryptedMessage = "ENC:" + AESCryptoService.encrypt(messageChat);
+                ChatMessage c = new ChatMessage(senderID, senderName, senderImage, receiverID, encryptedMessage, new Date());
                 databaseReference.child(Contants.KEY_COLLECTION_CHAT).push().setValue(c);
                 sentInputMessage.postValue(true);
                 if (conservationID != null) {
-                    Log.d("ChatActivity", "update Message");
-                    Log.d("ChatActivity", conservationID);
                     updateConservation(messageChat, senderID, senderName, senderImage, receiverID, receiveName, receiverImage);
                 } else if (conservationID == null) {
-                    Log.d("ChatActivity", "create new Message");
                     Conservation conservation = new Conservation(senderID, senderName, senderImage, receiverID, receiveName, receiverImage, messageChat, new Date());
                     addConservation(conservation);
                 }
@@ -142,29 +141,24 @@ public class ChatActivityViewModel extends AndroidViewModel {
             }
         });
     }
+
     public void countMemberOnline() {
         databaseReference.child(Contants.KEY_COLLECTION_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         int onlineUsers = 0; // Reset mỗi lần đếm
-
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Log.d("Firebase", "user onlinee: " + dataSnapshot);
                             String status = dataSnapshot.child("status").getValue(String.class);
                             if ("Online".equals(status)) {
-                                Log.d("Firebase", "user online: " + status);
                                 onlineUsers++;
                             }
                         }
-
-                        Log.d("Firebase", "Total users online: " + onlineUsers);
                         isUserActive.postValue(onlineUsers > 0);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase", "Lỗi khi đếm user online", error.toException());
                     }
                 });
     }
@@ -250,7 +244,13 @@ public class ChatActivityViewModel extends AndroidViewModel {
                         //text message
                         else {
                             String messageID = dataSnapshot.getKey();
-                            String message = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            String raw = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            String message;
+                            if (raw != null && raw.startsWith("ENC:")) {
+                                message = AESCryptoService.decrypt(raw.substring(4)); // ✅ Bỏ prefix trước khi giải mã
+                            } else {
+                                message = raw; // ✅ Không mã hóa, giữ nguyên
+                            }
                             Date date = dataSnapshot.child("dateTime").getValue(Date.class);
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
                             String messageRepLocal = dataSnapshot.child(Contants.KEY_MESSAGE_REP).getValue(String.class);
@@ -282,7 +282,13 @@ public class ChatActivityViewModel extends AndroidViewModel {
                         //text message
                         else {
                             String messageID = dataSnapshot.getKey();
-                            String message = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            String raw = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            String message;
+                            if (raw != null && raw.startsWith("ENC:")) {
+                                message = AESCryptoService.decrypt(raw.substring(4)); // ✅ Bỏ prefix trước khi giải mã
+                            } else {
+                                message = raw; // ✅ Không mã hóa, giữ nguyên
+                            }
                             Date date = dataSnapshot.child("dateTime").getValue(Date.class);
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
                             String messageRepLocal = dataSnapshot.child(Contants.KEY_MESSAGE_REP).getValue(String.class);
@@ -318,7 +324,13 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             chatMessages.add(chatMessage);
                         } else {
                             String messageID = dataSnapshot.getKey();
-                            String message = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            String raw = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
+                            String message;
+                            if (raw != null && raw.startsWith("ENC:")) {
+                                message = AESCryptoService.decrypt(raw.substring(4)); // ✅ Bỏ prefix trước khi giải mã
+                            } else {
+                                message = raw; // ✅ Không mã hóa, giữ nguyên
+                            }
                             Date date = dataSnapshot.child("dateTime").getValue(Date.class);
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
                             String senderName = dataSnapshot.child(Contants.KEY_SENDER_NAME).getValue(String.class);

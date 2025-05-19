@@ -109,7 +109,7 @@
                 android:elevation="@dimen/_10sdp"
                 android:hint="Name"
                 android:importantForAutofill="no"
-                android:padding="@dimen/_5sdp"
+                android:padding="@dimen/_10sdp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
 
@@ -138,7 +138,7 @@
                 android:elevation="@dimen/_10sdp"
                 android:hint="Name"
                 android:importantForAutofill="no"
-                android:padding="@dimen/_5sdp"
+                android:padding="@dimen/_10sdp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
 
@@ -167,7 +167,7 @@
                 android:elevation="@dimen/_10sdp"
                 android:hint="Name"
                 android:importantForAutofill="no"
-                android:padding="@dimen/_5sdp"
+                android:padding="@dimen/_10sdp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
 
@@ -207,7 +207,7 @@
                     android:imeOptions="actionDone"
                     android:layout_marginBottom="@dimen/_5sdp"
                     android:importantForAutofill="no"
-                    android:padding="@dimen/_5sdp"
+                    android:padding="@dimen/_10sdp"
                     android:textSize="@dimen/_13sdp" />
                 <TextView
                     android:id="@+id/textCheckPassword"
@@ -228,7 +228,7 @@
                     android:layout_marginBottom="@dimen/_5sdp"
                     android:importantForAutofill="no"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:padding="@dimen/_5sdp"
+                    android:padding="@dimen/_10sdp"
                     android:textSize="@dimen/_13sdp" />
                 <TextView
                     android:id="@+id/llCheckPassword"
@@ -274,6 +274,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/btn_background"
         android:text="Save"
+        android:textSize="@dimen/_20ssp"
         android:visibility="visible"
         />
     <Button

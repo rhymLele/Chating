@@ -25,6 +25,7 @@
         android:background="@drawable/background_profile"
         android:src="@drawable/baseline_person_24v2"
         android:scaleType="centerCrop"
+
         android:layout_marginTop="@dimen/_40sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:text="Person Chat"
+                android:textStyle="bold"
+                android:textColor="@color/my_primary"
                 android:textSize="@dimen/_14sdp"
                 />
         </LinearLayout>
@@ -88,12 +91,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter new name"
+                android:padding="@dimen/_10sdp"
                 android:textSize="@dimen/_14sdp"
+                android:drawableEnd="@drawable/baseline_mode_edit_outline_24"
                 android:background="@drawable/et_background"
                 />
                 <TextView
                     android:id="@+id/textNewName"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/my_primary"
+                    android:textStyle="bold"
                     android:text="Change new name of this group chat"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/_14sdp"/>

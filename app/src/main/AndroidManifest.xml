@@ -75,21 +75,6 @@
             android:name=".sign.view.MainSignActivity"
             android:exported="false" />
         <activity
-            android:name=".Account.SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Account.SignInActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Account.LoginUsernameActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Account.LoginOTPActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Account.LoginPhoneNumberActivity"
-            android:exported="false" />
-        <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>

@@ -41,13 +41,16 @@ import com.duc.chatting.chat.viewmodels.ReceiverConservationViewModel;
 import com.duc.chatting.databinding.ActivityReceiverConservationBinding;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.ReportDialogManager;
 import com.duc.chatting.utilities.widgets.StartGameDialogFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -83,7 +86,10 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
         preferenceManager=new PreferenceManager(this);
         viewModel = new ViewModelProvider(this).get(ReceiverConservationViewModel.class);
         blockUserViewModel=new  ViewModelProvider(this).get(BlockUserViewModel.class);
-
+        reportOptions.put("Selling or promoting restricted items", Arrays.asList("Drugs", "Weapons", "Animals", "Counterfeit goods", "Stolen property", "Tobacco products"));
+        reportOptions.put("Violent, hateful or disturbing content", Arrays.asList("Violence", "Hate speech", "Graphic content", "Terrorism", "Self-harm", "Bullying"));
+        reportOptions.put("Scam or fraud", Arrays.asList("Phishing", "Investment scams", "Lottery scams", "Romance scams", "Fake charities"));
+        reportOptions.put("Adult content", Arrays.asList("Pornography", "Sexual services", "Nudity", "Sexual exploitation", "Child exploitation"));
         viewModel.getIsCheckedCon().observe(this,ob->{
             if(ob==Boolean.TRUE)
             {
@@ -168,31 +174,13 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
                     }
                 }
             });
+    Map<String, List<String>> reportOptions = new HashMap<>();
     private void setClicked()
     {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
         binding.theme.setOnClickListener(v -> {
-//            if(binding.listThemeBackground.getVisibility()==View.GONE)
-//            {
-//                binding.listThemeBackground.setVisibility(View.VISIBLE);
-//            }else if(binding.listThemeBackground.getVisibility()==View.VISIBLE)
-//            {
-//                binding.listThemeBackground.setVisibility(View.GONE);
-//            }
             mStartForResult.launch(new Intent(this, ThemeActivity.class));
         });
-//        binding.theme.setOnLongClickListener(v -> {
-//            mStartForResult.launch(new Intent(this, ThemeActivity.class));
-//            return  false;
-//        });
-//        binding.themLove.setOnClickListener(v -> {
-//            String theme="love";
-//            viewModel.setThemeConservation(conservation.getConservationID(),theme);
-//        });
-//        binding.themFriend.setOnClickListener(v -> {
-//            String theme="friend";
-//            viewModel.setThemeConservation(conservation.getConservationID(),theme);
-//        });
         binding.textFileAndImage.setOnClickListener(v -> {
             if(binding.groupFileAndImage.getVisibility()==View.GONE)
             {
@@ -250,7 +238,12 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
         });
         binding.textReport.setOnClickListener(v -> {
             if(userA!=null) {
-                showReportDialog(userA.getId());
+                ReportDialogManager reportDialog = new ReportDialogManager(this, reportOptions);
+                reportDialog.show(userA.getId(), (conversationId, reason) -> {
+                    reportUser(conversationId, reason);
+                    Toast.makeText(this, "Reported: " + reason, Toast.LENGTH_SHORT).show();
+                });
+//                showReportDialog(userA.getId());
             }else {
                 Toast.makeText(this, "Oppss!", Toast.LENGTH_SHORT).show();
             }

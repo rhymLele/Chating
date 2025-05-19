@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chatting</string>
+    <string name="app_name">WeLog</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="intro_title_1">Group Chatting</string>

@@ -73,10 +73,10 @@ public class ConservationFragment extends Fragment {
         viewModel=new ViewModelProvider(this).get(ConservationViewModel.class);
         preferenceManager=new PreferenceManager(getContext());
         mListChatMessage=new ArrayList<>();
-        reportOptions.put("Selling or promoting restricted items", Arrays.asList("Drugs", "Weapons", "Animals"));
-        reportOptions.put("Violent, hateful or disturbing content", Arrays.asList("Violence", "Hate speech", "Graphic content"));
-        reportOptions.put("Scam or fraud", null);
-        reportOptions.put("Adult content", null);
+        reportOptions.put("Selling or promoting restricted items", Arrays.asList("Drugs", "Weapons", "Animals", "Counterfeit goods", "Stolen property", "Tobacco products"));
+        reportOptions.put("Violent, hateful or disturbing content", Arrays.asList("Violence", "Hate speech", "Graphic content", "Terrorism", "Self-harm", "Bullying"));
+        reportOptions.put("Scam or fraud", Arrays.asList("Phishing", "Investment scams", "Lottery scams", "Romance scams", "Fake charities"));
+        reportOptions.put("Adult content", Arrays.asList("Pornography", "Sexual services", "Nudity", "Sexual exploitation", "Child exploitation"));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeHelper(getContext(), new SwipeHelper.SwipeListener() {
             @Override
             public void onEdit(int position) {
@@ -91,11 +91,6 @@ public class ConservationFragment extends Fragment {
                     reportUser(conversationId, reason);
                     Toast.makeText(getContext(), "Reported: " + reason, Toast.LENGTH_SHORT).show();
                 });
-//                if (conservationId != null) {
-//                    showReportDialog(conservationId);
-//                } else {
-//                    Log.e("SwipeHelper", "Error: Conservation ID is null");
-//                }
             }
         }));
         viewModel.getConservationsMutableLiveData().observe(this, chatMessages -> {
@@ -113,30 +108,6 @@ public class ConservationFragment extends Fragment {
     }
     public void handleDeleteConservation()
     {}
-    private void showReportDialog(String conservationId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Report Conversation");
-
-        // Tạo EditText để nhập nội dung báo cáo
-        final EditText input = new EditText(getContext());
-        input.setHint("Enter report reason...");
-        builder.setView(input);
-
-        // Nút Gửi Báo Cáo
-        builder.setPositiveButton("Report", (dialog, which) -> {
-            String reportMessage = input.getText().toString().trim();
-            if (!reportMessage.isEmpty()) {
-                reportUser(conservationId, reportMessage);
-            } else {
-                Toast.makeText(getContext(), "Please enter a reason for reporting!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Nút Hủy
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        builder.show();
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

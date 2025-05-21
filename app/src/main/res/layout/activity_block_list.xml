@@ -33,7 +33,13 @@
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/emptyMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="No blocked users"
+        android:visibility="gone" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_blockUsers"
         android:layout_width="match_parent"

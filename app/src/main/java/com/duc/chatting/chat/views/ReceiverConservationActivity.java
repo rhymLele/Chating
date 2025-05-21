@@ -250,54 +250,13 @@ public class ReceiverConservationActivity extends AppCompatActivity implements S
         });
         dialog = new StartGameDialogFragment();
 
-
+        binding.lnLeave.setOnClickListener(v -> {
+            viewModel.leaveGroup(conservation.getReceiverID(),preferenceManager.getString(Contants.KEY_USER_ID));
+        });
         binding.lnBlock.setOnClickListener(v -> {
             dialog.show(getSupportFragmentManager(), "StartGameDialog");
 
         });
-    }
-    private void showReportDialog(String conservationId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Report Conversation");
-
-        // Tạo EditText để nhập nội dung báo cáo
-        final EditText input = new EditText(this);
-        input.setHint("Enter report reason...");
-//        input.setPadding(50, 40, 50, 10); // Tuỳ chỉnh padding cho đẹp
-        builder.setView(input);
-
-        // Nút Gửi Báo Cáo
-        builder.setPositiveButton("Report", null); // Gán null để xử lý sau trong setOnShowListener
-
-        // Nút Hủy
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-
-        // Tuỳ chỉnh sau khi dialog hiển thị
-        dialog.setOnShowListener(dialogInterface -> {
-            // Tuỳ chỉnh màu nền
-            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.custom_dialog_background);
-
-            // Tuỳ chỉnh màu nút
-            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            negativeButton.setTextColor(Color.RED);
-
-            // Gắn sự kiện click cho nút Report (vì lúc tạo đã set null)
-            positiveButton.setOnClickListener(v -> {
-                String reportMessage = input.getText().toString().trim();
-                if (!reportMessage.isEmpty()) {
-                    reportUser(conservationId, reportMessage);
-                    dialog.dismiss();
-                    Toast.makeText(this, "Reported ", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Please enter a reason for reporting!", Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-
-        dialog.show();
     }
     public void reportUser(String postId,String message) {
         String currentUserId = preferenceManager.getString(Contants.KEY_USER_ID);

@@ -46,7 +46,7 @@ import com.duc.chatting.chat.models.User;
 import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
 import com.duc.chatting.chat.viewmodels.ChatActivityViewModel;
 import com.duc.chatting.databinding.ActivityChatBinding;
-import com.duc.chatting.home.views.ConservationFragment;
+import com.duc.chatting.chat.viewmodels.ReceiverConservationViewModel;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.AppPreference;
 import com.duc.chatting.utilities.Contants;
@@ -54,7 +54,9 @@ import com.duc.chatting.utilities.PreferenceManager;
 import com.duc.chatting.utilities.widgets.BaseActivity;
 import com.permissionx.guolindev.PermissionX;
 import com.squareup.picasso.Picasso;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import org.checkerframework.checker.units.qual.C;
 
 import java.io.ByteArrayOutputStream;
@@ -74,6 +76,7 @@ public class ChatActivity extends BaseActivity {
     private PreferenceManager preferenceManager;
     private ChatActivityViewModel viewModel;
     private BlockUserViewModel blockUserViewModel;
+    private ReceiverConservationViewModel receiverConservationViewModel;
     //for dialog able and disable or rep ibox
     private Dialog dialog;
     private boolean isCheckedButton = false;
@@ -104,6 +107,7 @@ public class ChatActivity extends BaseActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ChatActivityViewModel.class);
         blockUserViewModel= new ViewModelProvider(this).get(BlockUserViewModel.class);
+        receiverConservationViewModel=new ViewModelProvider(this).get(ReceiverConservationViewModel.class);
         loadReceiverDetails();
         viewModel.getChatMessagesMutableLiveData().observe(this, chatMessages -> {
             if (receiverUser.getImgProfile() == null) {
@@ -194,7 +198,25 @@ public class ChatActivity extends BaseActivity {
             dialog.dismiss();
         });
         blockUserViewModel.observeBlockStatusRealtime(receiverUser.getId());
-
+        receiverConservationViewModel.checkUserInGroupChat(preferenceManager.getString(Contants.KEY_USER_ID), receiverUser.getId());
+        receiverConservationViewModel.getIsUserInGroup().observe(this, isInGroup -> {
+            boolean isGroup = receiverUser.getId().startsWith("-") && receiverUser.getId().length() == 20;
+            if (isInGroup != null && isInGroup) {
+                // Người dùng còn trong nhóm
+                binding.llGrSend.setVisibility(View.VISIBLE);
+                binding.layoutSend.setVisibility(View.VISIBLE);
+                binding.textBlockedNotice.setVisibility(View.GONE);
+            } else {
+                if (isGroup) {
+                    binding.textBlock.setText("You are not in this group");
+                    binding.llGrSend.setVisibility(View.GONE);
+                    binding.layoutSend.setVisibility(View.GONE);
+                    binding.textBlockedNotice.setVisibility(View.VISIBLE);
+                    // Người dùng đã bị xóa khỏi nhóm → có thể đóng activity hoặc thông báo
+                    Toast.makeText(this, "Bạn đã rời khỏi nhóm", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         blockUserViewModel.getBlockStatusLiveData().observe(this, status -> {
             if (status == null) return;
 

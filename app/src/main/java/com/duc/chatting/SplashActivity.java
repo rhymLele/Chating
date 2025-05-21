@@ -17,8 +17,9 @@ import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
 import com.duc.chatting.intro.IntroActivity;
 import com.duc.chatting.sign.view.MainSignActivity;
 import com.duc.chatting.utilities.AppPreference;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
     AppPreference prefManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +41,7 @@ public class SplashActivity extends AppCompatActivity {
             }
             finish();
         }, 2000);
-//        BlockUserViewModel blockUserViewModel=new BlockUserViewModel(getApplication());
-//        blockUserViewModel.getBlockedUsers(() -> {
-//            new Handler().postDelayed(() -> {
-//                createNotificationChannel();
-//                if (prefManager.isFirstTimeLaunch()) {
-//                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
-//                } else {
-//                    startActivity(new Intent(SplashActivity.this, MainSignActivity.class));
-//                }
-//                finish();
-//            }, 2000);
-//        });
+
     }
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

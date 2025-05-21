@@ -16,12 +16,13 @@ import com.duc.chatting.R;
 import com.duc.chatting.databinding.ActivityHelpBinding;
 import com.duc.chatting.otherComponents.adapters.HelpAdapter;
 import com.duc.chatting.otherComponents.models.HelpItem;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HelpActivity extends AppCompatActivity {
+public class HelpActivity extends BaseActivity {
     ActivityHelpBinding binding;
     HelpAdapter adapter;
     List<HelpItem> helpList = new ArrayList<>();

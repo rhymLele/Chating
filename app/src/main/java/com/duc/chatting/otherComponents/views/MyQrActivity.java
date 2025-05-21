@@ -21,6 +21,7 @@ import com.duc.chatting.R;
 import com.duc.chatting.databinding.ActivityMyQrBinding;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
@@ -28,7 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-public class MyQrActivity extends AppCompatActivity {
+public class MyQrActivity extends BaseActivity {
     ActivityMyQrBinding binding;
     PreferenceManager preferenceManager;
     @Override

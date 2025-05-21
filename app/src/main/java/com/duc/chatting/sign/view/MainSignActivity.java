@@ -13,8 +13,9 @@ import com.duc.chatting.R;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
-public class MainSignActivity extends AppCompatActivity {
+public class MainSignActivity extends BaseActivity {
     PreferenceManager preferenceManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

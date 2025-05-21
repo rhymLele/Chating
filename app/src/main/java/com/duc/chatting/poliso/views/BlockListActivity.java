@@ -22,8 +22,9 @@ import com.duc.chatting.home.viewmodels.ListFriendViewModel;
 import com.duc.chatting.poliso.adapters.BlockUserAdapter;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
-public class BlockListActivity extends AppCompatActivity {
+public class BlockListActivity extends BaseActivity {
     ActivityBlockListBinding binding;
     BlockUserAdapter userAdapter;
     BlockUserViewModel viewModel;

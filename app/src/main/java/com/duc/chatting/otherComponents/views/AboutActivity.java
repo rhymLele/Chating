@@ -10,8 +10,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.duc.chatting.R;
 import com.duc.chatting.databinding.ActivityAboutBinding;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
     ActivityAboutBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

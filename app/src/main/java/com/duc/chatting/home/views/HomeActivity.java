@@ -39,6 +39,7 @@ import com.duc.chatting.messaging.service.WebSocketService;
 import com.duc.chatting.newfeature.views.FeatureActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -58,7 +59,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
     ActivityHomeBinding binding;
     DatabaseReference databaseReference = FirebaseDatabase
             .getInstance()

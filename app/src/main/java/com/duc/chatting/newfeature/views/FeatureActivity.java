@@ -10,8 +10,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.duc.chatting.R;
 import com.duc.chatting.databinding.ActivityFeatureBinding;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
-public class FeatureActivity extends AppCompatActivity {
+public class FeatureActivity extends BaseActivity {
     ActivityFeatureBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,8 +9,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.duc.chatting.R;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
-public class InformationProfileActivity extends AppCompatActivity {
+public class InformationProfileActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

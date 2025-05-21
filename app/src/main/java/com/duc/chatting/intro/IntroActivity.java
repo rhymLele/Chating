@@ -19,11 +19,12 @@ import com.duc.chatting.R;
 import com.duc.chatting.databinding.ActivityIntroBinding;
 import com.duc.chatting.sign.view.MainSignActivity;
 import com.duc.chatting.utilities.AppPreference;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntroActivity extends AppCompatActivity {
+public class IntroActivity extends BaseActivity {
 
 ActivityIntroBinding binding;
     private int currentIndex = 0;

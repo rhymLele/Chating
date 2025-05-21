@@ -51,6 +51,7 @@ import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.AppPreference;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 import com.permissionx.guolindev.PermissionX;
 import com.squareup.picasso.Picasso;
 
@@ -66,7 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ChatActivity extends AppCompatActivity{
+public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private User receiverUser;
     private String conservationID = "";

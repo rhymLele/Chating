@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -148,11 +149,12 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
                 binding.progressBar.setVisibility(View.GONE);
             }
         });
-        viewModel.getIsUserActive().observe(this, isActive  -> {
-            if (isActive  == Boolean.TRUE) {
+
+        viewModel.getOnlineUserCount().observe(this, count -> {
+            Toast.makeText(getApplicationContext(),String.valueOf(count),Toast.LENGTH_SHORT).show();
+            if (count != null && count>0) {
                 binding.checkUserOn.setBackgroundResource(R.drawable.user_active);
-                Log.d("ChatActivity","Stattus"+isActive );
-            }else   {
+            } else {
                 binding.checkUserOn.setBackgroundResource(R.drawable.user_inactive);
             }
         });
@@ -420,8 +422,8 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
 
     private void loadReceiverDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Contants.KEY_USER);
-        viewModel.countMemberOnline();
 //        Log.d("User",receiverUser.getPhoneNumber().toString());
+        viewModel.countOnlineMembersInGroup(receiverUser.getId());
         if (!binding.textName.toString().isEmpty()) {
             binding.textName.setText(receiverUser.getName());
         }

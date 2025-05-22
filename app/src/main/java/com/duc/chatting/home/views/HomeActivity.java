@@ -40,6 +40,7 @@ import com.duc.chatting.newfeature.views.FeatureActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
 import com.duc.chatting.utilities.widgets.BaseActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -149,6 +150,26 @@ public class HomeActivity extends BaseActivity {
         });
 //        startService();
     }
+    private void setUserStatus(String status) {
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(preferenceManager.getString(Contants.KEY_USER_ID))
+                .child("status")
+                .setValue(status);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setUserStatus("Online");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setUserStatus("Offline");
+
+    }
+
     public void startService(){
         Intent intent = new Intent(this, WebSocketService.class);
         intent.putExtra("user_id", preferenceManager.getString(Contants.KEY_USER_ID));

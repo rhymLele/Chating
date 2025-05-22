@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChatActivityViewModel extends AndroidViewModel {
     private PreferenceManager preferenceManager;
@@ -63,6 +64,12 @@ public class ChatActivityViewModel extends AndroidViewModel {
     private MutableLiveData<String> conservationIdMutableLiveData;
     private List<ChatMessage> chatMessages;
     private String conservationID = null;
+    private final MutableLiveData<Integer> cntUserOnline = new MutableLiveData<>();
+
+
+    public MutableLiveData<Integer> getOnlineUserCount() {
+        return cntUserOnline;
+    }
     private boolean isChecked = false;
     DatabaseReference databaseReference = FirebaseDatabase
             .getInstance()
@@ -142,26 +149,63 @@ public class ChatActivityViewModel extends AndroidViewModel {
         });
     }
 
-    public void countMemberOnline() {
-        databaseReference.child(Contants.KEY_COLLECTION_USERS)
+    public void countOnlineMembersInGroup(String groupID) {
+        databaseReference.child(Contants.KEY_COLLECTION_GROUP_MEMBER)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        int onlineUsers = 0; // Reset mỗi lần đếm
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            String status = dataSnapshot.child("status").getValue(String.class);
-                            if ("Online".equals(status)) {
-                                onlineUsers++;
+                    public void onDataChange(@NonNull DataSnapshot groupSnapshot) {
+                        List<String> memberIds = new ArrayList<>();
+
+                        for (DataSnapshot postSnapshot : groupSnapshot.getChildren()) {
+                            if (groupID.equals(postSnapshot.child(Contants.KEY_GROUP_CHAT_ID).getValue(String.class))) {
+                                String userID = postSnapshot.child("userID").getValue(String.class);
+                                if (userID != null) {
+                                    memberIds.add(userID);
+                                }
                             }
                         }
-                        isUserActive.postValue(onlineUsers > 0);
+
+                        if (memberIds.isEmpty()) {
+                            cntUserOnline.postValue(0);
+                            return;
+                        }
+
+                        // Đếm người online
+                        AtomicInteger onlineCount = new AtomicInteger(0);
+                        AtomicInteger completedCount = new AtomicInteger(0);
+                        for (String userId : memberIds) {
+                            databaseReference.child(Contants.KEY_COLLECTION_USERS).child(userId)
+                                    .child("status")
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            String status = snapshot.getValue(String.class);
+                                            if ("Online".equals(status)) {
+                                                onlineCount.getAndIncrement();
+                                            }
+
+                                            if (completedCount.incrementAndGet() == memberIds.size()) {
+                                                cntUserOnline.postValue(onlineCount.get());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            if (completedCount.incrementAndGet() == memberIds.size()) {
+                                                cntUserOnline.postValue(onlineCount.get());
+                                            }
+                                        }
+                                    });
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+                        cntUserOnline.postValue(0);
                     }
                 });
     }
+
 
     //for message rep local
     public void sendMessageRepLocal(String senderID, String senderName, String senderImage, String receiverID, String receiverName, String receiverImage, String messageChat, String messageRepLocal, String urlFileRepLocal, String urlImageRepLocal) {

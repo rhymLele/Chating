@@ -49,6 +49,8 @@ public class MainRepository implements WebRTCClient.Listener {
     }
 
     public void login(String username, Context context, SuccessCallBack callBack){
+        Log.d("MainRepository", "Attempting login with username: " + username);
+
         firebaseClient.login(username,()->{
             updateCurrentUsername(username);
             this.webRTCClient = new WebRTCClient(context,new MyPeerConnectionObserver(){
@@ -66,7 +68,11 @@ public class MainRepository implements WebRTCClient.Listener {
                 public void onConnectionChange(PeerConnection.PeerConnectionState newState) {
                     Log.d("TAG", "onConnectionChange: "+newState);
                     super.onConnectionChange(newState);
+                    Log.d("TAG", "State CONNECTED - listener is " + (listener == null ? "null" : "not null"));
+
                     if (newState == PeerConnection.PeerConnectionState.CONNECTED && listener!=null){
+                        Log.d("TAG", "State CONNECTED - listener is " + (listener == null ? "null" : "not null"));
+
                         listener.webrtcConnected();
                     }
 

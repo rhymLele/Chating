@@ -87,9 +87,9 @@ public class WebRTCClient {
     public void initSurfaceViewRendere(SurfaceViewRenderer viewRenderer){
         viewRenderer.setEnableHardwareScaler(true);
         viewRenderer.setMirror(true);
+        viewRenderer.setZOrderMediaOverlay(true);
         viewRenderer.init(eglBaseContext,null);
     }
-
     public void initLocalSurfaceView(SurfaceViewRenderer view){
         initSurfaceViewRendere(view);
         startLocalVideoStreaming(view);

@@ -28,9 +28,9 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         EdgeToEdge.enable(this);
         binding=ActivityCallBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        String targetPhoneNumber = getIntent().getStringExtra("Target");
-        init(targetPhoneNumber);
-
+//        String targetPhoneNumber = getIntent().getStringExtra("Target");
+        init();
+        MainRepository.getInstance().listener = this;
     }
     private void showCallingDialog(String target) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -45,13 +45,16 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         callingDialog = builder.create();
         callingDialog.show();
     }
-    private void init(String phoneNumber){
+    private void init(){
         mainRepository = MainRepository.getInstance();
-        mainRepository.sendCallRequest(phoneNumber,()->{
-            Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
-            if (callingDialog != null) callingDialog.dismiss();
+        binding.callBtn.setOnClickListener(v->{
+            //start a call request here
+            String target = binding.targetUserNameEt.getText().toString();
+            mainRepository.sendCallRequest(binding.targetUserNameEt.getText().toString(),()->{
+                Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
+            });
         });
-        showCallingDialog(phoneNumber);
+
         mainRepository.initLocalView(binding.localView);
         mainRepository.initRemoteView(binding.remoteView);
         mainRepository.subscribeForLatestEvent(data->{
@@ -103,7 +106,7 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
     public void webrtcConnected() {
         runOnUiThread(()->{
             binding.incomingCallLayout.setVisibility(View.GONE);
-            if (callingDialog != null) callingDialog.dismiss();
+//            if (callingDialog != null) callingDialog.dismiss();
 //            binding.whoToCallLayout.setVisibility(View.GONE);
             binding.callLayout.setVisibility(View.VISIBLE);
         });

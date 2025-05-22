@@ -69,7 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends BaseActivity implements MainRepository.Listener{
     private ActivityChatBinding binding;
     private User receiverUser;
     private String conservationID = "";
@@ -90,6 +90,7 @@ public class ChatActivity extends BaseActivity {
     private MainRepository mainRepository;
     private Boolean isCameraMuted = false;
     private Boolean isMicrophoneMuted = false;
+
     AppPreference prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,19 +241,15 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
-
+//        init();
+//        MainRepository.getInstance().listener = this;
     }
 
-    
+
 
 
     private void setListener() {
-//        binding.textName.setOnClickListener(v -> {
-//            Conservation conservation= new Conservation(conservationID,receiverUser.getId());
-//            Intent i=new Intent(this, ReceiverConservationActivity.class);
-//            i.putExtra(Contants.KEY_CONVERSATION,conservation);
-//            startActivity(i);
-//        });
+
         binding.llNameAndVisible.setOnClickListener(v -> {
             Conservation conservation= new Conservation(conservationID,receiverUser.getId());
             Intent i=new Intent(this, ReceiverConservationActivity.class);
@@ -349,16 +346,8 @@ public class ChatActivity extends BaseActivity {
 
                         }
                     });
-
-//            if(binding.chatScreen.getVisibility()==View.VISIBLE)
-//            {
-//                binding.chatScreen.setVisibility(View.GONE);
-//                binding.callScreen.setVisibility(View.VISIBLE);
-//                mainRepository.sendCallRequest(receiverUser.getId(),()->{
-//                    Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
-//                });
-//            }
         });
+
     }
     private final ActivityResultLauncher<Intent> pickImageBanner = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -589,5 +578,80 @@ public class ChatActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void webrtcConnected() {
+        runOnUiThread(()->{
+            binding.incomingCallLayout.setVisibility(View.GONE);
+//            if (callingDialog != null) callingDialog.dismiss();
+//            binding.whoToCallLayout.setVisibility(View.GONE);
+            binding.includeCallLayout.callLayout.setVisibility(View.VISIBLE);
+        });
+    }
+    private void init(){
+        mainRepository = MainRepository.getInstance();
+        binding.imageCall.setOnClickListener(v->{
+            //start a call request here
+            binding.incomingCallLayout.setVisibility(View.VISIBLE);
+            mainRepository.sendCallRequest(receiverUser.getId().toString(),()->{
+                Toast.makeText(this, "couldnt find the target", Toast.LENGTH_SHORT).show();
+            });
+        });
+
+        mainRepository.initLocalView(binding.includeCallLayout.localView);
+        mainRepository.initRemoteView(binding.includeCallLayout.remoteView);
+        mainRepository.subscribeForLatestEvent(data->{
+            if (data.getType()== DataModelType.StartCall){
+                runOnUiThread(()->{
+                    binding.incomingNameTV.setText(data.getSender()+" is Calling you");
+                    binding.incomingCallLayout.setVisibility(View.VISIBLE);
+                    binding.acceptButton.setOnClickListener(v->{
+                        //star the call here
+                        mainRepository.startCall(data.getSender());
+                        binding.includeCallLayout.getRoot().setVisibility(View.VISIBLE); // nếu cần hiển thị call UI
+                        binding.incomingCallLayout.setVisibility(View.GONE);
+                    });
+                    binding.rejectButton.setOnClickListener(v->{
+                        binding.incomingCallLayout.setVisibility(View.GONE);
+                    });
+                });
+            }
+        });
+        binding.includeCallLayout.switchCameraButton.setOnClickListener(v->{
+            mainRepository.switchCamera();
+        });
+        binding.includeCallLayout.micButton.setOnClickListener(v->{
+            if (isMicrophoneMuted){
+                binding.includeCallLayout.micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
+            }else {
+                binding.includeCallLayout.micButton.setImageResource(R.drawable.ic_baseline_mic_24);
+            }
+            mainRepository.toggleAudio(isMicrophoneMuted);
+            isMicrophoneMuted=!isMicrophoneMuted;
+        });
+
+        binding.includeCallLayout.videoButton.setOnClickListener(v->{
+            if (isCameraMuted){
+                binding.includeCallLayout.videoButton.setImageResource(R.drawable.ic_baseline_videocam_off_24);
+            }else {
+                binding.includeCallLayout.videoButton.setImageResource(R.drawable.ic_baseline_videocam_24);
+            }
+            mainRepository.toggleVideo(isCameraMuted);
+            isCameraMuted=!isCameraMuted;
+        });
+
+        binding.includeCallLayout.endCallButton.setOnClickListener(v->{
+            mainRepository.endCall();
+            finish();
+        });
+    }
+
+    @Override
+    public void webrtcClosed() {
+        binding.includeCallLayout.getRoot().setVisibility(View.GONE); // nếu cần hiển thị call UI
+
+//        runOnUiThread(this::finish);
+
     }
 }

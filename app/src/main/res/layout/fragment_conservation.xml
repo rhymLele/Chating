@@ -23,7 +23,7 @@
             android:orientation="vertical"
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:paddingEnd="@dimen/_20sdp"
+            android:paddingEnd="@dimen/_10sdp"
             android:paddingTop="@dimen/_20sdp"
             android:visibility="visible"
             android:paddingBottom="@dimen/_20sdp"/>

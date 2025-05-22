@@ -26,8 +26,8 @@
     <LinearLayout
         android:id="@+id/lnName"
         android:layout_width="@dimen/_220sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginStart="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_18sdp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
@@ -37,37 +37,43 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:paddingVertical="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/textName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="Username"
+                    android:textColor="@color/test"
+                    android:textSize="@dimen/_15sdp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="View my profile"
+                    android:textColor="@color/test"
+                    android:textSize="@dimen/_10ssp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/textName"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_18sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:text="Username"
-                android:textColor="@color/test"
-                android:textSize="@dimen/_15sdp"
-                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/imgQr"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="14dp"
                 android:src="@drawable/qr" />
         </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_15sdp"
-            android:layout_marginStart="@dimen/_18sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:text="View my profile"
-            android:textColor="@color/test"
-            android:textSize="@dimen/_10ssp" />
+
 
     </LinearLayout>
 

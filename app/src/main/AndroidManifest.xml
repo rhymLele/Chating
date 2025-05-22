@@ -61,6 +61,7 @@
             android:exported="false" />
         <activity
             android:name=".chat.views.ChatActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".chat.views.ReceiverDetailProfileActivity"

@@ -3,6 +3,8 @@ package com.duc.chatting.home.views;
 import static androidx.core.content.ContextCompat.getMainExecutor;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -34,7 +36,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.view.animation.LinearInterpolator;
 import com.duc.chatting.ChatGPT.adapters.MessageBotAdapter;
 import com.duc.chatting.ChatGPT.models.MessageBot;
 import com.duc.chatting.ChatGPT.viewmodels.ChatBotViewModel;
@@ -353,7 +355,23 @@ public class BotFragment extends Fragment {
                 "✈️ Solo travel benefits",
                 "🎓 Best schools in Europe",
                 "💬 Quotes for workout",
-                "🤖 Interview tips"
+                "🤖 Interview tips",
+                "📚 Book recommendations 2025",
+                "🍽️ Easy 15-min recipes",
+                "💡 Daily motivation quotes",
+                "💻 Learn coding with AI",
+                "📈 How to invest safely",
+                "🎵 Focus music playlist",
+                "🧘 Breathe and meditate tips",
+                "🌍 Eco-friendly lifestyle tips",
+                "🏋️‍♀️ Home workout plan",
+                "📝 Productivity hacks",
+                "🎯 Goal setting strategies",
+                "👨‍💼 Career development tips",
+                "🧳 Travel checklist essentials",
+                "💤 Sleep improvement habits",
+                "🗣️ Public speaking tips",
+                "📷 Instagram photo tips"
         };
 
         LinearLayout suggestionContainer = view.findViewById(R.id.suggestion_container);
@@ -386,7 +404,7 @@ public class BotFragment extends Fragment {
         }
 
         // Bắt đầu scroll sau khi layout sẵn sàng
-//        scrollView.post(() -> startAutoScroll(scrollView, suggestionContainer));
+        scrollView.post(() -> startAutoScroll2(scrollView, suggestionContainer));
     }
 
     private Handler scrollHandler = new Handler();
@@ -399,9 +417,21 @@ public class BotFragment extends Fragment {
         HorizontalScrollView scrollView = requireView().findViewById(R.id.suggestion_scroll);
         scrollView.setVisibility(View.GONE);
     }
+    private void startAutoScroll2(HorizontalScrollView scrollView, LinearLayout chipContainer) {
+        int maxScrollX = chipContainer.getWidth() - scrollView.getWidth();
+
+        ObjectAnimator animator = ObjectAnimator.ofInt(scrollView, "scrollX", 0, maxScrollX);
+        animator.setDuration(50000); // 5 giây để scroll toàn bộ chiều dài
+        animator.setInterpolator(new android.view.animation.LinearInterpolator()); // cuộn đều
+        animator.setRepeatCount(ValueAnimator.INFINITE); // lặp vô hạn
+        animator.setRepeatMode(ValueAnimator.REVERSE); // cuộn lại từ đầu
+
+        animator.start();
+    }
+
     private void startAutoScroll(HorizontalScrollView scrollView, LinearLayout chipContainer) {
-        final int scrollStep = 40; // mỗi lần cuộn bao nhiêu pixel
-        final int delay = 100; // độ trễ giữa mỗi lần
+        final int scrollStep = 5;   // mượt hơn
+        final int delay = 20;       // lặp lại thường xuyên hơn
 
         scrollRunnable = new Runnable() {
             int currentX = 0;

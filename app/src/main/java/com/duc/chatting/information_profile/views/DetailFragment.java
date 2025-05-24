@@ -2,6 +2,7 @@ package com.duc.chatting.information_profile.views;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -23,17 +26,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.duc.chatting.R;
 import com.duc.chatting.databinding.FragmentDetailBinding;
+import com.duc.chatting.information_profile.adapters.AvatarAdapter;
 import com.duc.chatting.information_profile.viewmodels.InformationProfileViewModel;
+import com.duc.chatting.utilities.AppHelper;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class DetailFragment extends Fragment {
@@ -60,6 +70,50 @@ public class DetailFragment extends Fragment {
         binding = FragmentDetailBinding.inflate(getLayoutInflater());    // Inflate the layout for this fragment
         return binding.getRoot();
     }
+    private void showImageOptions() {
+        BottomSheetDialog sheetDialog = new BottomSheetDialog(requireContext());
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_image_option, null);
+
+        LinearLayout btnPredefined = view.findViewById(R.id.btnPredefined);
+        LinearLayout btnGallery = view.findViewById(R.id.btnGallery);
+
+        btnPredefined.setOnClickListener(v -> {
+            sheetDialog.dismiss();
+            showPredefinedImagePicker();
+        });
+
+        btnGallery.setOnClickListener(v -> {
+            sheetDialog.dismiss();
+            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pickImage.launch(i);
+        });
+
+        sheetDialog.setContentView(view);
+        sheetDialog.show();
+    }
+
+
+    private void showPredefinedImagePicker() {
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_ava_picker, null);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerAvatars);
+
+        List<Integer> avatarList = AppHelper.getAvatarDrawables(requireContext());
+        AvatarAdapter adapter = new AvatarAdapter(avatarList, resId -> {
+            binding.imgProfile.setImageResource(resId);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId);
+            encodeImage = encodeImage(bitmap);
+            dialog.dismiss();
+        });
+
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
+        recyclerView.setAdapter(adapter);
+
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -67,17 +121,11 @@ public class DetailFragment extends Fragment {
         navController = Navigation.findNavController(view);
         loadUserDetails();
         binding.imgProfile.setOnClickListener(v -> {
-            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            i.addFlags(i.FLAG_GRANT_READ_URI_PERMISSION);
-
-//            i.setType("image/*");
-            pickImage.launch(i);
+            showImageOptions();
         });
         binding.imgBanner.setOnClickListener(v -> {
             Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             i.addFlags(i.FLAG_GRANT_READ_URI_PERMISSION);
-
-//            i.setType("image/*");
             pickImageBanner.launch(i);
         });
         binding.imageBack.setOnClickListener(v ->

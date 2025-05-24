@@ -384,9 +384,9 @@ public class BotFragment extends Fragment {
             TextView chip = new TextView(getContext());
             chip.setText(suggestion);
             chip.setBackgroundResource(R.drawable.suggestion_chip_bg);
-            chip.setPadding(40, 20, 40, 20);
+            chip.setPadding(40, 30, 40, 30);
             chip.setTextColor(Color.WHITE);
-            chip.setTextSize(14);
+            chip.setTextSize(16);
             chip.setTypeface(Typeface.DEFAULT_BOLD);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -421,7 +421,7 @@ public class BotFragment extends Fragment {
         int maxScrollX = chipContainer.getWidth() - scrollView.getWidth();
 
         ObjectAnimator animator = ObjectAnimator.ofInt(scrollView, "scrollX", 0, maxScrollX);
-        animator.setDuration(50000); // 5 giây để scroll toàn bộ chiều dài
+        animator.setDuration(80000); // 5 giây để scroll toàn bộ chiều dài
         animator.setInterpolator(new android.view.animation.LinearInterpolator()); // cuộn đều
         animator.setRepeatCount(ValueAnimator.INFINITE); // lặp vô hạn
         animator.setRepeatMode(ValueAnimator.REVERSE); // cuộn lại từ đầu
@@ -429,31 +429,6 @@ public class BotFragment extends Fragment {
         animator.start();
     }
 
-    private void startAutoScroll(HorizontalScrollView scrollView, LinearLayout chipContainer) {
-        final int scrollStep = 5;   // mượt hơn
-        final int delay = 20;       // lặp lại thường xuyên hơn
-
-        scrollRunnable = new Runnable() {
-            int currentX = 0;
-
-            @Override
-            public void run() {
-                if (!isScrolling) return;
-
-                int maxScrollX = chipContainer.getWidth() - scrollView.getWidth();
-                if (currentX >= maxScrollX) {
-                    currentX = 0; // quay về đầu
-                } else {
-                    currentX += scrollStep;
-                }
-
-                scrollView.smoothScrollTo(currentX, 0);
-                scrollHandler.postDelayed(this, delay);
-            }
-        };
-
-        scrollHandler.post(scrollRunnable);
-    }
 
 
     @Override

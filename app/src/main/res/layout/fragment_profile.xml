@@ -91,6 +91,53 @@
             />
 
         />
+        <HorizontalScrollView
+            android:id="@+id/suggestion_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="8dp"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/suggestion_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"/>
+        </HorizontalScrollView>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/splash_animationView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_120sdp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/thought" />
+        <TextView
+            android:id="@+id/textFle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello,anything interesting today?"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/test"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This is your personal timeline - Let's fill it up with lots of joys and memories"
+           android:gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:textSize="@dimen/_10ssp"
+            android:textColor="@color/test"
+            android:layout_gravity="center_horizontal"
+            />
+        <Button
+            android:layout_width="@dimen/_200sdp"
+           android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="Share your first thought"
+            android:layout_height="@dimen/_30sdp"/>
     </LinearLayout>
 
 

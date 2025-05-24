@@ -43,6 +43,7 @@ import com.duc.chatting.chat.adapters.ChatAdapter;
 import com.duc.chatting.chat.models.ChatMessage;
 import com.duc.chatting.chat.models.Conservation;
 import com.duc.chatting.chat.models.PDFClass;
+import com.duc.chatting.chat.models.ThemeItem;
 import com.duc.chatting.chat.models.User;
 import com.duc.chatting.chat.viewmodels.BlockUserViewModel;
 import com.duc.chatting.chat.viewmodels.ChatActivityViewModel;
@@ -180,6 +181,21 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
                 }
                 if (theme.equals("Sun")) {
                     binding.chatRecyclerView.setBackgroundResource(R.drawable.sun);
+                }
+                if (theme.equals("Sea")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.chep);
+                }
+                if (theme.equals("Night City")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.city);
+                }
+                if (theme.equals("Big Mons")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.croco);
+                }
+                if (theme.equals("Fresh Mountain")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.mout);
+                }
+                if (theme.equals("Extra Duck")) {
+                    binding.chatRecyclerView.setBackgroundResource(R.drawable.vit);
                 }
             }
         });

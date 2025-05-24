@@ -47,7 +47,11 @@ public class ThemeActivity extends AppCompatActivity {
         themeList.add(new ThemeItem(R.drawable.star, "Star"));
         themeList.add(new ThemeItem(R.drawable.element, "Ocean"));
         themeList.add(new ThemeItem(R.drawable.kids, "Kids"));
-        themeList.add(new ThemeItem(R.drawable.sun, "Sun"));
+        themeList.add(new ThemeItem(R.drawable.chep, "Sea"));
+        themeList.add(new ThemeItem(R.drawable.city, "Night City"));
+        themeList.add(new ThemeItem(R.drawable.croco, "Big Mons"));
+        themeList.add(new ThemeItem(R.drawable.mout, "Fresh Mountain"));
+        themeList.add(new ThemeItem(R.drawable.vit, "Extra Duck"));
         adapter = new ThemeAdapter(this, themeList,this::onThemeClick);
         binding.themeList.setAdapter(adapter);
         binding.imageBack.setOnClickListener(v -> {

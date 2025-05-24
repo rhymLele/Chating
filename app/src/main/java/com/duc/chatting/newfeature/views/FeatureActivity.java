@@ -29,4 +29,9 @@ public class FeatureActivity extends BaseActivity {
             finish();
         });
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
 }

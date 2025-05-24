@@ -43,6 +43,12 @@ public class SplashActivity extends BaseActivity {
         }, 2000);
 
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             String channelId = "FCM_CHANNEL";

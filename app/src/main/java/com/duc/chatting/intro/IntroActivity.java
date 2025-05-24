@@ -51,6 +51,11 @@ ActivityIntroBinding binding;
         setLis();
     }
 
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     private void setLis() {
         binding.nextBtn.setOnClickListener(v -> {
             currentIndex++;

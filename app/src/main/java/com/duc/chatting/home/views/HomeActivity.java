@@ -150,6 +150,12 @@ public class HomeActivity extends BaseActivity {
         });
 //        startService();
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     private void setUserStatus(String status) {
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(preferenceManager.getString(Contants.KEY_USER_ID))

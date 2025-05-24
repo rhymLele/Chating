@@ -34,4 +34,9 @@ public class MainSignActivity extends BaseActivity {
             startActivity(intent);
         }
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
 }

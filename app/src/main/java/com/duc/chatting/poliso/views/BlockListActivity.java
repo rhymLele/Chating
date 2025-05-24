@@ -54,6 +54,11 @@ public class BlockListActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     private void loadBlockList() {
         viewModel.getBlockedUsers();
     }

@@ -29,4 +29,9 @@ public class AboutActivity extends BaseActivity {
             finish();
         });
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
 }

@@ -19,6 +19,7 @@ import com.duc.chatting.R;
 import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.databinding.FragmentSignInBinding;
 import com.duc.chatting.sign.viewmodel.AuthenticationViewModel;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
 
 public class SignInFragment extends Fragment {
@@ -67,15 +68,26 @@ public class SignInFragment extends Fragment {
         binding.buttonSignIn.setOnClickListener(v->{
             String pN=binding.etSignPhone.getText().toString();
             String pW=binding.etSignPassw.getText().toString();
-            if(isValidSignInDetails())
-            {
-                viewModel.login(pN,pW);
+            if (getActivity() instanceof BaseActivity) {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+                if (!baseActivity.isNetworkConnected()) {
+                    Toast.makeText(getContext(), "Không có kết nối mạng! Vui lòng kiểm tra lại.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(isValidSignInDetails())
+                {
+                    viewModel.login(pN,pW);
 //                mainRepository.login(pN,getActivity(),()->{
 
 //                });
-            }else{
-                Toast.makeText(getContext(), "Phone number of password is invalid!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(), "Phone number of password is invalid!", Toast.LENGTH_SHORT).show();
+                }
+            }else {
+                // Fallback in case the activity is not an instance of BaseActivity
+                Toast.makeText(getContext(), "Lỗi: Activity không hỗ trợ kiểm tra mạng!", Toast.LENGTH_SHORT).show();
             }
+
         });
     }
 

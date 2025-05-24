@@ -98,6 +98,11 @@ public class HelpActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     void addContent() {
         helpList.add(new HelpItem("How do I create a new account?", "1. Tap menu > Select Profile > Register...", "Account"));
         helpList.add(new HelpItem("How do I reset my password?", "Go to login screen and tap on 'Forgot password'...", "Account"));

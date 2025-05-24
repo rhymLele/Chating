@@ -64,6 +64,12 @@ public class MyQrActivity extends BaseActivity {
         });
 
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     private void saveImageToGallery(Bitmap bitmap) {
         String filename = "QR_" + System.currentTimeMillis() + ".png";
 

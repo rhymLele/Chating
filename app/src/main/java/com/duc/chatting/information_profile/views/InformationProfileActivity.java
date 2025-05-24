@@ -24,4 +24,9 @@ public class InformationProfileActivity extends BaseActivity {
             return insets;
         });
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
 }

@@ -263,7 +263,10 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
 //        MainRepository.getInstance().listener = this;
     }
 
+    @Override
+    protected void onRetryConnection() {
 
+    }
 
 
     private void setListener() {

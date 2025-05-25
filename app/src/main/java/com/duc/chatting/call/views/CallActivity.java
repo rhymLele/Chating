@@ -39,12 +39,7 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         builder.setMessage("Waiting for " + target + " to accept...");
         builder.setCancelable(false);
         builder.setNegativeButton("Cancel", (dialog, which) -> {
-            mainRepository.endCall(new ErrorCallBack() {
-                @Override
-                public void onError() {
-
-                }
-            }); // Cancel the call
+            mainRepository.endCall(); // Cancel the call
             dialog.dismiss();
         });
 
@@ -103,12 +98,7 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         });
 
         binding.endCallButton.setOnClickListener(v->{
-            mainRepository.endCall(new ErrorCallBack() {
-                @Override
-                public void onError() {
-
-                }
-            });
+            mainRepository.endCall();
             finish();
         });
     }

@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.duc.chatting.R;
+import com.duc.chatting.call.interfaces.ErrorCallBack;
 import com.duc.chatting.call.models.DataModelType;
 import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.databinding.ActivityCallBinding;
@@ -38,7 +39,12 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         builder.setMessage("Waiting for " + target + " to accept...");
         builder.setCancelable(false);
         builder.setNegativeButton("Cancel", (dialog, which) -> {
-            mainRepository.endCall(); // Cancel the call
+            mainRepository.endCall(new ErrorCallBack() {
+                @Override
+                public void onError() {
+
+                }
+            }); // Cancel the call
             dialog.dismiss();
         });
 
@@ -97,7 +103,12 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         });
 
         binding.endCallButton.setOnClickListener(v->{
-            mainRepository.endCall();
+            mainRepository.endCall(new ErrorCallBack() {
+                @Override
+                public void onError() {
+
+                }
+            });
             finish();
         });
     }

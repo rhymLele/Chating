@@ -134,6 +134,9 @@ public class MainRepository implements WebRTCClient.Listener {
 
     public void endCall(){
         webRTCClient.closeConnection();
+//        firebaseClient.sendMessageToOtherUser(
+//                new DataModel(target,currentUsername,null, DataModelType.EndCall),errorCallBack
+//        );
     }
 
     public void subscribeForLatestEvent(NewEventCallBack callBack){
@@ -164,6 +167,12 @@ public class MainRepository implements WebRTCClient.Listener {
                 case StartCall:
                     this.target = model.getSender();
                     callBack.onNewEventReceived(model);
+                    break;
+                case EndCall:
+//                    if (listener != null) {
+//                        webRTCClient.closeConnection(); // đảm bảo dọn tài nguyên
+//                        listener.webrtcClosed(); // gọi callback về Activity để UI đóng call
+//                    }
                     break;
             }
 

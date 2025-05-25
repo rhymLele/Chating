@@ -172,7 +172,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        setUserStatus("Offline");
+//        setUserStatus("Offline");
 
     }
 

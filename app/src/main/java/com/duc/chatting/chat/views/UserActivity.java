@@ -29,6 +29,7 @@ import com.duc.chatting.chat.viewmodels.ChatUserViewModel;
 import com.duc.chatting.databinding.ActivityUserBinding;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.Contants;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.RGBLuminanceSource;
@@ -38,7 +39,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends BaseActivity {
     ActivityUserBinding binding;
     private ChatUserViewModel viewModel;
     UserAdapter userAdapter;
@@ -112,6 +113,12 @@ public class UserActivity extends AppCompatActivity {
             return false; // Cho phép EditText xử lý các sự kiện khác (như nhập văn bản)
         });
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     public void onUserClicked(User user){
         Intent intent=new Intent(getApplicationContext(), ReceiverDetailProfileActivity.class);
         intent.putExtra(Contants.KEY_USER,user);

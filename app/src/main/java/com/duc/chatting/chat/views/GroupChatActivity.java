@@ -23,11 +23,12 @@ import com.duc.chatting.databinding.ActivityGroupChatBinding;
 import com.duc.chatting.home.views.HomeActivity;
 import com.duc.chatting.utilities.Contants;
 import com.duc.chatting.utilities.PreferenceManager;
+import com.duc.chatting.utilities.widgets.BaseActivity;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class GroupChatActivity extends AppCompatActivity {
+public class GroupChatActivity extends BaseActivity {
     private ActivityGroupChatBinding binding;
     private GroupChatViewModel viewModel;
     private PreferenceManager preferenceManager;
@@ -115,6 +116,12 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onRetryConnection() {
+
+    }
+
     public void onUserClicked(User user){
         if(user.getChecked()==true){
             memberUserGroup.add(user);

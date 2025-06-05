@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.duc.chatting.R;
+import com.duc.chatting.Storage.views.StorageActivity;
 import com.duc.chatting.databinding.FragmentPersonalBinding;
 import com.duc.chatting.home.viewmodels.ConservationViewModel;
 import com.duc.chatting.information_profile.views.InformationProfileActivity;
@@ -133,7 +134,9 @@ public class PersonalFragment extends Fragment {
             Intent i = new Intent(getContext(), NotificationActivity.class);
             startActivity(i);
         });
-        binding.lnSchedule.setOnClickListener(v -> {
+        binding.lnStorage.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), StorageActivity.class);
+            startActivity(i);
             Toast.makeText(getContext(),"Go to storage",Toast.LENGTH_SHORT);
         });
         binding.lnNote.setOnClickListener(v -> {

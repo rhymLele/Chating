@@ -135,6 +135,7 @@
         <Button
             android:layout_width="@dimen/_200sdp"
            android:layout_gravity="center"
+            android:background="@drawable/btn_background"
             android:layout_marginTop="@dimen/_10sdp"
             android:text="Share your first thought"
             android:layout_height="@dimen/_30sdp"/>

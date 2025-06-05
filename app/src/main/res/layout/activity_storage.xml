@@ -24,7 +24,7 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="QR Code"
+        android:text="My Storage"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -44,54 +44,46 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/imageBack"/>
 
-    <!-- QR Code -->
-    <ImageView
-        android:id="@+id/qrCode"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="@dimen/_32sdp"
-        android:src="@drawable/logo"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Title -->
-    <TextView
-        android:id="@+id/textTitle"
+    <LinearLayout
+        android:id="@+id/groupFileAndImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WeLog"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/qrCode"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_16sdp"/>
-
-    <!-- Copyright -->
-    <TextView
-        android:id="@+id/textCopyright"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/textTitle"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_16sdp"/>
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <TextView
+            android:id="@+id/textFileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:text="Image" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:text="Pdf" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </LinearLayout>
 
 
-    <Button
-        android:id="@+id/btn_share"
-        android:layout_width="@dimen/_170sdp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text="Share"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/btn_background"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textCopyright" />
 </androidx.constraintlayout.widget.ConstraintLayout>

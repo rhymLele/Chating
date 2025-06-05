@@ -1,13 +1,17 @@
 package com.duc.chatting.otherComponents.views;
 
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.service.chooser.ChooserAction;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -69,7 +73,30 @@ public class MyQrActivity extends BaseActivity {
     protected void onRetryConnection() {
 
     }
-
+//    private void share(ImageView bitmap)
+//    {
+//        Intent sendIntent = new Intent(Intent.ACTION_SEND)
+//                .setType("text.plain")
+//                .putExtra(Intent., bitmap);
+//        Intent shareIntent = Intent.createChooser(sendIntent, null);
+//        ChooserAction[] actions = null;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+//            actions = new ChooserAction[]{
+//                    new ChooserAction.Builder(
+//                            Icon.createWithResource(getApplicationContext(), R.drawable.ic_custom_action),
+//                            "Custom",
+//                            PendingIntent.getBroadcast(
+//                                    getApplicationContext(),
+//                                    1,
+//                                    new Intent(Intent.ACTION_VIEW),
+//                                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
+//                            )
+//                    ).build()
+//            };
+//        }
+//        shareIntent.putExtra(Intent.EXTRA_CHOOSER_CUSTOM_ACTIONS, actions);
+//        getApplication().startActivity(shareIntent);
+//    }
     private void saveImageToGallery(Bitmap bitmap) {
         String filename = "QR_" + System.currentTimeMillis() + ".png";
 

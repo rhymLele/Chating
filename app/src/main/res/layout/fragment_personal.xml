@@ -78,7 +78,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/lnSchedule"
+        android:id="@+id/lnStorage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_30sdp"
@@ -125,7 +125,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lnSchedule">
+        app:layout_constraintTop_toBottomOf="@id/lnStorage">
 
         <ImageView
             android:layout_width="@dimen/_20sdp"

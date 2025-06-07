@@ -49,7 +49,7 @@ public class StorageViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    String senderID = postSnapshot.child(Contants.KEY_SENDER_ID).getValue(String.class);
+                    String senderID = postSnapshot.child("senderID").getValue(String.class);
                     if (userId.equals(senderID)) {
                         String name = postSnapshot.child("name").getValue(String.class);
                         String url = postSnapshot.child("url").getValue(String.class);

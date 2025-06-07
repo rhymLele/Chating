@@ -31,40 +31,20 @@ public class StorageActivity extends BaseActivity {
     private ImageListAdapter imageListAdapter;
     private StorageViewModel viewModel;
     private PreferenceManager preferenceManager;
+    private boolean isImageExpanded = true;
+    private boolean isPdfExpanded  = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityStorageBinding.inflate(getLayoutInflater());
-        EdgeToEdge.enable(this);
+
         setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
         preferenceManager=new PreferenceManager(this);
         viewModel = new ViewModelProvider(this).get(StorageViewModel.class);
-        binding.textFile.setOnClickListener(v -> {
-            if(binding.recyclerViewFile.getVisibility()== View.GONE)
-            {
-                binding.recyclerViewFile.setVisibility(View.VISIBLE);
-                viewModel.getListFile(preferenceManager.getString(Contants.KEY_USER_ID));
-            }else if(binding.recyclerViewFile.getVisibility()==View.VISIBLE)
-            {
-                binding.recyclerViewFile.setVisibility(View.GONE);
-            }
-        });
-        binding.textFileImage.setOnClickListener(v -> {
-            if(binding.recyclerViewFileImage.getVisibility()==View.GONE)
-            {
-                binding.recyclerViewFileImage.setVisibility(View.VISIBLE);
-                viewModel.getListImage(preferenceManager.getString(Contants.KEY_USER_ID));
-            }else if(binding.recyclerViewFileImage.getVisibility()==View.VISIBLE)
-            {
-                binding.recyclerViewFileImage.setVisibility(View.GONE);
-            }
-        });
+        viewModel.getListFile(preferenceManager.getString(Contants.KEY_USER_ID));
+        viewModel.getListImage(preferenceManager.getString(Contants.KEY_USER_ID));
         viewModel.getListPDFMutableLiveData().observe(this, pdfs -> {
             fileListAdapter = new FileListAdapter(pdfs, this::onUserClickedFileMessage);
             binding.recyclerViewFile.setAdapter(fileListAdapter);
@@ -77,6 +57,19 @@ public class StorageActivity extends BaseActivity {
             imageListAdapter = new ImageListAdapter(images);
             binding.recyclerViewFileImage.setAdapter(imageListAdapter);
 
+        });
+        binding.sectionImage.setOnClickListener(v -> {
+            isImageExpanded = !isImageExpanded;
+            binding.recyclerViewFileImage.setVisibility(isImageExpanded ? View.VISIBLE : View.GONE);
+            binding.arrowImage.setRotation(isImageExpanded ? 0f : 180f);
+        });
+        binding.sectionPdf.setOnClickListener(v -> {
+            isPdfExpanded = !isPdfExpanded;
+            binding.recyclerViewFile.setVisibility(isPdfExpanded ? View.VISIBLE : View.GONE);
+            binding.arrowPdf.setRotation(isPdfExpanded ? 0f : 180f);
+        });
+        binding.imageBack.setOnClickListener(v -> {
+            finish();
         });
     }
     @SuppressLint("IntentReset")

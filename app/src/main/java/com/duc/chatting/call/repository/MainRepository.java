@@ -168,12 +168,6 @@ public class MainRepository implements WebRTCClient.Listener {
                     this.target = model.getSender();
                     callBack.onNewEventReceived(model);
                     break;
-                case EndCall:
-//                    if (listener != null) {
-//                        webRTCClient.closeConnection(); // đảm bảo dọn tài nguyên
-//                        listener.webrtcClosed(); // gọi callback về Activity để UI đóng call
-//                    }
-                    break;
             }
 
         });

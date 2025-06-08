@@ -80,6 +80,7 @@
         android:layout_height="@dimen/_35sdp"
         android:src="@drawable/baseline_remove_circle_outline_24"
         android:contentDescription="Reject Request"
+        android:layout_marginRight="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

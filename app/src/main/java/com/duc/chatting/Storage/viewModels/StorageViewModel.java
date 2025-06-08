@@ -1,6 +1,7 @@
 package com.duc.chatting.Storage.viewModels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -51,11 +52,13 @@ public class StorageViewModel extends AndroidViewModel {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     String senderID = postSnapshot.child("senderID").getValue(String.class);
                     if (userId.equals(senderID)) {
-                        String name = postSnapshot.child("name").getValue(String.class);
-                        String url = postSnapshot.child("url").getValue(String.class);
+                        String name = postSnapshot.child(Contants.KEY_FILENAME).getValue(String.class);
+                        String url = postSnapshot.child(Contants.KEY_URL_FILE).getValue(String.class);
                         String statusFile = postSnapshot.child(Contants.KEY_STATUS_FILE).getValue(String.class);
                         PDFClass pdfClass = new PDFClass(name, url, statusFile);
                         listPDF.add(pdfClass);
+
+                        Log.d("SenderImD",String.valueOf(listPDF.size() ));
                     }
                 }
                 listPDFMutableLiveData.postValue(listPDF);
@@ -69,18 +72,22 @@ public class StorageViewModel extends AndroidViewModel {
 
     }
 
-    public void getListImage(String userId) {
+    public void getListImage() {
+        String userID=preferenceManager.getString(Contants.KEY_USER_ID);
         listImage.clear();
         databaseReference.child(Contants.KEY_COLLECTION_IMAGE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     String senderId = postSnapshot.child("senderID").getValue(String.class);
-                    if (userId.equals(senderId)) {
+                    Log.d("SenderIm",senderId);
+                    if (userID.equals(senderId)) {
                         String imageUrl = postSnapshot.child(Contants.KEY_URL_IMAGE).getValue(String.class);
                         String statusImage = postSnapshot.child(Contants.KEY_STATUS_IMAGE).getValue(String.class);
                         ImageClass imageClass = new ImageClass(imageUrl, statusImage);
                         listImage.add(imageClass);
+                        Log.d("SenderIm",String.valueOf(listImage.size() ));
+
                     }
                 }
                 listImageMutableLiveData.postValue(listImage);

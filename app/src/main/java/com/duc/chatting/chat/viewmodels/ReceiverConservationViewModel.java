@@ -1,6 +1,7 @@
 package com.duc.chatting.chat.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -217,13 +218,14 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    String conservationIdFile = postSnapshot.child(Contants.KEY_CONVERSATION_ID).getValue(String.class);
+                    String conservationIdFile = postSnapshot.child("conservationID").getValue(String.class);
                     if (conservationID.equals(conservationIdFile)) {
-                        String name = postSnapshot.child("name").getValue(String.class);
-                        String url = postSnapshot.child("url").getValue(String.class);
+                        String name = postSnapshot.child(Contants.KEY_FILENAME).getValue(String.class);
+                        String url = postSnapshot.child(Contants.KEY_URL_FILE).getValue(String.class);
                         String statusFile = postSnapshot.child(Contants.KEY_STATUS_FILE).getValue(String.class);
                         PDFClass pdfClass = new PDFClass(name, url, statusFile);
                         listPDF.add(pdfClass);
+                        Log.d(":asd",String.valueOf(listPDF.size()));
                     }
                 }
                 listPDFMutableLiveData.postValue(listPDF);

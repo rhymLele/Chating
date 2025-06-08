@@ -105,10 +105,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             this.binding=itemContainerSentMessageBinding;
         }
         public void setData(ChatMessage chatMessage){
+            resetViews();
             if(chatMessage.getStatusMessage()!=null&&chatMessage.getStatusMessage().equals("disableForAll")){
+                binding.textMessage.setVisibility(View.VISIBLE);
                 binding.textMessage.setText("User unsent message");
             }else{
                 if(chatMessage.getFileName()!=null){
+                    binding.textMessage.setVisibility(View.VISIBLE);
                     binding.textMessage.setText(chatMessage.getFileName());
                     binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
                     binding.getRoot().setOnClickListener(v -> {
@@ -130,6 +133,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 }
                 //message image
                 else if(chatMessage.getUrlImage()!=null){
+                    binding.roundImageViewItemSent.setVisibility(View.VISIBLE);
                     binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
 //                    Picasso.get().load(chatMessage.getUrlImage()).into(binding.roundImageViewItemSent);
                     binding.roundImageViewItemSent.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImage()));
@@ -150,6 +154,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 }
                 //message Text
                 else{
+                    binding.textMessage.setVisibility(View.VISIBLE);
                     binding.textMessage.setText(chatMessage.getMessage());
                     binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
 
@@ -182,8 +187,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
         }
+        private void resetViews() {
+            binding.textMessage.setVisibility(View.GONE);
+            binding.roundImageViewItemSent.setVisibility(View.GONE);
+            binding.textMessageRepLocal.setVisibility(View.GONE);
+            binding.roundImageViewRepLocal.setVisibility(View.GONE);
+            // ... thêm các view cần reset khác nếu có
+        }
 
     }
+
     //using xml receiver message(user receiver)
     public class ReceiverMessageViewHolder extends RecyclerView.ViewHolder{
         ItemContainerReceiverMessageBinding binding;
@@ -192,137 +205,94 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             super(itemContainerReceiverMessageBinding.getRoot());
             this.binding=itemContainerReceiverMessageBinding;
         }
-        public void setData(ChatMessage chatMessage, Bitmap receiverProfileImage){
-            if(chatMessage.getStatusMessage()!=null&&chatMessage.getStatusMessage().equals("disableForAll")){
-                String text="";
+        public void setData(ChatMessage chatMessage, Bitmap receiverProfileImage) {
+            resetViews();
 
-                if(chatMessage.getSenderName()!=null){
-                    text=chatMessage.getSenderName() + ": Valid message";
-                    if(receiverProfileImage!=null){
-                        binding.imageProfile.setImageBitmap(receiverProfileImage);
-                    }else if(chatMessage.getSenderImage()!=null){
-                        binding.imageProfile.setImageBitmap(getBitmapFromEncodeString(chatMessage.getSenderImage()));
-                    }
-                    if(chatMessage.getSenderName()!=null){
-                        binding.textNameSender.setVisibility(View.VISIBLE);
-                        binding.textNameSender.setText(chatMessage.getSenderName());
-                    }
-                }else {
-                    text=name + ": Valid message";
-                    if(receiverProfileImage!=null){
-                        binding.imageProfile.setImageBitmap(receiverProfileImage);
-                    }else if(chatMessage.getSenderImage()!=null){
-                        binding.imageProfile.setImageBitmap(getBitmapFromEncodeString(chatMessage.getSenderImage()));
-                    }
-                    if(chatMessage.getSenderName()!=null){
-                        binding.textNameSender.setVisibility(View.VISIBLE);
-                        binding.textNameSender.setText(chatMessage.getSenderName());
-                    }
+            setSenderInfo(chatMessage, receiverProfileImage);
 
-                }
+            if ("disableForAll".equals(chatMessage.getStatusMessage())) {
+                String text = (chatMessage.getSenderName() != null)
+                        ? chatMessage.getSenderName() + ": Valid message"
+                        : name + ": Valid message";
+                binding.textMessage.setVisibility(View.VISIBLE);
                 binding.textMessage.setText(text);
-            }else{
-                if(chatMessage.getFileName()!=null){
-                    binding.textMessage.setText(chatMessage.getFileName());
-                    binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
-                    if(receiverProfileImage!=null){
-                        binding.imageProfile.setImageBitmap(receiverProfileImage);
-                    }else if(chatMessage.getSenderImage()!=null){
-                        binding.imageProfile.setImageBitmap(getBitmapFromEncodeString(chatMessage.getSenderImage()));
-                    }
-                    if(chatMessage.getSenderName()!=null){
-                        binding.textNameSender.setVisibility(View.VISIBLE);
-                        binding.textNameSender.setText(chatMessage.getSenderName());
-                    }
-                    binding.getRoot().setOnClickListener(v -> {
-                        String nameFile=chatMessage.getFileName();
-                        String urlFile=chatMessage.getUrlFile();
-                        PDFClass pdfClass=new PDFClass(nameFile,urlFile);
-                        pdfListeners.onUserClickedFileMessage(pdfClass);
-                        if(binding.textDateTime.getVisibility()==View.GONE){
-                            binding.textDateTime.setVisibility(View.VISIBLE);
-                        }else if(binding.textDateTime.getVisibility()==View.VISIBLE){
-                            binding.textDateTime.setVisibility(View.GONE);
-                        }
-                    });
-                    binding.getRoot().setOnLongClickListener( v -> {
-                        messageStatusListeners.onUserClickedMessageStatus(chatMessage);
-                        return false;
-                    });
-                }
-                //set image display chat
-                else if(chatMessage.getUrlImage()!=null){
-                    binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
-                    if(receiverProfileImage!=null){
-                        binding.imageProfile.setImageBitmap(receiverProfileImage);
-                    }else if(chatMessage.getSenderImage()!=null){
-                        binding.imageProfile.setImageBitmap(getBitmapFromEncodeString(chatMessage.getSenderImage()));
-                    }
-                    if(chatMessage.getSenderName()!=null){
-                        binding.textNameSender.setVisibility(View.VISIBLE);
-                        binding.textNameSender.setText(chatMessage.getSenderName());
-                    }
-                    binding.roundedImageViewItemReceiver.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImage()));
-//                    Picasso.get().load(chatMessage.getUrlImage()).into(binding.roundedImageViewItemReceiver);
-                    binding.roundedImageViewItemReceiver.setVisibility(View.VISIBLE);
-                    binding.textMessage.setVisibility(View.GONE);
-                    binding.getRoot().setOnClickListener(v -> {
-                        if(binding.textDateTime.getVisibility()==View.GONE){
-                            binding.textDateTime.setVisibility(View.VISIBLE);
-                        }else if(binding.textDateTime.getVisibility()==View.VISIBLE){
-                            binding.textDateTime.setVisibility(View.GONE);
-                        }
-                    });
-                    binding.getRoot().setOnLongClickListener(v -> {
-                        messageStatusListeners.onUserClickedMessageStatus(chatMessage);
-                        return false;
-                    });
-                }
-                else{
-                    binding.textMessage.setText(chatMessage.getMessage());
-                    binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
-                    if(receiverProfileImage!=null){
-                        binding.imageProfile.setImageBitmap(receiverProfileImage);
-                    } else if (chatMessage.getSenderImage()!=null)
-                    {
-                        binding.imageProfile.setImageBitmap(getBitmapFromEncodeString(chatMessage.getSenderImage()));
-                        
-                    }
-                    if(chatMessage.getSenderName()!=null){
-                        binding.textNameSender.setVisibility(View.VISIBLE);
-                        binding.textNameSender.setText(chatMessage.getSenderName());
-
-                    }
-                    //rep ib local
-                    if(chatMessage.getMessageRepLocal()!=null){
-                        binding.textMessageRepLocal.setVisibility(View.VISIBLE);
-                        binding.textMessageRepLocal.setText(chatMessage.getMessageRepLocal());
-                    }else if(chatMessage.getUrlImageRepLocal()!=null){
-                        binding.roundImageViewRepLocal.setVisibility(View.VISIBLE);
-                        binding.roundImageViewRepLocal.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImageRepLocal()));
-//                        Picasso.get().load(chatMessage.getUrlImageRepLocal()).into(binding.roundImageViewRepLocal);
-
-                    }
-                    binding.getRoot().setOnClickListener(v -> {
-                        if(binding.textDateTime.getVisibility()==View.GONE){
-                            binding.textDateTime.setVisibility(View.VISIBLE);
-                        } else if (binding.textDateTime.getVisibility()==View.VISIBLE) {
-                            binding.textDateTime.setVisibility(View.GONE);
-                        }
-                    });
-                }
             }
-            //click to profile user
+            else if (chatMessage.getFileName() != null) {
+                binding.textMessage.setVisibility(View.VISIBLE);
+                binding.textMessage.setText(chatMessage.getFileName());
+                binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
+                binding.getRoot().setOnClickListener(v -> {
+                    PDFClass pdfClass = new PDFClass(chatMessage.getFileName(), chatMessage.getUrlFile());
+                    pdfListeners.onUserClickedFileMessage(pdfClass);
+                    toggleDateTimeVisibility();
+                });
+            }
+            else if (chatMessage.getUrlImage() != null) {
+                binding.roundedImageViewItemReceiver.setVisibility(View.VISIBLE);
+                binding.roundedImageViewItemReceiver.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImage()));
+                binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
+                binding.getRoot().setOnClickListener(v -> toggleDateTimeVisibility());
+            }
+            else {
+                binding.textMessage.setVisibility(View.VISIBLE);
+                binding.textMessage.setText(chatMessage.getMessage());
+                binding.textDateTime.setText(getReadableDateTime(chatMessage.getDateTime()));
+
+                if (chatMessage.getMessageRepLocal() != null) {
+                    binding.textMessageRepLocal.setVisibility(View.VISIBLE);
+                    binding.textMessageRepLocal.setText(chatMessage.getMessageRepLocal());
+                } else if (chatMessage.getUrlImageRepLocal() != null) {
+                    binding.roundImageViewRepLocal.setVisibility(View.VISIBLE);
+                    binding.roundImageViewRepLocal.setImageBitmap(getBitmapFromEncodeString(chatMessage.getUrlImageRepLocal()));
+                }
+
+                binding.getRoot().setOnClickListener(v -> toggleDateTimeVisibility());
+            }
+
+            // click profile
             binding.imageProfile.setOnClickListener(v -> {
-                String userID=chatMessage.getSenderID();
-                User user=new User(userID);
+                String userID = chatMessage.getSenderID();
+                User user = new User(userID);
                 userListeners.onUserClicked(user);
             });
+
+            // long click
             binding.getRoot().setOnLongClickListener(v -> {
                 messageStatusListeners.onUserClickedMessageStatus(chatMessage);
                 return false;
             });
         }
+
+        private void resetViews() {
+            binding.textMessage.setVisibility(View.GONE);
+            binding.roundedImageViewItemReceiver.setVisibility(View.GONE);
+            binding.textMessageRepLocal.setVisibility(View.GONE);
+            binding.roundImageViewRepLocal.setVisibility(View.GONE);
+            binding.textNameSender.setVisibility(View.GONE);
+        }
+
+        private void setSenderInfo(ChatMessage chatMessage, Bitmap receiverProfileImage) {
+            if (receiverProfileImage != null) {
+                binding.imageProfile.setImageBitmap(receiverProfileImage);
+            } else if (chatMessage.getSenderImage() != null) {
+                binding.imageProfile.setImageBitmap(getBitmapFromEncodeString(chatMessage.getSenderImage()));
+            } else {
+                binding.imageProfile.setImageBitmap(null); // tránh reuse ảnh cũ
+            }
+
+            if (chatMessage.getSenderName() != null) {
+                binding.textNameSender.setVisibility(View.VISIBLE);
+                binding.textNameSender.setText(chatMessage.getSenderName());
+            }
+        }
+        private void toggleDateTimeVisibility() {
+            if (binding.textDateTime.getVisibility() == View.GONE) {
+                binding.textDateTime.setVisibility(View.VISIBLE);
+            } else {
+                binding.textDateTime.setVisibility(View.GONE);
+            }
+        }
+
 
     }
     private String getReadableDateTime(Date date){

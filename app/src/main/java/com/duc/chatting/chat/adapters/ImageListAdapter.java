@@ -48,10 +48,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         }
 
         public void setData(ImageClass imageClass) {
-            if (imageClass.getStatusImage().equals("enable")) {
+
                 binding.roundImageFile.setImageBitmap(getBitmapFromEncodeString(imageClass.getUrlImage()));
 //                Picasso.get().load(imageClass.getUrlImage()).into(binding.roundImageFile);
-            }
+
         }
 
     }

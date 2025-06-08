@@ -21,13 +21,16 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ListFriendViewModel extends AndroidViewModel {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatting-4faf6-default-rtdb.firebaseio.com/");
     private PreferenceManager preferenceManager;
     private List<User> users;
     private List<User> usersRequest;
+    private Set<User> usersRequester;
     private MutableLiveData<List<User>> friendsMutableLiveData;
     private MutableLiveData<Integer> frRequest;
     private MutableLiveData<List<User>> friendRequestMutableLiveData;
@@ -58,6 +61,7 @@ public class ListFriendViewModel extends AndroidViewModel {
         frAll=new MutableLiveData<>();
         users=new ArrayList<>();
         usersRequest = new ArrayList<>();
+        usersRequester = new HashSet<>();
 
     }
     public MutableLiveData<List<User>> getFriendsMutableLiveData() {
@@ -66,10 +70,12 @@ public class ListFriendViewModel extends AndroidViewModel {
     public void getListFriendRequest()
     {
         String myId = preferenceManager.getString(Contants.KEY_USER_ID);
+        Set<String> processedSenderIds = new HashSet<>();
         databaseReference.child(Contants.KEY_COLLECTION_FRIEND).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 usersRequest.clear();
+                processedSenderIds.clear();
                 for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
                     String status = friendSnapshot.child("status").getValue(String.class);
                     String userID_2 = friendSnapshot.child("userID_2").getValue(String.class);
@@ -79,7 +85,8 @@ public class ListFriendViewModel extends AndroidViewModel {
                         if (senderID != null) {
                             keyFriendId=friendSnapshot.getKey();
                             getUsers(senderID, user -> {
-                                if (user != null) {
+                                if (user != null&&!usersRequester.contains(user)) {
+                                    usersRequester.add(user);
                                     usersRequest.add(user);
                                     friendRequestMutableLiveData.postValue(usersRequest);
                                     frRequest.postValue(usersRequest.size());
@@ -194,7 +201,7 @@ public class ListFriendViewModel extends AndroidViewModel {
     }
 
     public void destroyAddFriend(User user) {
-        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("disable").addOnCompleteListener(v -> {
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("").addOnCompleteListener(v -> {
             usersRequest.remove(user);
             friendRequestMutableLiveData.postValue(usersRequest);
             frRequest.postValue(usersRequest.size());

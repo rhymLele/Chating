@@ -136,7 +136,7 @@ public class ReceiverDetailProfileViewModel extends AndroidViewModel {
     }
 
     public void destroyAddFriend() {
-        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("disable").addOnCompleteListener(v -> {
+        databaseReference.child(Contants.KEY_COLLECTION_FRIEND).child(keyFriendId).child(Contants.KEY_STATUS).setValue("").addOnCompleteListener(v -> {
             isCheckedFriend.postValue(Boolean.FALSE);
         });
         keyFriendId = null;

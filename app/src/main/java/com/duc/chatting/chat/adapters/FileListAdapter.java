@@ -46,13 +46,12 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.FileLi
         }
         public void setData(PDFClass pdfClass)
         {
-            if(pdfClass.getStatusFile()!="disable")
-            {
+
                 binding.textFileName.setText(pdfClass.getFileName());
                 binding.getRoot().setOnClickListener(v -> {
                     pdfListeners.onUserClickedFileMessage(pdfClass);
                 });
-            }
+
         }
 
     }

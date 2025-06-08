@@ -63,19 +63,6 @@ public class ListFriendViewModel extends AndroidViewModel {
     public MutableLiveData<List<User>> getFriendsMutableLiveData() {
         return friendsMutableLiveData;
     }
-    public void cacheFriendsList(List<User> users) {
-        Gson gson = new Gson();
-        String json = gson.toJson(users);
-        preferenceManager.putString("cachedFriends", json);
-    }
-    public List<User> getCachedFriends() {
-        String json = preferenceManager.getString("cachedFriends");
-        if (json != null && !json.isEmpty()) {
-            Type type = new TypeToken<List<User>>() {}.getType();
-            return new Gson().fromJson(json, type);
-        }
-        return new ArrayList<>();
-    }
     public void getListFriendRequest()
     {
         String myId = preferenceManager.getString(Contants.KEY_USER_ID);
@@ -100,9 +87,7 @@ public class ListFriendViewModel extends AndroidViewModel {
                             });
                     }
                 }
-//                Log.d("LF","FrRequest"+String.valueOf(usersRequest.size()));
-//                friendRequestMutableLiveData.postValue(usersRequest);
-//                frRequest.postValue(usersRequest.size());
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -110,10 +95,6 @@ public class ListFriendViewModel extends AndroidViewModel {
         });
     }
     public void showListFriend(){
-//        List<User> cachedUsers = getCachedFriends();
-//        if (!cachedUsers.isEmpty()) {
-//            friendsMutableLiveData.postValue(cachedUsers);
-//        }
         String myId = preferenceManager.getString(Contants.KEY_USER_ID);
         databaseReference.child(Contants.KEY_COLLECTION_FRIEND).addValueEventListener(new ValueEventListener() {
             @Override
@@ -144,10 +125,6 @@ public class ListFriendViewModel extends AndroidViewModel {
                         }
                     }
                 }
-//                Log.d("LF","FrList"+String.valueOf(users.size()));
-//                friendsMutableLiveData.postValue(users);
-//                frAll.postValue(users.size());
-//                cacheFriendsList(users);
             }
 
             @Override
@@ -188,8 +165,6 @@ public class ListFriendViewModel extends AndroidViewModel {
                                 return;
                             }
                         }
-//                        if(type==1) friendsMutableLiveData.postValue(users);
-//                        else if(type==2) friendRequestMutableLiveData.postValue(users);
                         callback.onUserRetrieved(null);
                     }
 

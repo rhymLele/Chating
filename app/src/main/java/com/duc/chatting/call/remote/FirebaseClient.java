@@ -31,6 +31,12 @@ public class FirebaseClient {
             callBack.onSuccess();
         });
     }
+    public void end(String currentIds, SuccessCallBack callBack){
+        databaseReference.child(Contants.KEY_CALL).child(currentIds).setValue("").addOnCompleteListener(task -> {
+            currentId = currentIds;
+            callBack.onSuccess();
+        });
+    }
     public void sendMessageToOtherUser(DataModel dataModel, ErrorCallBack errorCallBack){
         databaseReference.child(Contants.KEY_CALL).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

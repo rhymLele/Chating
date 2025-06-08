@@ -1,11 +1,13 @@
 package com.duc.chatting.chat.views;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ComponentCaller;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +31,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -312,17 +316,6 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
                     });
                 });
             }
-//            if (data.getType() == DataModelType.EndCall) {
-//                runOnUiThread(() -> {
-//                    if (callingDialog != null && callingDialog.isShowing()) {
-//                        callingDialog.dismiss();
-//                    }
-//                    binding.callLayout.setVisibility(View.GONE);
-//                    binding.incomingCallLayout.setVisibility(View.GONE);
-//                    binding.includeCallLayout.setVisibility(View.GONE);
-//                    Toast.makeText(this, "The other side has ended the call", Toast.LENGTH_SHORT).show();
-//                });
-//        }
         });
 
         binding.switchCameraButton.setOnClickListener(v -> {
@@ -331,9 +324,9 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
 
         binding.micButton.setOnClickListener(v -> {
             if (isMicrophoneMuted) {
-                binding.micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
-            } else {
                 binding.micButton.setImageResource(R.drawable.ic_baseline_mic_24);
+            } else {
+                binding.micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
             }
             mainRepository.toggleAudio(isMicrophoneMuted);
             isMicrophoneMuted = !isMicrophoneMuted;
@@ -341,9 +334,10 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
 
         binding.videoButton.setOnClickListener(v -> {
             if (isCameraMuted) {
-                binding.videoButton.setImageResource(R.drawable.ic_baseline_videocam_off_24);
-            } else {
                 binding.videoButton.setImageResource(R.drawable.ic_baseline_videocam_24);
+            } else {
+                binding.videoButton.setImageResource(R.drawable.ic_baseline_videocam_off_24);
+
             }
             mainRepository.toggleVideo(isCameraMuted);
             isCameraMuted = !isCameraMuted;
@@ -456,16 +450,24 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
             pickImageBanner.launch(intent);
         });
         binding.imageCall.setOnClickListener(v -> {
-            PermissionX.init(this)
-                    .permissions(android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO)
-                    .request((allGranted, grantedList, deniedList) -> {
-                        if (allGranted) {
-                            String target = receiverUser.getId(); // hoặc số điện thoại người gọi
-                            startCallRequest(target);
-                        } else {
-                            Toast.makeText(this, "Permissions are required", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                // Hiển thị dialog giải thích nếu cần
+
+            } else {
+                // Quyền đã được cấp, tiếp tục call
+                String target = receiverUser.getId();
+                startCallRequest(target);
+            }
+            viewModel.sendMessage(
+                    preferenceManager.getString(Contants.KEY_USER_ID),
+                    preferenceManager.getString(Contants.KEY_NAME),
+                    preferenceManager.getString(Contants.KEY_IMAGE),
+                    receiverUser.getId(),
+                    receiverUser.getName(),
+                    receiverUser.getImgProfile(),
+                    "Started a calling"
+            );
         });
 
     }

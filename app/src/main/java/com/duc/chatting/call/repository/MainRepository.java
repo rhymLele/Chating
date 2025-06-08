@@ -137,6 +137,7 @@ public class MainRepository implements WebRTCClient.Listener {
 //        firebaseClient.sendMessageToOtherUser(
 //                new DataModel(target,currentUsername,null, DataModelType.EndCall),errorCallBack
 //        );
+//        firebaseClient.end(currentUsername,()->{});
     }
 
     public void subscribeForLatestEvent(NewEventCallBack callBack){

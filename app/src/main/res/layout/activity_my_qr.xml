@@ -6,8 +6,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:background="@color/AcliceBlue"
-    android:padding="@dimen/_16sdp"
+    android:padding="@dimen/_26sdp"
     tools:context=".otherComponents.views.AboutActivity">
 
     <!-- Header Layout -->

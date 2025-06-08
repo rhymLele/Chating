@@ -134,7 +134,7 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
     }
     public void checkUserInGroupChat(String currentID, String groupID) {
         databaseReference.child(Contants.KEY_COLLECTION_GROUP_MEMBER)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent (new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         boolean found = false;
@@ -199,6 +199,7 @@ public class ReceiverConservationViewModel extends AndroidViewModel {
                                 // Xóa node user khỏi group
                                 postSnapshot.getRef().removeValue();
                                 Toast.makeText(getApplication(),"Out",Toast.LENGTH_SHORT);
+                                isUserInGroup.postValue(false);
                                 break;
                             }
                         }

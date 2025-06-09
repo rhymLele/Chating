@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="Connect with new one"
-        android:textSize="32dp"
+        android:textSize="@dimen/_25sdp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.444"

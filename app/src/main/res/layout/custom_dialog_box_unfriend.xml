@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/_250sdp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="@dimen/_10sdp"
@@ -8,6 +8,7 @@
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:padding="@dimen/_10sdp"
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/textView"
@@ -36,23 +37,20 @@
             app:layout_constraintTop_toBottomOf="@id/textView">
             <Button
                 android:id="@+id/btnDialogCancel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-               android:background="@drawable/btn_background"
+                android:backgroundTint="@color/white"
                 android:padding="12dp"
                 android:text="Cancel"
-                android:textColor="@color/whiteAccent"
+                android:textColor="@color/my_primary"
                 android:textSize="@dimen/_12sdp"
-                app:strokeColor="@color/my_primary"
-                app:strokeWidth="2dp"/>
+                />
             <Button
                 android:id="@+id/btnDialogConfirm"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="1"
                 android:background="@drawable/btn_background"
                 android:backgroundTint="@color/error"
                 android:padding="12dp"

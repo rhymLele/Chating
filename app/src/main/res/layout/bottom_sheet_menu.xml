@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Report"
+            android:textStyle="bold"
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:padding="12dp" />
@@ -47,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Block"
+            android:textStyle="bold"
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:padding="12dp" />

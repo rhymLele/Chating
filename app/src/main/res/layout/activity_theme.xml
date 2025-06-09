@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AcliceBlue"
     tools:context=".chat.views.ThemeActivity">
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageBack"

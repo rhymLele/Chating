@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.databinding.FragmentSignInBinding;
 import com.duc.chatting.sign.viewmodel.AuthenticationViewModel;
 import com.duc.chatting.utilities.widgets.BaseActivity;
+import com.duc.chatting.utilities.widgets.ComingDialog;
+import com.duc.chatting.utilities.widgets.LoadingDialog;
 
 
 public class SignInFragment extends Fragment {
@@ -30,14 +33,20 @@ public class SignInFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel=new ViewModelProvider(this).get(AuthenticationViewModel.class);
-
+        ComingDialog loadingDialog=new ComingDialog(getActivity());
         viewModel.getUserData().observe(this,firebaseUser->{
             if(firebaseUser!=null)
             {
-                binding.textCheckLogin.setVisibility(View.GONE);
-                Toast.makeText(getContext(),"Login Successfully",Toast.LENGTH_SHORT).show();
+                loadingDialog.show();
+                new Handler().postDelayed(() -> {
+                    loadingDialog.dismiss();
+                    binding.textCheckLogin.setVisibility(View.GONE);
 //                navController.navigate(R.id.action_signInFragment_to_mainActivity);
-                navController.navigate(R.id.action_signInFragment_to_homeActivity);
+                    navController.navigate(R.id.action_signInFragment_to_homeActivity);
+                }, 2000);
+
+            }else{
+                Toast.makeText(getContext(),"Phone number or password is not correct",Toast.LENGTH_SHORT).show();
             }
         });
         viewModel.getIsCheckPhoneNumberAndPasswordLogin().observe(this,isChecked->{
@@ -71,7 +80,7 @@ public class SignInFragment extends Fragment {
             if (getActivity() instanceof BaseActivity) {
                 BaseActivity baseActivity = (BaseActivity) getActivity();
                 if (!baseActivity.isNetworkConnected()) {
-                    Toast.makeText(getContext(), "Không có kết nối mạng! Vui lòng kiểm tra lại.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No internet connection! Check your connection please!.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(isValidSignInDetails())

@@ -159,11 +159,11 @@ public class MyQrActivity extends BaseActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             if (fos != null) fos.close();
 
-            Toast.makeText(this, "Đã lưu QR vào thư viện!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Saved into gallery!", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Lỗi khi lưu ảnh!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Saving error!", Toast.LENGTH_SHORT).show();
         }
     }
 

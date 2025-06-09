@@ -211,7 +211,7 @@ public class UserActivity extends BaseActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Không thể nhận diện mã QR từ ảnh", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cant recognize the QR image", Toast.LENGTH_SHORT).show();
         }
     }
 

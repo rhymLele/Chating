@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".sign.view.SignUpFragment"
     android:overScrollMode="never"
-    android:padding="@dimen/_24sdp"
+    android:padding="@dimen/_4sdp"
     android:background="@color/AcliceBlue"
     android:clipToPadding="false"
 
@@ -21,23 +21,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_40sdp"
             android:text="Register"
             android:textColor="@color/my_primary"
             android:textSize="@dimen/_18ssp"
             android:textStyle="bold"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:text="Login to main"
-            android:textColor="@color/my_primary"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp"
-            android:textSize="@dimen/_12ssp"
-            android:visibility="invisible"
-            />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/splash_animationView"
+            android:layout_width="match_parent"
+            android:padding="@dimen/_5sdp"
+            android:layout_height="@dimen/_125sdp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/register" />
         <EditText
             android:id="@+id/et_sign_phone"
             android:layout_width="match_parent"
@@ -137,12 +133,13 @@
             android:layout_marginTop="@dimen/_20sdp">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSignIn"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/_200sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:text="Sign Up"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:textStyle="bold"
-                android:layout_margin="10dp"
+                android:textSize="@dimen/_15sdp"
                 android:textColor="@color/white"
                 app:cornerRadius="@dimen/_8sdp"
                 />

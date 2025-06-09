@@ -111,7 +111,6 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Log.d("ChatActivity", "OnCreated");
         preferenceManager = new PreferenceManager(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(ChatActivityViewModel.class);
         blockUserViewModel= new ViewModelProvider(this).get(BlockUserViewModel.class);
@@ -157,7 +156,7 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
         });
 
         viewModel.getOnlineUserCount().observe(this, count -> {
-            Toast.makeText(getApplicationContext(),String.valueOf(count),Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),String.valueOf(count),Toast.LENGTH_SHORT).show();
             if (count != null && count>0) {
                 binding.checkUserOn.setBackgroundResource(R.drawable.user_active);
             } else {
@@ -237,7 +236,7 @@ public class ChatActivity extends BaseActivity implements MainRepository.Listene
                     binding.layoutSend.setVisibility(View.GONE);
                     binding.textBlockedNotice.setVisibility(View.VISIBLE);
                     // Người dùng đã bị xóa khỏi nhóm → có thể đóng activity hoặc thông báo
-                    Toast.makeText(this, "Bạn đã rời khỏi nhóm", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You are not in this group", Toast.LENGTH_SHORT).show();
                 }
             }
         });

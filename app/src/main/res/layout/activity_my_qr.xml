@@ -50,7 +50,7 @@
         android:id="@+id/qrCode"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_marginTop="@dimen/_32sdp"
+        android:layout_marginTop="@dimen/_52sdp"
         android:src="@drawable/logo"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,10 +75,10 @@
         android:id="@+id/textCopyright"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
+        android:text="Share this QR code to make friends quickly, securely"
         android:textSize="14sp"
         android:gravity="center"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/textTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,5 +94,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/btn_background"
         app:layout_constraintStart_toStartOf="parent"
+        android:textSize="@dimen/_15ssp"
         app:layout_constraintTop_toBottomOf="@+id/textCopyright" />
 </androidx.constraintlayout.widget.ConstraintLayout>

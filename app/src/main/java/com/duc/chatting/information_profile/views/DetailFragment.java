@@ -174,17 +174,13 @@ public class DetailFragment extends Fragment {
         });
         binding.btnChangePassword.setOnClickListener(v -> {
             if (isValidEmpty()) {
-                Log.d("Pass","heree8");
                 viewModel.checkPassword(preferenceManager.getString(Contants.KEY_USER_ID), binding.textOldPassword.getText().toString());
                 viewModel.getIsCheckPasswordMutableLiveData().observe(getViewLifecycleOwner(), isCheck -> {
                     if (isCheck.equals(Boolean.TRUE)) {
                         binding.textCheckPassword.setVisibility(View.GONE);
-                        Log.d("Pass","heree7");
                         if (isValid(binding.textNewPassword.getText().toString())) {
-                            Log.d("Pass","heree6");
                             if(binding.textNewPassword.getText().toString().equals(binding.textNewConfPassword.getText().toString()))
                             {
-                                Log.d("Pass","heree5");
                                 viewModel.changePassword(binding.textNewPassword.getText().toString());
                                 binding.llChangePassword.setVisibility(View.GONE);
                                 binding.btnChangePassword.setVisibility(View.GONE);
@@ -197,20 +193,17 @@ public class DetailFragment extends Fragment {
                                 binding.textOldPassword.setText(null);
                                 binding.textNewPassword.setText(null);
                                 binding.textNewConfPassword.setText(null);
-                                Log.d("Pass","heree44");
 
                             }else{
-                                Log.d("Pass","heree3");
+
                                 binding.textCheckConfirmPassword.setVisibility(View.VISIBLE);
                                 binding.llCheckPassword.setVisibility(View.GONE);
                             }
                         } else {
-                            Log.d("Pass","heree2");
                             binding.llCheckPassword.setVisibility(View.VISIBLE);
                             binding.textCheckPassword.setVisibility(View.GONE);
                         }
                     }else if(isCheck.equals(Boolean.FALSE)){
-                        Log.d("Pass","heree1");
                         binding.textCheckPassword.setVisibility(View.VISIBLE);
 
                     }

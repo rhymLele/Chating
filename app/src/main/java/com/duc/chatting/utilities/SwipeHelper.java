@@ -27,7 +27,7 @@ public class SwipeHelper  extends ItemTouchHelper.SimpleCallback{
         this.context = context;
         this.listener = listener;
         this.iconLeft = ContextCompat.getDrawable(context, R.drawable.baseline_report_24); // Icon chỉnh sửa
-        this.iconRight = ContextCompat.getDrawable(context, R.drawable.baseline_delete_24); // Icon xóa
+        this.iconRight = ContextCompat.getDrawable(context, R.drawable.baseline_report_24); // Icon xóa
 
         backgroundPaint = new Paint();
     }
@@ -56,14 +56,15 @@ public class SwipeHelper  extends ItemTouchHelper.SimpleCallback{
         if (dX > maxSwipeDistance) dX = maxSwipeDistance;
         if (dX < -maxSwipeDistance) dX = -maxSwipeDistance;
         backgroundPaint.setColor(ContextCompat.getColor(context, R.color.AcliceBlue));
-        if (dX > 0) { // Vuốt sang phải
-            canvas.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom(), backgroundPaint);
-
-            int iconLeftPos = itemView.getLeft() + iconMargin;
-            int iconRightPos = iconLeftPos + iconLeft.getIntrinsicWidth();
-            iconLeft.setBounds(iconLeftPos, itemView.getTop() + iconMargin, iconRightPos, itemView.getBottom() - iconMargin);
-            iconLeft.draw(canvas);
-        } else if (dX < 0) { // Vuốt sang trái
+//        if (dX > 0) { // Vuốt sang phải
+//            canvas.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom(), backgroundPaint);
+//
+//            int iconLeftPos = itemView.getLeft() + iconMargin;
+//            int iconRightPos = iconLeftPos + iconLeft.getIntrinsicWidth();
+//            iconLeft.setBounds(iconLeftPos, itemView.getTop() + iconMargin, iconRightPos, itemView.getBottom() - iconMargin);
+//            iconLeft.draw(canvas);
+//        }
+         if (dX < 0) { // Vuốt sang trái
 
             canvas.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom(), backgroundPaint);
 

@@ -5,13 +5,20 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
 import android.provider.MediaStore;
 import android.service.chooser.ChooserAction;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,6 +39,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 public class MyQrActivity extends BaseActivity {
     ActivityMyQrBinding binding;
@@ -61,12 +69,39 @@ public class MyQrActivity extends BaseActivity {
                 saveImageToGallery(bitmap);
             }
         });
+        binding.btnShare.setOnClickListener(v -> {
+            buttonShare(binding.qrCode);
+        });
 
     }
 
     @Override
     protected void onRetryConnection() {
 
+    }
+    private void buttonShare(ImageView view){
+        Drawable drawable = view.getDrawable();
+        Bitmap bitmap;
+
+        if (drawable instanceof BitmapDrawable) {
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
+        } else {
+            bitmap = Bitmap.createBitmap(
+                    drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight(),
+                    Bitmap.Config.ARGB_8888
+            );
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        }
+        StorageManager storageManager=(StorageManager) getSystemService(STORAGE_SERVICE);
+        StorageVolume storageVolume=storageManager.getStorageVolumes().get(0);
+        String stringPath=MediaStore.Images.Media.insertImage(this.getContentResolver(),bitmap,"Shared Image",null);
+        Intent intent=new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_STREAM,Uri.parse(stringPath));
+        startActivity(Intent.createChooser(intent,"Share the image ...."));
     }
 //    private void share(ImageView bitmap)
 //    {

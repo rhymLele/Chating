@@ -30,7 +30,7 @@
             android:id="@+id/splash_animationView"
             android:layout_width="match_parent"
             android:padding="@dimen/_5sdp"
-            android:layout_height="@dimen/_125sdp"
+            android:layout_height="@dimen/_135sdp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/register" />
@@ -41,7 +41,8 @@
             android:padding="10dp"
             android:hint="Phone Number"
             android:inputType="phone"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
             android:background="@drawable/et_background"
             android:elevation="10dp"
             android:textSize="23sp"
@@ -154,9 +155,9 @@
             android:id="@+id/tv_haveAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:text="Having an account?"
-            android:textColor="@color/greyAccent"
+            android:textColor="@color/my_primary"
             />
     </LinearLayout>
 

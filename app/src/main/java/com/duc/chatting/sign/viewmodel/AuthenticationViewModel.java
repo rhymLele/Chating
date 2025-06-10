@@ -58,8 +58,9 @@ public class AuthenticationViewModel extends AndroidViewModel {
                         if(snapshot.hasChild(phoneNumber))
                         {
                             String getPassword=snapshot.child(phoneNumber).child(Contants.KEY_PASSWORD).getValue(String.class);
-                            Log.d("Auth", "User found, checking password...");
-                            if(getPassword.equals(password1)||getPassword.equals(password2))
+                            Boolean statusValue = snapshot.child(phoneNumber).child("isActive").getValue(Boolean.class);
+                            boolean status = statusValue != null ? statusValue : true;
+                            if((getPassword.equals(password1)||getPassword.equals(password2))&&status)
                             {    Log.d("Auth", "Password matched, setting userData...");
                                 preferenceManager.putBoolean(Contants.KEY_IS_SIGNED_IN,true);
                                 preferenceManager.putString(Contants.KEY_USER_ID,phoneNumber);
@@ -105,6 +106,7 @@ public class AuthenticationViewModel extends AndroidViewModel {
                             }
                         }
                         else{
+                            isCheckPhoneNumberAndPasswordLogin.postValue(Boolean.TRUE);
                             Log.d("Auth", "Phone number not found");
                         }
                     }

@@ -33,6 +33,17 @@
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No conversations yet! Click '+' in the top app bar to find your friends."
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textAlignment="center"
+            android:textColor="@color/greyLight"
+            android:textSize="@dimen/_18sdp"
+            android:visibility="gone"/>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.duc.chatting.call.repository.MainRepository;
 import com.duc.chatting.utilities.Contants;
+import com.duc.chatting.utilities.PasswordHasher;
 import com.duc.chatting.utilities.PreferenceManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +50,7 @@ public class AuthenticationViewModel extends AndroidViewModel {
     }
     public void login(String phoneNumber,String password){
         String password1=String.valueOf(password.hashCode());
+        String password2=PasswordHasher.hashPassword(password);
         databaseReference.child(Contants.KEY_COLLECTION_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -57,7 +59,7 @@ public class AuthenticationViewModel extends AndroidViewModel {
                         {
                             String getPassword=snapshot.child(phoneNumber).child(Contants.KEY_PASSWORD).getValue(String.class);
                             Log.d("Auth", "User found, checking password...");
-                            if(getPassword.equals(password1))
+                            if(getPassword.equals(password1)||getPassword.equals(password2))
                             {    Log.d("Auth", "Password matched, setting userData...");
                                 preferenceManager.putBoolean(Contants.KEY_IS_SIGNED_IN,true);
                                 preferenceManager.putString(Contants.KEY_USER_ID,phoneNumber);
@@ -114,7 +116,7 @@ public class AuthenticationViewModel extends AndroidViewModel {
                 });
     }
     public void register(String email,String password1,String phoneNumber,String name){
-        String password=String.valueOf(password1.hashCode());
+        String password=PasswordHasher.hashPassword(password1);
         databaseReference.child(Contants.KEY_COLLECTION_USERS).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override

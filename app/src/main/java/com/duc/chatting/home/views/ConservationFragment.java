@@ -94,15 +94,18 @@ public class ConservationFragment extends Fragment {
             }
         }));
         viewModel.getConservationsMutableLiveData().observe(this, chatMessages -> {
-            Log.d("ConservationFragment", "LiveData updated, siz e: " + chatMessages.size());
-            adapter=new RecentConservationAdapter(chatMessages,this::onConservationClicked);
-            Log.d("Consetvation","Mesaage");
-            binding.conservationRecyclerView.setAdapter(adapter);
-            binding.conservationRecyclerView.smoothScrollToPosition(0);
-            binding.conservationRecyclerView.setVisibility(View.VISIBLE);
+            if (chatMessages.isEmpty()) {
+                binding.emptyTextView.setVisibility(View.VISIBLE);
+                binding.conservationRecyclerView.setVisibility(View.GONE);
+            } else {
+                adapter = new RecentConservationAdapter(chatMessages, this::onConservationClicked);
+                binding.conservationRecyclerView.setAdapter(adapter);
+                binding.conservationRecyclerView.smoothScrollToPosition(0);
+                binding.conservationRecyclerView.setVisibility(View.VISIBLE);
+                binding.emptyTextView.setVisibility(View.GONE);
+                itemTouchHelper.attachToRecyclerView(binding.conservationRecyclerView);
+            }
             binding.progressBar.setVisibility(View.GONE);
-            itemTouchHelper.attachToRecyclerView(binding.conservationRecyclerView);
-            Log.d("ConservationFragment", "RecyclerView visibility: " + binding.conservationRecyclerView.getVisibility());
         });
 
     }

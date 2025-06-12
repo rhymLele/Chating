@@ -291,9 +291,9 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             String raw = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
                             String message;
                             if (raw != null && raw.startsWith("ENC:")) {
-                                message = AESCryptoService.decrypt(raw.substring(4)); // ✅ Bỏ prefix trước khi giải mã
+                                message = AESCryptoService.decrypt(raw.substring(4)); //  Bỏ prefix trước khi giải mã
                             } else {
-                                message = raw; // ✅ Không mã hóa, giữ nguyên
+                                message = raw; //  Không mã hóa, giữ nguyên
                             }
                             Date date = dataSnapshot.child("dateTime").getValue(Date.class);
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);
@@ -329,9 +329,9 @@ public class ChatActivityViewModel extends AndroidViewModel {
                             String raw = dataSnapshot.child(Contants.KEY_MESSAGE).getValue(String.class);
                             String message;
                             if (raw != null && raw.startsWith("ENC:")) {
-                                message = AESCryptoService.decrypt(raw.substring(4)); // ✅ Bỏ prefix trước khi giải mã
+                                message = AESCryptoService.decrypt(raw.substring(4)); //  Bỏ prefix trước khi giải mã
                             } else {
-                                message = raw; // ✅ Không mã hóa, giữ nguyên
+                                message = raw; //  Không mã hóa, giữ nguyên
                             }
                             Date date = dataSnapshot.child("dateTime").getValue(Date.class);
                             Date dateObject = dataSnapshot.child("dateTime").getValue(Date.class);

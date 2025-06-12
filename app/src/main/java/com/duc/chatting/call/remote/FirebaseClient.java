@@ -81,5 +81,23 @@ public class FirebaseClient {
 
 
     }
-
+//    public void sư()
+//    {
+//        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+//        Query query = usersRef.orderByChild("isOnline").equalTo(true);
+//
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                for (DataSnapshot child : snapshot.getChildren()) {
+//                    User user = child.getValue(User.class);
+//                    Log.d("UserOnline", "User: " + user.getName());
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError error) {}
+//        });
+//
+//
+//    }
 }
